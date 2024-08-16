@@ -1,4 +1,4 @@
-# LMIM_mini_project
+# LMIM_Mini_Project
 **플라스크 & 리액트 개인용 미니 프로젝트**
 
 *제작자: 서다현*
