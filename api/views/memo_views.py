@@ -46,4 +46,9 @@ def delete() :
         db.session.commit()
         rs = 1
     
-    return jsonify({'rs':rs}) 
+    return jsonify({'rs':rs})
+
+@bp.route('/delete/delete_admin')
+def delete_admin() :
+    rs = 0
+    return jsonify({'rs':rs})
