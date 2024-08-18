@@ -2,8 +2,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css'
 import { useState, useRef, useEffect } from 'react';
 import service from '../service';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Board() {
+    // 파라미터 처리
+    const location = useLocation();
+
     // 입력값 처리 부분
     const [data, setData] = useState({}); // 불러온 데이터 상태 관리
     const [values, setValues] = useState(''); // 입력값 반영
@@ -16,8 +20,13 @@ export default function Board() {
     const inputDeletePwFocus = useRef(null); // 방명록 삭제 비밀번호 참조
 
     // 저장된 데이터 로드
+
+    
     useEffect(() => { // 페이지 로드 시 실행
-        service.getBoard().then( // 플라스크에서 데이터를 가져옴
+        const queryParams = new URLSearchParams(location.search);
+        const page = queryParams.get('page');
+
+        service.getBoard(page).then( // 플라스크에서 데이터를 가져옴
             (res) => { // 응답이 성공했을 때
                 setData(res.data); // 응답받은 값을 data에 저장
                 console.log(res.data);
@@ -25,7 +34,7 @@ export default function Board() {
                 console.log('못 찾겠다 꾀꼬리');
             }
         )
-    }, []) // 한 번만 실행
+    }, [location.search]) // 주소가 변경될 때마다 실행
 
     // 입력값이 변경될 때마다 자동으로 상태를 반영
     const handleChange = (e) => {
@@ -134,6 +143,47 @@ export default function Board() {
                             )}
                         </div>
                     ))}
+                    <ul className='pagination justify-content-center py-5'>
+                        {(data.hasPrev) ? (
+                            <li className='page-item'>
+                                <Link className='page-link text-secondary' to={`?page=${data.prevNum}`}>이전</Link>
+                            </li>
+                        ) : (
+                            <li className='page-item disabled'>
+                                <Link className='page-link' to={()=>false} aria-disabled='true'>이전</Link>
+                            </li>
+                        )}
+                        {data.iterPages.map((pageNum) => (
+                            <>
+                            {(pageNum !== null) ? (
+                                <>
+                                {(pageNum !== data.page) ? (
+                                    <li className='page-item' key={pageNum}>
+                                        <Link className='page-link text-secondary' to={`?page=${pageNum}`}>{pageNum}</Link>
+                                    </li>
+                                ) : (
+                                    <li className='page-item active' aria-current="page" key={pageNum}>
+                                        <Link className='page-link bg-secondary' tabIndex={-1} to={()=>false}>{pageNum}</Link>
+                                    </li>                            
+                                )}
+                                </>
+                            ) : (
+                                <li className='disabled' key={pageNum}>
+                                    <Link className='page-link' to={()=>false}>...</Link>
+                                </li>
+                            )}
+                            </>
+                        ))}
+                        {(data.hasNext) ? (
+                            <li>
+                                <Link className='page-link text-secondary' to={`?page=${data.nextNum}`}>다음</Link>
+                            </li>
+                        ) : (
+                            <li className='page-item disabled'>
+                                <Link className='page-link' to={()=>false} tabIndex={-1} aria-disabled='true'>다음</Link>
+                            </li>
+                        )}
+                    </ul>
                 </div>
             ) : (
                 <div className='text-center fw-bold'>데이터가 아직 로드되지 않았습니다.</div>

@@ -13,7 +13,7 @@ def load() :
 
     data = [{'idx':m.idx, 'username':m.username, 'content':m.content} for m in memos]
     result = {
-        'items':data, 'hasPrev':memos.has_prev, 'hasNext':memos.has_next,
+        'items':data, 'hasPrev':memos.has_prev, 'hasNext':memos.has_next, 'page':page,
         'iterPages':list(memos.iter_pages()), 'prevNum':memos.prev_num, 'nextNum':memos.next_num
         }
 

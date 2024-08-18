@@ -9,8 +9,8 @@ const getPost = () => {
 }
 
 // 방명록
-const getBoard = () => {
-    return axios.get(API.BOARDLOAD)
+const getBoard = (page) => {
+    return axios.get(API.BOARDLOAD, {params: {page:page}})
 }
 
 const createBoard = (values) => {
