@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 *.code-workspace
 *.env
+.flaskenv
 *.cmd
 *.db
 __pycache__/

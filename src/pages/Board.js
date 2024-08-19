@@ -29,7 +29,6 @@ export default function Board() {
         service.getBoard(page).then( // 플라스크에서 데이터를 가져옴
             (res) => { // 응답이 성공했을 때
                 setData(res.data); // 응답받은 값을 data에 저장
-                console.log(res.data);
             }, (error) => { // 응답이 실패했을 때
                 console.log('못 찾겠다 꾀꼬리');
             }

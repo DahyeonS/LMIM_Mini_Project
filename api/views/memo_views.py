@@ -48,7 +48,12 @@ def delete() :
     
     return jsonify({'rs':rs})
 
-@bp.route('/delete/delete_admin')
+@bp.route('/delete/delete_admin', methods=['POST'])
 def delete_admin() :
-    rs = 0
-    return jsonify({'rs':rs})
+    data = request.get_json()
+    idx = data.get('idx')
+
+    db.session.delete(Memo.query.get(idx))
+    db.session.commit()
+
+    return jsonify({'rs':1})

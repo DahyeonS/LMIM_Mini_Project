@@ -1,5 +1,6 @@
 export const API = {
     // 로그인
+    AUTHINSERT: 'auth/update',
     AUTHLOGIN: 'auth/login',
     AHTHLOGOUT: 'auth/logout',
     AHTHUPDATE: 'auth/update',

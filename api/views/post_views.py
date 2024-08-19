@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify
-import json
 
 bp = Blueprint('post', __name__, url_prefix='/post')
 
