@@ -36,7 +36,6 @@ def insert() :
 
 @bp.route('/delete', methods=['POST'])
 def delete() :
-    rs = 0
     data = request.get_json()
     idx = data.get('idx')
     pw = data.get('password')
@@ -44,9 +43,9 @@ def delete() :
     if check_password_hash(Memo.query.get(idx).pw, pw) :
         db.session.delete(Memo.query.get(idx))
         db.session.commit()
-        rs = 1
+        return jsonify({'rs':1})
     
-    return jsonify({'rs':rs})
+    return jsonify({'rs':0})
 
 @bp.route('/delete/delete_admin', methods=['POST'])
 def delete_admin() :

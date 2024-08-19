@@ -20,8 +20,6 @@ export default function Board() {
     const inputDeletePwFocus = useRef(null); // 방명록 삭제 비밀번호 참조
 
     // 저장된 데이터 로드
-
-    
     useEffect(() => { // 페이지 로드 시 실행
         const queryParams = new URLSearchParams(location.search);
         const page = queryParams.get('page');

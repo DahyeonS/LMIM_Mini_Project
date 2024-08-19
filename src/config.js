@@ -1,8 +1,8 @@
 export const API = {
     // 로그인
-    AUTHINSERT: 'auth/update',
+    AUTHLOAD: 'auth/load',
+    AUTHINSERT: 'auth/insert',
     AUTHLOGIN: 'auth/login',
-    AHTHLOGOUT: 'auth/logout',
     AHTHUPDATE: 'auth/update',
 
     // 게시판

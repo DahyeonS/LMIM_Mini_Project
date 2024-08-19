@@ -2,19 +2,19 @@ import axios from "axios";
 import { API } from "./config"
 
 // 로그인
-const userCreate = () => {
-    
+const loadUser = () => {
+    return axios.get(API.AUTHLOAD)
+}
+
+const createUser = (values) => {
+    return axios.post(API.AUTHINSERT, values)
 }
 
 const Login = () => {
 
 }
 
-const Logout = () => {
-
-}
-
-const userUpdate = () => {
+const updateUser = () => {
 
 }
 
@@ -23,12 +23,16 @@ const getPost = (page) => {
     return axios.get(API.POSTLOAD, {params: {page:page}})
 }
 
-const createPost = (values) => {
-    return axios.post(API.POSTINSERT, values)
+const createPost = () => {
+    
 }
 
-const updatePost = (values) => {
-    return axios.post(API.POSTUPDATE, values)
+const loadPost = (idx) => {
+
+}
+
+const updatePost = () => {
+    
 }
 
 const deletePost = (idx) => {
@@ -59,13 +63,14 @@ const contact = (values) => {
 
 const service = {
     // 로그인
-    userCreate,
+    loadUser,
+    createUser,
     Login, 
-    Logout,
-    userUpdate,
+    updateUser,
 
     // 게시판
     getPost,
+    loadPost,
     createPost,
     updatePost,
     deletePost,
