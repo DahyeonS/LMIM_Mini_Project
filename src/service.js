@@ -1,21 +1,30 @@
 import axios from "axios";
 import { API } from "./config"
 
+// CSRF
+const getCsrfToken = () => {
+    return axios.get(API.CSRFTOKEN)
+}
+
 // 로그인
 const loadUser = () => {
     return axios.get(API.AUTHLOAD)
 }
 
-const createUser = (values) => {
-    return axios.post(API.AUTHINSERT, values)
+const createUser = (values, csrfToken) => {
+    return axios.post(API.AUTHINSERT, values, {headers:{'X-CSRFToken':csrfToken}})
 }
 
-const Login = () => {
-
+const login = (values, csrfToken) => {
+    return axios.post(API.AUTHLOGIN, values, {headers:{'X-CSRFToken':csrfToken}})
 }
 
-const updateUser = () => {
+const logout = () => {
+    return axios.get(API.AHTHLOGOUT)
+}
 
+const updateUser = (values, csrfToken) => {
+    return axios.post(API.AHTHUPDATE, values, {headers:{'X-CSRFToken':csrfToken}})
 }
 
 // 게시판
@@ -44,12 +53,12 @@ const getBoard = (page) => {
     return axios.get(API.BOARDLOAD, {params: {page:page}})
 }
 
-const createBoard = (values) => {
-    return axios.post(API.BOARDINSERT, values)
+const createBoard = (values, csrfToken) => {
+    return axios.post(API.BOARDINSERT, values, {headers:{'X-CSRFToken':csrfToken}})
 }
 
-const deleteBoard = (idx, password) => {
-    return axios.post(API.BOARDDELETE, {idx, password})
+const deleteBoard = (idx, password, csrfToken) => {
+    return axios.post(API.BOARDDELETE, {idx, password}, {headers:{'X-CSRFToken':csrfToken}})
 }
 
 const deleteBoardAdmin = (idx) => {
@@ -57,15 +66,19 @@ const deleteBoardAdmin = (idx) => {
 }
 
 // 문의
-const contact = (values) => {
-    return axios.post(API.CONTACT, values)
+const contact = (values, csrfToken) => {
+    return axios.post(API.CONTACT, values, {headers:{'X-CSRFToken':csrfToken}})
 }
 
 const service = {
+    // CSRF
+    getCsrfToken,
+
     // 로그인
     loadUser,
     createUser,
-    Login, 
+    login,
+    logout,
     updateUser,
 
     // 게시판

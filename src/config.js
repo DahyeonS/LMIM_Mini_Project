@@ -1,4 +1,7 @@
 export const API = {
+    // CSRF
+    CSRFTOKEN: 'csrf_token',
+
     // 로그인
     AUTHLOAD: 'auth/load',
     AUTHINSERT: 'auth/insert',

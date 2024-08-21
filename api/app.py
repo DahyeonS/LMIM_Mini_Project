@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 from sqlalchemy import MetaData
 
 naming_convention = {
@@ -14,9 +15,14 @@ naming_convention = {
 
 db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate()
+csrf = CSRFProtect()
 
 def create_app() :
     app = Flask(__name__)
+
+    # CSRF 설정
+    csrf.init_app(app)
+
     # CORS 설정
     CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
     app.config.from_envvar('APP_CONFIG_FILE')

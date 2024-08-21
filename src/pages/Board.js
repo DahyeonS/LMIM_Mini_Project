@@ -5,11 +5,12 @@ import service from '../service';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Board() {
-    // 파라미터 처리
-    const location = useLocation();
-
-    // 입력값 처리 부분
+    // 출력값 처리 부분
+    const location = useLocation(); // 현재 페이지 위치 추출
     const [data, setData] = useState({}); // 불러온 데이터 상태 관리
+    
+    // 입력값 처리 부분
+    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
     const [values, setValues] = useState(''); // 입력값 반영
     const [password, setPassword] = useState({}); // 비밀번호 입력값 반영
     const [showPasswordInput, setShowPasswordInput] = useState(null); // 비밀번호 입력 필드
@@ -20,9 +21,16 @@ export default function Board() {
     const inputDeletePwFocus = useRef(null); // 방명록 삭제 비밀번호 참조
 
     // 저장된 데이터 로드
-    useEffect(() => { // 페이지 로드 시 실행
-        const queryParams = new URLSearchParams(location.search);
-        const page = queryParams.get('page');
+    useEffect(() => { // 페이지 로드시 실행
+        const queryParams = new URLSearchParams(location.search); // 주소창 문자열 처리
+        const page = queryParams.get('page'); // 주소창 파라미터 추출
+
+        // CSRF 토큰
+        service.getCsrfToken().then(
+            (res) => {
+                setCsrfToken(res.data.csrf_token);
+            }
+        )
 
         service.getBoard(page).then( // 플라스크에서 데이터를 가져옴
             (res) => { // 응답이 성공했을 때
@@ -33,20 +41,21 @@ export default function Board() {
         )
     }, [location.search]) // 주소가 변경될 때마다 실행
 
-    // 입력값이 변경될 때마다 자동으로 상태를 반영
+    // 방명록 입력값이 변경될 때마다 자동으로 상태를 반영
     const handleChange = (e) => {
         const {name, value} = e.target; // 입력값의 name, value 추출
         setValues((prevValues) => ({ // values의 값을 갱신
             ...prevValues, // 이전에 입력된 값을 복사
-            [name]: value, // 새로운 값을 추가하거나 갱신된 값을 적용
+            [name]: value // 새로운 값을 추가하거나 갱신된 값을 적용
         }))
     };
 
+    // 제출 처리 함수
     const handleSubmit = async(e) => {
-        e.preventDefault();
+        e.preventDefault(); // 페이지 변경 방지
 
         // 빈 공간이 있을 시 전송 X
-        if ((!values.username) || (!values.password) || (!values.content)) {
+        if (!values.username || !values.password || !values.content) {
             if (!values.username) {
                 alert('이름을 입력해주세요.');
                 inputNameFocus.current.focus(); // 유저명에 포커스
@@ -64,7 +73,7 @@ export default function Board() {
         }
 
         // DB 저장 함수 호출
-        service.createBoard(values).then(
+        service.createBoard(values, csrfToken).then(
             (res) => { // 응답이 성공했을 때
                 if (res.data.rs === 1) { // 응답받은 값의 rs가 1일 때
                     alert('방명록이 작성되었습니다.');
@@ -74,17 +83,20 @@ export default function Board() {
         )
     };
 
-    const handlsShowPasswordInput = (idx) => {
+    // 삭제할 방명록의 인덱스 값 설정
+    const handleShowPasswordInput = (idx) => {
         setShowPasswordInput(idx);
-        setPassword('');
+        setPassword(''); // 비밀번호 값 초기화
     }
 
+    // 비밀번호 입력값이 변경될 때마다 자동으로 상태를 반영
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
     }
 
-    const handleDelete = (idx) => {
-        service.deleteBoard(idx, password).then(
+    // 방명록 삭제
+    const handleDelete = (idx, csrfToken) => {
+        service.deleteBoard(idx, password, csrfToken).then(
             (res) => {
                 if (res.data.rs === 1) {
                     alert('정상적으로 삭제되었습니다.');
@@ -124,7 +136,7 @@ export default function Board() {
                             <div className='col-4'>{item.content}</div>
                             {/* 삭제 버튼 */}
                             {}
-                            {showPasswordInput === item.idx ? (
+                            {showPasswordInput === item.idx ? ( /* 삭제할 방명록의 인덱스 값과 일치할 경우 */
                                 <>
                                 <div className='col-1'></div>
                                 <div className='col-2'>
@@ -135,11 +147,12 @@ export default function Board() {
                             ) : (
                                 <>
                                 <div className='col-3'></div>
-                                <button className='btn btn-secondary col-1' onClick={() => handlsShowPasswordInput(item.idx)}>삭제</button>
+                                <button className='btn btn-secondary col-1' onClick={() => handleShowPasswordInput(item.idx)}>삭제</button>
                                 </>
                             )}
                         </div>
                     ))}
+                    {/* 페이징 */}
                     <ul className='pagination justify-content-center py-5'>
                         {(data.hasPrev) ? (
                             <li className='page-item'>
@@ -183,9 +196,9 @@ export default function Board() {
                     </ul>
                 </div>
             ) : (
+                // 로딩 대기 문구
                 <div className='text-center fw-bold'>데이터가 아직 로드되지 않았습니다.</div>
             )}
         </div>
     );
 }
-

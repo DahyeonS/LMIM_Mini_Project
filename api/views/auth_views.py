@@ -28,10 +28,14 @@ def login() :
     data = request.get_json()
     user = Member.query.get(1)
 
-    if user.id == data.get('user') and check_password_hash(user.pw, data.get('pw')) :
+    if user.id == data.get('id') and check_password_hash(user.pw, data.get('pw')) :
         return jsonify({'rs':1})
 
     return jsonify({'rs':0})
+
+@bp.route('/logout')
+def logout() :
+    return jsonify({'rs':1})
 
 @bp.route('/update', methods=['POST'])
 def update() :
