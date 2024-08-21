@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css'
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Fragment } from 'react';
 import service from '../service';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -14,6 +14,7 @@ export default function Board() {
     const [values, setValues] = useState(''); // 입력값 반영
     const [password, setPassword] = useState({}); // 비밀번호 입력값 반영
     const [showPasswordInput, setShowPasswordInput] = useState(null); // 비밀번호 입력 필드
+    const [isDisabled, setIsDisabled] = useState(false);
 
     const inputNameFocus = useRef(null); // 유저명 참조
     const inputPwFocus = useRef(null); // 비밀번호 참조
@@ -24,6 +25,16 @@ export default function Board() {
     useEffect(() => { // 페이지 로드시 실행
         const queryParams = new URLSearchParams(location.search); // 주소창 문자열 처리
         const page = queryParams.get('page'); // 주소창 파라미터 추출
+
+        if (localStorage.getItem('token') !== null) {
+            setIsDisabled(true);
+            setValues((prevValues) => ({ // values의 값을 갱신
+                ...prevValues, // 이전에 입력된 값을 복사
+                username: '관리자',
+                password: 'admin'
+            }))
+        }
+        else setIsDisabled(false);
 
         // CSRF 토큰
         service.getCsrfToken().then(
@@ -55,7 +66,7 @@ export default function Board() {
         e.preventDefault(); // 페이지 변경 방지
 
         // 빈 공간이 있을 시 전송 X
-        if (!values.username || !values.password || !values.content) {
+        if (!values.username || !values.password || !values.content || (localStorage.getItem('token') === null && values.username === '관리자')) {
             if (!values.username) {
                 alert('이름을 입력해주세요.');
                 inputNameFocus.current.focus(); // 유저명에 포커스
@@ -64,9 +75,12 @@ export default function Board() {
                 alert('비밀번호를 입력해주세요.');
                 inputPwFocus.current.focus(); // 비밀번호에 포커스
             }
-            else {
+            else if (!values.content) {
                 alert('내용을 입력해주세요.');
                 inputContentFocus.current.focus(); // 내용에 포커스
+            } else {
+                alert('해당 이름은 설정할 수 없습니다.');
+                inputNameFocus.current.focus(); // 유저명에 포커스
             }
             
             return false;
@@ -95,7 +109,7 @@ export default function Board() {
     }
 
     // 방명록 삭제
-    const handleDelete = (idx, csrfToken) => {
+    const handleDelete = (idx) => {
         service.deleteBoard(idx, password, csrfToken).then(
             (res) => {
                 if (res.data.rs === 1) {
@@ -108,6 +122,20 @@ export default function Board() {
             }
         )
     }
+    
+    // 관리자용 방명록 삭제
+    const handleDeleteAdmin = (idx) => {
+        if (window.confirm('정말 삭제하시겠습니까?')) {
+            service.deleteBoardAdmin(idx, csrfToken).then(
+                (res) => {
+                    if (res.data.rs === 1) {
+                        alert('정상적으로 삭제되었습니다.');
+                        window.location.reload();
+                    }
+                }
+            )
+        }
+    }
 
     // 화면 출력 부분
     return (
@@ -115,10 +143,10 @@ export default function Board() {
             <h1 className='pb-2 ms-3 my-3 border-bottom'>방명록</h1>
             <form className='row g-2' onSubmit={handleSubmit} method='post'>
                 <div className='col-6'>
-                    <input type='text' className='form-control' name='username' placeholder='Name' onChange={handleChange} ref={inputNameFocus}></input>
+                    <input type='text' className='form-control' name='username' placeholder='Name' onChange={handleChange} ref={inputNameFocus} disabled={isDisabled}></input>
                 </div>
                 <div className='col-6'>
-                    <input type='password' className='form-control' name='password' placeholder='Password' onChange={handleChange} ref={inputPwFocus}></input>
+                    <input type='password' className='form-control' name='password' placeholder='Password' onChange={handleChange} ref={inputPwFocus} disabled={isDisabled}></input>
                 </div>
                 <div className='col-12'>
                     <input type='text' className='form-control py-5' name='content' onChange={handleChange} ref={inputContentFocus}></input>
@@ -135,20 +163,37 @@ export default function Board() {
                             <div className='col-4'>{item.username}</div>
                             <div className='col-4'>{item.content}</div>
                             {/* 삭제 버튼 */}
-                            {}
-                            {showPasswordInput === item.idx ? ( /* 삭제할 방명록의 인덱스 값과 일치할 경우 */
-                                <>
-                                <div className='col-1'></div>
-                                <div className='col-2'>
-                                    <input type='password' onChange={handlePasswordChange} className='form-control' placeholder='비밀번호 확인' ref={inputDeletePwFocus}></input>
-                                </div>
-                                <button onClick={() => handleDelete(item.idx)} className='btn btn-secondary col-1'>삭제</button>
-                                </>
+                            {(localStorage.getItem('token') !== null) ? (
+                                <Fragment>
+                                    <div className='col-3'></div>
+                                    <button onClick={() => handleDeleteAdmin(item.idx)} className='btn btn-secondary col-1'>삭제</button>
+                                </Fragment>
                             ) : (
-                                <>
-                                <div className='col-3'></div>
-                                <button className='btn btn-secondary col-1' onClick={() => handleShowPasswordInput(item.idx)}>삭제</button>
-                                </>
+                                <Fragment>
+                                    {showPasswordInput === item.idx ? ( /* 삭제할 방명록의 인덱스 값과 일치할 경우 */
+                                        <Fragment key={`memo-fragment-${item.idx}`}>
+                                        <div className='col-1'></div>
+                                        <div className='col-2'>
+                                            <input type='password' onChange={handlePasswordChange} className='form-control' placeholder='비밀번호 확인' ref={inputDeletePwFocus}></input>
+                                        </div>
+                                        <button onClick={() => handleDelete(item.idx)} className='btn btn-secondary col-1'>삭제</button>
+                                        </Fragment>
+                                    ) : (
+                                        <Fragment key={`memo-fragment-${item.idx}`}>
+                                            {(item.username !== '관리자') ? (
+                                                <Fragment>
+                                                    <div className='col-3'></div>
+                                                    <button className='btn btn-secondary col-1' onClick={() => handleShowPasswordInput(item.idx)}>삭제</button>
+                                                </Fragment>
+                                            ) : (
+                                                <Fragment>
+                                                    <div className='col-3'></div>
+                                                    <div className=''></div>
+                                                </Fragment>
+                                            )}
+                                        </Fragment>
+                                    )}
+                                </Fragment>
                             )}
                         </div>
                     ))}
@@ -164,25 +209,25 @@ export default function Board() {
                             </li>
                         )}
                         {data.iterPages.map((pageNum) => (
-                            <>
+                            <Fragment key={`paging-${pageNum}`}>
                             {(pageNum !== null) ? (
-                                <>
+                                <Fragment key={`paging-fragment-${pageNum}`}>
                                 {(pageNum !== data.page) ? (
-                                    <li className='page-item' key={pageNum}>
+                                    <li className='page-item' >
                                         <Link className='page-link text-secondary' to={`?page=${pageNum}`}>{pageNum}</Link>
                                     </li>
                                 ) : (
-                                    <li className='page-item active' aria-current="page" key={pageNum}>
+                                    <li className='page-item active' aria-current="page">
                                         <Link className='page-link bg-secondary' tabIndex={-1} to={()=>false}>{pageNum}</Link>
                                     </li>                            
                                 )}
-                                </>
+                                </Fragment>
                             ) : (
-                                <li className='disabled' key={pageNum}>
+                                <li className='disabled'>
                                     <Link className='page-link' to={()=>false}>...</Link>
                                 </li>
                             )}
-                            </>
+                            </Fragment>
                         ))}
                         {(data.hasNext) ? (
                             <li>

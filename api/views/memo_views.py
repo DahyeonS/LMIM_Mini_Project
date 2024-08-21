@@ -47,7 +47,7 @@ def delete() :
     
     return jsonify({'rs':0})
 
-@bp.route('/delete/delete_admin', methods=['POST'])
+@bp.route('/delete_admin', methods=['POST'])
 def delete_admin() :
     data = request.get_json()
     idx = data.get('idx')

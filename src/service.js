@@ -19,10 +19,6 @@ const login = (values, csrfToken) => {
     return axios.post(API.AUTHLOGIN, values, {headers:{'X-CSRFToken':csrfToken}})
 }
 
-const logout = () => {
-    return axios.get(API.AHTHLOGOUT)
-}
-
 const updateUser = (values, csrfToken) => {
     return axios.post(API.AHTHUPDATE, values, {headers:{'X-CSRFToken':csrfToken}})
 }
@@ -61,8 +57,8 @@ const deleteBoard = (idx, password, csrfToken) => {
     return axios.post(API.BOARDDELETE, {idx, password}, {headers:{'X-CSRFToken':csrfToken}})
 }
 
-const deleteBoardAdmin = (idx) => {
-    return axios.post(API.BOARDDELETEADMIN, {idx})
+const deleteBoardAdmin = (idx, csrfToken) => {
+    return axios.post(API.BOARDDELETEADMIN, {idx}, {headers:{'X-CSRFToken':csrfToken}})
 }
 
 // 문의
@@ -78,7 +74,6 @@ const service = {
     loadUser,
     createUser,
     login,
-    logout,
     updateUser,
 
     // 게시판

@@ -1,9 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css'
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import service from '../service';
 
 export default function Login() {
+    // 라우팅 부분
+    const navigate = useNavigate();
+
     // 입력값 처리 부분
     const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
     const [values, setValues] = useState({}); // 입력값 반영
@@ -48,7 +52,8 @@ export default function Login() {
             (res) => {
                 if (res.data.rs === 1) {
                     alert('로그인에 성공하였습니다.');
-                    window.location.href = '../';
+                    localStorage.setItem('token', res.data.access_token);
+                    navigate('../');
                 } else {
                     alert('로그인에 실패하였습니다. 아이디와 비빌번호를 다시 확인해주세요.');
                     idFocus.current.focus();
@@ -63,11 +68,11 @@ export default function Login() {
             <h1 className='pb-2 ms-3 my-3 border-bottom'>로그인</h1>
             <form onSubmit={handleSubmit}>
                 <div className='mb-3'>
-                    <label for='id'>아이디</label>
+                    <label htmlFor='id'>아이디</label>
                     <input type='text' id='id' name='id' className='form-control' ref={idFocus} onChange={handleChange}></input>
                 </div>
                 <div className='mb-3'>
-                    <label for='pw'>비밀번호</label>
+                    <label htmlFor='pw'>비밀번호</label>
                     <input type='password' id='pw' name='pw' className='form-control' ref={pwFocus} onChange={handleChange}></input>
                 </div>
                 <div>

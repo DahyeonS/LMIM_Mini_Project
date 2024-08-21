@@ -8,9 +8,11 @@ pw = os.getenv('DB_PASSWORD') # 암호
 url = os.getenv('DB_HOST') # 데이터베이스 주소
 db = os.getenv('DB_NAME') # 데이터베이스 이름
 
-SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{user}:{pw}@{url}/{db}'
+SQLALCHEMY_DATABASE_URI = f'postgresql+psycopg2://{user}:{pw}@{url}/{db}'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-SECRET_KEY = str(os.urandom(16))
+SECRET_KEY = os.getenv('SECRET_KEY') # 시크릿 키
+JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY') # JWT 시크릿 키
+
 
 dictConfig({
     'version': 1,

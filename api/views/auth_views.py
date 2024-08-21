@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from models import Member
 from app import db
 
@@ -29,13 +30,11 @@ def login() :
     user = Member.query.get(1)
 
     if user.id == data.get('id') and check_password_hash(user.pw, data.get('pw')) :
-        return jsonify({'rs':1})
+        access_token = create_access_token(identity=user.id)
+
+        return jsonify({'rs':1, 'access_token':access_token})
 
     return jsonify({'rs':0})
-
-@bp.route('/logout')
-def logout() :
-    return jsonify({'rs':1})
 
 @bp.route('/update', methods=['POST'])
 def update() :

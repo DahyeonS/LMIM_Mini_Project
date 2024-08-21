@@ -1,9 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css'
 import { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import service from '../service';
 
 export default function Join() {
+    // 라우팅 부분
+    const navigate = useNavigate();
+
     // 출력값 처리 부분
     const [data, setData] = useState({}); // 불러온 데이터 상태 관리
     
@@ -17,13 +21,14 @@ export default function Join() {
 
     // 저장된 데이터 로드
     useEffect(() => { // 페이지 로드시 실행
-        // 계정 생성 가능 여부
+        // CSRF 토큰
         service.getCsrfToken().then(
             (res) => {
                 setCsrfToken(res.data.csrf_token);
             }
         )
-
+        
+        // 계정 생성 가능 여부
         service.loadUser().then(
             (res) => {
                 setData(res.data);
@@ -70,7 +75,7 @@ export default function Join() {
             (res) => {
                 if (res.data.rs === 1) {
                     alert('회원가입이 완료되었습니다.');
-                    window.location.href = '/login';
+                    navigate('/login');
                 }
             }
         )
@@ -83,19 +88,19 @@ export default function Join() {
             {(data.rs < 1) ? (
                 <form onSubmit={handleSubmit}>
                     <div className='mb-3'>
-                        <label for='id'>아이디</label>
+                        <label htmlFor='id'>아이디</label>
                         <input type='text' id='id' className='form-control' name='id' onChange={handleChange} ref={idFocus}></input>
                     </div>
                     <div className='mb-3'>
-                        <label for='pw'>비밀번호</label>
+                        <label htmlFor='pw'>비밀번호</label>
                         <input type='password' id='pw' className='form-control' name='pw' onChange={handleChange} ref={pwFocus}></input>
                     </div>
                     <div className='mb-3'>
-                        <label for='pw2'>비밀번호 확인</label>
+                        <label htmlFor='pw2'>비밀번호 확인</label>
                         <input type='password' id='pw2' className='form-control' name='pw2' onChange={handleChange} ref={pw2Focus}></input>
                     </div>
                     <div className='mb-3'>
-                        <label for='email'>이메일</label>
+                        <label htmlFor='email'>이메일</label>
                         <input type='email' id='email' className='form-control' name='email' onChange={handleChange} ref={emailFocus}></input>
                     </div>
                     <div>
