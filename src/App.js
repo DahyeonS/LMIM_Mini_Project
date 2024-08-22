@@ -7,9 +7,10 @@ import Login from './pages/Login';
 import Update from './pages/Update';
 import About from './pages/About';
 import Works from './pages/Works';
-import Board from './pages/Board';
-import Contact from './pages/Contact'
 import Post from './pages/Post';
+import Board from './pages/Board';
+import Write from './pages/Write';
+import Contact from './pages/Contact'
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <Route path={'/about'} element={<About/>}></Route>
           <Route path={'/works'} element={<Works/>}></Route>
           <Route path={'/post'} element={<Post/>}></Route>
+          <Route path={'/write'} element={<Write/>}></Route>
           <Route path={'/board'} element={<Board/>}></Route>
           <Route path={'/contact'} element={<Contact/>}></Route>
         </Routes>

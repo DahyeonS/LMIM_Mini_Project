@@ -38,7 +38,7 @@ export default function Header() {
                             <li><Link to={()=>false} onClick={logout}>Logout</Link></li>
                             </Fragment>
                         ) : (
-                            <Fragment></Fragment>
+                            <Fragment/>
                         )}
                     </ul>
                 </nav>

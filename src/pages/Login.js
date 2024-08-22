@@ -14,6 +14,7 @@ export default function Login() {
     const idFocus = useRef(null); // 아이디 참조
     const pwFocus = useRef(null); // 비밀번호 참조
 
+    // 바로 실행
     useEffect(() => {
         // CSRF 토큰
         service.getCsrfToken().then(

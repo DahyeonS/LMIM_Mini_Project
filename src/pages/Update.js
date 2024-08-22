@@ -17,19 +17,19 @@ export default function Update() {
     const idFocus = useRef(null); // 아이디 참조
     const emailFocus = useRef(null) // 이메일 참조
 
+    // 바로 실행
     useEffect(() => {
         if (localStorage.getItem('token') === null) {
             navigate('../');
-            return false
+        } else {
+            service.getCsrfToken().then(
+                (res) => {
+                    setCsrfToken(res.data.csrf_token);
+                }
+            )
+    
+            setIsChecked(false);
         }
-
-        service.getCsrfToken().then(
-            (res) => {
-                setCsrfToken(res.data.csrf_token);
-            }
-        )
-
-        setIsChecked(false);
     }, [navigate]) // 한 번만 실행
 
     // 입력값이 변경될 때마다 자동으로 상태를 반영
