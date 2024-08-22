@@ -1,5 +1,5 @@
-import axios from "axios";
-import { API } from "./config"
+import axios from 'axios';
+import { API } from './config'
 
 // CSRF
 const getCsrfToken = () => {
@@ -17,6 +17,14 @@ const createUser = (values, csrfToken) => {
 
 const login = (values, csrfToken) => {
     return axios.post(API.AUTHLOGIN, values, {headers:{'X-CSRFToken':csrfToken}})
+}
+
+const checkUser = (values, csrfToken) => {
+    return axios.post(API.AUTHCHECK, values, {headers:{'X-CSRFToken':csrfToken}})
+}
+
+const loadUpdateUser = () => {
+    return axios.get(API.AHTHUPDATE)
 }
 
 const updateUser = (values, csrfToken) => {
@@ -74,6 +82,8 @@ const service = {
     loadUser,
     createUser,
     login,
+    checkUser,
+    loadUpdateUser,
     updateUser,
 
     // 게시판

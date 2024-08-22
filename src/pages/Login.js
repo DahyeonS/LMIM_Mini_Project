@@ -21,7 +21,7 @@ export default function Login() {
                 setCsrfToken(res.data.csrf_token);
             }
         )
-    })
+    }, [])
 
     // 입력값이 변경될 때마다 자동으로 상태를 반영
     const handleChange = (e) => {
@@ -64,7 +64,7 @@ export default function Login() {
 
     // 화면 출력 부분
     return (
-        <div className="container-fluid container-xl">
+        <div className='container-fluid container-xl'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>로그인</h1>
             <form onSubmit={handleSubmit}>
                 <div className='mb-3'>

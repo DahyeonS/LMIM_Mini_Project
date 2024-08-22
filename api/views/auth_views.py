@@ -36,12 +36,30 @@ def login() :
 
     return jsonify({'rs':0})
 
-@bp.route('/update', methods=['POST'])
-def update() :
+@bp.route('/check', methods=['POST'])
+def check() :
     data = request.get_json()
-    update = {'id':data.get('id'), 'pw':generate_password_hash(data.get('pw')), 'email':data.get('email')}
+    user = Member.query.get(1)
 
-    db.session.query(Member).filter(Member.idx==1).update(update)
-    db.session.commit()
+    if check_password_hash(user.pw, data.get('password')) :
+        return jsonify({'rs':1})
+    
+    return jsonify({'rs':0})
 
-    return jsonify({'rs':1})
+@bp.route('/update', methods=['GET', 'POST'])
+def update() :
+    if request.method == 'POST' :
+        data = request.get_json()
+
+        if data.get('pw') :
+            update = {'id':data.get('id'), 'pw':generate_password_hash(data.get('pw')), 'email':data.get('email')}
+        else :
+            update = {'id':data.get('id'), 'email':data.get('email')}
+
+        db.session.query(Member).filter(Member.idx==1).update(update)
+        db.session.commit()
+
+        return jsonify({'rs':1})
+    
+    user = Member.query.get(1)
+    return jsonify({'id':user.id, 'email':user.email})

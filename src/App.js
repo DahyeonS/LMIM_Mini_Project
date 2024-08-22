@@ -17,15 +17,15 @@ export default function App() {
       <Header/>
       <main className='main'>
         <Routes>
-          <Route path={"/"} element={<Home/>}></Route>
-          <Route path={"/join"} element={<Join/>}></Route>
-          <Route path={"/login"} element={<Login/>}></Route>
-          <Route path={"/update"} element={<Update/>}></Route>
-          <Route path={"/about"} element={<About/>}></Route>
-          <Route path={"/works"} element={<Works/>}></Route>
-          <Route path={"/post"} element={<Post/>}></Route>
-          <Route path={"/board"} element={<Board/>}></Route>
-          <Route path={"/contact"} element={<Contact/>}></Route>
+          <Route path={'/'} element={<Home/>}></Route>
+          <Route path={'/join'} element={<Join/>}></Route>
+          <Route path={'/login'} element={<Login/>}></Route>
+          <Route path={'/update'} element={<Update/>}></Route>
+          <Route path={'/about'} element={<About/>}></Route>
+          <Route path={'/works'} element={<Works/>}></Route>
+          <Route path={'/post'} element={<Post/>}></Route>
+          <Route path={'/board'} element={<Board/>}></Route>
+          <Route path={'/contact'} element={<Contact/>}></Route>
         </Routes>
       </main>
       <Footer/>

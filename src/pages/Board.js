@@ -139,7 +139,7 @@ export default function Board() {
 
     // 화면 출력 부분
     return (
-        <div className="container-fluid container-xl">
+        <div className='container-fluid container-xl'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>방명록</h1>
             <form className='row g-2' onSubmit={handleSubmit} method='post'>
                 <div className='col-6'>
@@ -217,7 +217,7 @@ export default function Board() {
                                         <Link className='page-link text-secondary' to={`?page=${pageNum}`}>{pageNum}</Link>
                                     </li>
                                 ) : (
-                                    <li className='page-item active' aria-current="page">
+                                    <li className='page-item active' aria-current='page'>
                                         <Link className='page-link bg-secondary' tabIndex={-1} to={()=>false}>{pageNum}</Link>
                                     </li>                            
                                 )}

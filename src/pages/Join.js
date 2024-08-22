@@ -83,7 +83,7 @@ export default function Join() {
 
     // 화면 출력 부분
     return (
-        <div className="container-fluid container-xl">
+        <div className='container-fluid container-xl'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>회원가입</h1>
             {(data.rs < 1) ? (
                 <form onSubmit={handleSubmit}>

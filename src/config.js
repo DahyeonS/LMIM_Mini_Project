@@ -6,6 +6,7 @@ export const API = {
     AUTHLOAD: 'auth/load',
     AUTHINSERT: 'auth/insert',
     AUTHLOGIN: 'auth/login',
+    AUTHCHECK: 'auth/check',
     AHTHUPDATE: 'auth/update',
 
     // 게시판
