@@ -12,6 +12,8 @@ export const API = {
     // 게시판
     POSTLOAD: 'post/load',
     POSTINSERT: 'post/insert',
+    POSTUPLOAD: 'post/upload',
+    POSTLOADIMAGE: 'post/load_image',
     POSTSELECT: 'post/select',
     POSTUPDATE: 'post/update',
     POSTDELETE: 'post/delete',

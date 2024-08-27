@@ -12,7 +12,7 @@ SQLALCHEMY_DATABASE_URI = f'postgresql+psycopg2://{user}:{pw}@{url}/{db}'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SECRET_KEY = os.getenv('SECRET_KEY') # 시크릿 키
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY') # JWT 시크릿 키
-
+CORS_RESOURCES = {r'/*': {'origins': ''}} # CORS 허용 주소
 
 dictConfig({
     'version': 1,

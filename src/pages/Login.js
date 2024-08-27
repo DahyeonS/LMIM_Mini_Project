@@ -18,9 +18,7 @@ export default function Login() {
     useEffect(() => {
         // CSRF 토큰
         service.getCsrfToken().then(
-            (res) => {
-                setCsrfToken(res.data.csrf_token);
-            }
+            (res) => {setCsrfToken(res.data.csrf_token);}
         )
     }, [])
 

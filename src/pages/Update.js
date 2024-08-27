@@ -23,9 +23,7 @@ export default function Update() {
             navigate('../');
         } else {
             service.getCsrfToken().then(
-                (res) => {
-                    setCsrfToken(res.data.csrf_token);
-                }
+                (res) => {setCsrfToken(res.data.csrf_token);}
             )
     
             setIsChecked(false);

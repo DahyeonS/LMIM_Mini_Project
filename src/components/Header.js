@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Fragment } from 'react';
 
 export default function Header() {
@@ -25,16 +25,16 @@ export default function Header() {
                         <span className='navbar-toggler-icon'></span>
                     </button>
                     <ul>
-                        <li><Link to={'/'}>Home</Link></li>
-                        <li><Link to={'about'}>About</Link></li>
-                        <li><Link to={'works'}>Works</Link></li>
-                        <li><Link to={'post'}>Post</Link></li>
-                        <li><Link to={'board'}>Board</Link></li>
-                        <li><Link to={'contact'}>Contact</Link></li>
+                        <li><NavLink to={'/'}>Home</NavLink></li>
+                        <li><NavLink to={'about'}>About</NavLink></li>
+                        <li><NavLink to={'works'}>Works</NavLink></li>
+                        <li><NavLink to={'post'}>Post</NavLink></li>
+                        <li><NavLink to={'board'}>Board</NavLink></li>
+                        <li><NavLink to={'contact'}>Contact</NavLink></li>
                         {/* 로그인 한정 */}
                         {(localStorage.getItem('token') !== null) ? (
                             <Fragment>
-                            <li><Link to={'update'} >Update</Link></li>
+                            <li><NavLink to={'update'} >Update</NavLink></li>
                             <li><Link to={()=>false} onClick={logout}>Logout</Link></li>
                             </Fragment>
                         ) : (

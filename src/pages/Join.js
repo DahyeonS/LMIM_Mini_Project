@@ -23,16 +23,12 @@ export default function Join() {
     useEffect(() => { // 페이지 로드시 실행
         // CSRF 토큰
         service.getCsrfToken().then(
-            (res) => {
-                setCsrfToken(res.data.csrf_token);
-            }
+            (res) => {setCsrfToken(res.data.csrf_token);}
         )
         
         // 계정 생성 가능 여부
         service.loadUser().then(
-            (res) => {
-                setData(res.data);
-            }
+            (res) => {setData(res.data);}
         )
     }, []) // 한 번만 실행
 

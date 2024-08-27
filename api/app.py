@@ -29,7 +29,7 @@ def create_app() :
     jwt.init_app(app)
 
     # CORS 설정
-    CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+    CORS(app, resources=app.config.get('CORS_RESOURCES', {r'/*': {'origins': '*'}}))
     app.config.from_envvar('APP_CONFIG_FILE')
 
     # ORM

@@ -33,11 +33,20 @@ const updateUser = (values, csrfToken) => {
 
 // 게시판
 const getPost = (page) => {
-    return axios.get(API.POSTLOAD, {params: {page:page}})
+    return axios.get(API.POSTLOAD, {params: {page}})
 }
 
-const createPost = () => {
-    
+const createPost = (content, csrfToken) => {
+    return axios.post(API.POSTINSERT, content, {headers:{'X-CSRFToken':csrfToken}})
+}
+
+const uploadImage = (formData, csrfToken) => {
+    return axios.post(API.POSTUPLOAD, formData,
+        {headers:{'X-CSRFToken':csrfToken, 'content-type':'multipart/formdata'}, withCredentials: true});
+}
+
+const loadImage = (type, name) => {
+    return axios.get(API.POSTLOADIMAGE, {params: {type, name}})
 }
 
 const loadPost = (idx) => {
@@ -90,6 +99,8 @@ const service = {
     getPost,
     loadPost,
     createPost,
+    uploadImage,
+    loadImage,
     updatePost,
     deletePost,
 
