@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 /api/venv
+/api/migrations
 
 # testing
 /coverage
