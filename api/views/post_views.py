@@ -40,6 +40,7 @@ def insert() :
         for f in os.scandir(UPLOAD_FOLDER + '/temp') :
             os.remove(f.path)
 
+        content.replace('<img src="./post/load_image?type=temp', '<img src="./post/load_image?type=uploads')
         post = Post(title=title, content=content, photo=', '.join(files), postdate=datetime.now())
     else :
         post = Post(title=title, content=content, postdate=datetime.now())
@@ -53,7 +54,7 @@ def insert() :
 def upload() :
     file = request.files['image']
     file.filename = re.sub('\W', '_', str(datetime.now()).split('.')[0]) + '_' + file.filename
-    file.save(os.path.join(UPLOAD_FOLDER + '/temp', file.filename))
+    file.save(os.path.join(f'{UPLOAD_FOLDER}/temp', file.filename))
     return jsonify({'type':'temp', 'name':file.filename})
 
 @bp.route('/load_image')
@@ -63,18 +64,35 @@ def load_image() :
 
     if file_type == 'static' :
         path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-        return send_file(os.path.join(path + '/static', file_name + '.png'), as_attachment=True)
+        return send_file(os.path.join(f'{path}/static', f'{file_name}.png'), as_attachment=True)
 
-    return send_from_directory(UPLOAD_FOLDER + '/' + file_type, file_name)
+    return send_from_directory(f'{UPLOAD_FOLDER}/{file_type}', file_name)
 
 @bp.route('/select')
 def select() :
-    return jsonify({'rs':0})
+    idx = request.args.get('idx', type=int)
+    result = Post.query.get(idx)
+    return jsonify({'title':result.title, 'content':result.content, 'photo':result.photo})
 
 @bp.route('/update', methods=['GET', 'POST'])
 def update() :
-    return jsonify({'rs':0})
+    if request.method == 'POST' :
+        return jsonify({'rs':0})
+
+    idx = request.args.get('idx', type=int)
+    post = Post.query.get(idx)
+    return jsonify({'title':post.title, 'content':post.content})
 
 @bp.route('/delete', methods=['POST'])
 def delete() :
-    return jsonify({'rs':0})
+    idx = request.get_json().get('idx')
+    post = Post.query.get(idx)
+
+    if post.photo :
+        for file in post.photo.split(', ') :
+            os.remove(f'{UPLOAD_FOLDER}/uploads/{file}')
+
+    db.session.delete(post)
+    db.session.commit()
+
+    return jsonify({'rs':1})

@@ -50,7 +50,7 @@ def delete() :
 @bp.route('/delete_admin', methods=['POST'])
 def delete_admin() :
     data = request.get_json()
-    idx = data.get('idx')
+    idx = data
 
     db.session.delete(Memo.query.get(idx))
     db.session.commit()

@@ -4,33 +4,47 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import service from '../service';
 
-export default function Join() {
-    // 라우팅 부분
-    const navigate = useNavigate();
-
-    // 출력값 처리 부분
-    const [data, setData] = useState({}); // 불러온 데이터 상태 관리
-    
-    // 입력값 처리 부분
+// 저장된 데이터 로드
+function useCsrfToken() {
     const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
-    const [values, setValues] = useState({}); // 입력값 반영
-    const idFocus = useRef(null); // 아이디 참조
-    const pwFocus = useRef(null); // 비밀번호 참조
-    const pw2Focus = useRef(null); // 비밀번호 확인 참조
-    const emailFocus = useRef(null); // 이메일 참조
 
-    // 저장된 데이터 로드
     useEffect(() => { // 페이지 로드시 실행
         // CSRF 토큰
         service.getCsrfToken().then(
             (res) => {setCsrfToken(res.data.csrf_token);}
         )
-        
+    }, []) // 한 번만 실행
+
+    return [csrfToken];
+}
+
+function useData() {
+    const [data, setData] = useState({}); // 불러온 데이터 상태 관리
+
+    useEffect(() => { 
         // 계정 생성 가능 여부
         service.loadUser().then(
             (res) => {setData(res.data);}
         )
-    }, []) // 한 번만 실행
+    }, [])
+
+    return [data];
+}
+
+export default function Join() {
+    // 라우팅 부분
+    const navigate = useNavigate();
+
+    // 출력값 처리 부분
+    const [data] = useData();
+    
+    // 입력값 처리 부분
+    const [csrfToken] = useCsrfToken();
+    const [values, setValues] = useState({}); // 입력값 반영
+    const idFocus = useRef(null); // 아이디 참조
+    const pwFocus = useRef(null); // 비밀번호 참조
+    const pw2Focus = useRef(null); // 비밀번호 확인 참조
+    const emailFocus = useRef(null); // 이메일 참조
 
     // 입력값이 변경될 때마다 자동으로 상태를 반영
     const handleChange = (e) => {

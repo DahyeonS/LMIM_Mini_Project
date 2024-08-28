@@ -4,15 +4,9 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import service from '../service';
 
-export default function Login() {
-    // 라우팅 부분
-    const navigate = useNavigate();
-
-    // 입력값 처리 부분
+// 저장된 데이터 로드
+function useCsrfToken() {
     const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
-    const [values, setValues] = useState({}); // 입력값 반영
-    const idFocus = useRef(null); // 아이디 참조
-    const pwFocus = useRef(null); // 비밀번호 참조
 
     // 바로 실행
     useEffect(() => {
@@ -21,6 +15,19 @@ export default function Login() {
             (res) => {setCsrfToken(res.data.csrf_token);}
         )
     }, [])
+
+    return [csrfToken]
+}
+
+export default function Login() {
+    // 라우팅 부분
+    const navigate = useNavigate();
+
+    // 입력값 처리 부분
+    const [csrfToken] = useCsrfToken();
+    const [values, setValues] = useState({}); // 입력값 반영
+    const idFocus = useRef(null); // 아이디 참조
+    const pwFocus = useRef(null); // 비밀번호 참조
 
     // 입력값이 변경될 때마다 자동으로 상태를 반영
     const handleChange = (e) => {

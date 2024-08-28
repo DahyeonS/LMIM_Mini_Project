@@ -4,31 +4,47 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import service from '../service';
 
+function useCsrfToken() {
+    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
+
+    // 바로 실행
+    useEffect(() => {
+        if (localStorage.getItem('token') === null) return;
+        service.getCsrfToken().then(
+            (res) => {setCsrfToken(res.data.csrf_token);}
+        )
+    }, []) // 한 번만 실행
+
+    return [csrfToken];
+}
+
+function useIsChecked() {
+    const [isChecked, setIsChecked] = useState(false); // 비밀번호 확인 여부 반영
+
+    useEffect(() => {
+        if (localStorage.getItem('token') === null) return;
+        setIsChecked(false);
+    }, [])
+
+    return [isChecked, setIsChecked];
+}
+
 export default function Update() {
     // 라우팅 부분
     const navigate = useNavigate();
     
     // 입력값 처리 부분
-    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
+    const [csrfToken] = useCsrfToken();
+    const [isChecked, setIsChecked] = useIsChecked();
     const [values, setValues] = useState({}) // 입력값 반영
-    const [isChecked, setIsChecked] = useState(false); // 비밀번호 확인 여부 반영
     const [password, setPassword] = useState('') // 비밀번호 입력값 반영
     const passwordFocus = useRef(null); // 비밀번호 확인 참조
     const idFocus = useRef(null); // 아이디 참조
     const emailFocus = useRef(null) // 이메일 참조
 
-    // 바로 실행
     useEffect(() => {
-        if (localStorage.getItem('token') === null) {
-            navigate('../');
-        } else {
-            service.getCsrfToken().then(
-                (res) => {setCsrfToken(res.data.csrf_token);}
-            )
-    
-            setIsChecked(false);
-        }
-    }, [navigate]) // 한 번만 실행
+        if (localStorage.getItem('token') === null) navigate('../');
+    }, [navigate])
 
     // 입력값이 변경될 때마다 자동으로 상태를 반영
     const handleChange = (e) => {

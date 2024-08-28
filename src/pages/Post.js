@@ -4,20 +4,26 @@ import { useEffect, useState, Fragment } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import service from '../service';
 
-export default function Post() {
-    // 출력값 반영
+// 저장된 데이터 로드
+function useData() {
     const location = useLocation(); // 현재 페이지 위치 추출
     const [data, setData] = useState({}); // 불러온 데이터 관리
 
-    // 저장된 데이터 로드
     useEffect(() => { // 페이지 로드시 실행
         const queryParams = new URLSearchParams(location.search);
         const page = queryParams.get('page');
 
         service.getPost(page).then(
-            (res) => {setData(res.data); }
+            (res) => {setData(res.data);}
         )
-    }, [location.search])
+    }, [location.search]) // 주소가 변경될 때마다 실행
+
+    return [data];
+}
+
+export default function Post() {
+    // 출력값 반영
+    const [data] = useData();
 
     // 화면 출력 부분
     return (
@@ -26,16 +32,16 @@ export default function Post() {
             {Array.isArray(data.items) ? (
                 <div className='py-3'>
                     {data.items.map((item) => (
-                        <Link className='text-dark' to={'/view'} state={{idx:item.idx}}>
-                            <div key={item.idx} className='row g-3 my-3 border-bottom'>
-                                    <div className='col-10 float-left'>
+                        <Link key={item.idx} className='text-dark' to={'/view'} state={{idx:item.idx}}>
+                            <div className='row g-3 my-3 border-bottom'>
+                                    <div className='col-9 float-left'>
                                         <h2 className='mb-5'>{(item.title.length <= 30) ? (item.title) : (item.title.substring(0, 30) + '...')}</h2>
                                         <h4 className='mt-5'>{(item.content.length <= 50) ? (item.content) : (item.content.substring(0, 50) + '...')}</h4>
                                     </div>
                                     {(item.photo) ? (
-                                        <div className='col-2 float-right'><img src={`./post/load_image?type=uploads&name=${item.photo.split(', ')[0]}`} alt={item.photo.split(', ')[0]} width='300px' height='200px'/></div>
+                                        <div className='col-3 float-right'><img src={`./post/load_image?type=uploads&name=${item.photo.split(', ')[0]}`} alt={item.photo.split(', ')[0]} width='300px' height='200px'/></div>
                                     ) : (
-                                        <div className='col-2 float-right'><img src={'./post/load_image?type=static&name=empty_image'} alt='empty'></img></div>
+                                        <div className='col-3 float-right'><img src={'./post/load_image?type=static&name=empty_image'} alt='empty'></img></div>
                                     )}
                             </div>
                         </Link>

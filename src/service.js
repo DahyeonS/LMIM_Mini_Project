@@ -50,7 +50,11 @@ const loadImage = (type, name) => {
 }
 
 const loadPost = (idx) => {
-    return axios.get(API.POSTSELECT, {idx})
+    return axios.get(API.POSTSELECT, {params: {idx}})
+}
+
+const loadUpdatePost = (idx) => {
+    return axios.get(API.POSTUPDATE, {params: {idx}})
 }
 
 const updatePost = (values, csrfToken) => {
@@ -101,6 +105,7 @@ const service = {
     createPost,
     uploadImage,
     loadImage,
+    loadUpdatePost,
     updatePost,
     deletePost,
 

@@ -4,47 +4,78 @@ import { useState, useRef, useEffect, Fragment } from 'react';
 import service from '../service';
 import { Link, useLocation } from 'react-router-dom';
 
-export default function Board() {
-    // 출력값 처리 부분
-    const location = useLocation(); // 현재 페이지 위치 추출
+// 저장된 데이터 로드
+function useData() {
     const [data, setData] = useState({}); // 불러온 데이터 상태 관리
-    
-    // 입력값 처리 부분
-    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
-    const [values, setValues] = useState(''); // 입력값 반영
-    const [password, setPassword] = useState({}); // 비밀번호 입력값 반영
-    const [showPasswordInput, setShowPasswordInput] = useState(null); // 비밀번호 입력 필드
-    const [isDisabled, setIsDisabled] = useState(false);
+    const location = useLocation(); // 현재 페이지 위치 추출
 
-    const inputNameFocus = useRef(null); // 유저명 참조
-    const inputPwFocus = useRef(null); // 비밀번호 참조
-    const inputContentFocus = useRef(null); // 내용 참조
-    const inputDeletePwFocus = useRef(null); // 방명록 삭제 비밀번호 참조
-
-    // 저장된 데이터 로드
     useEffect(() => { // 페이지 로드시 실행
         const queryParams = new URLSearchParams(location.search); // 주소창 문자열 처리
         const page = queryParams.get('page'); // 주소창 파라미터 추출
-
-        if (localStorage.getItem('token') !== null) {
-            setIsDisabled(true);
-            setValues((prevValues) => ({ // values의 값을 갱신
-                ...prevValues, // 이전에 입력된 값을 복사
-                username: '관리자',
-                password: 'admin'
-            }))
-        }
-        else setIsDisabled(false);
-
-        // CSRF 토큰
-        service.getCsrfToken().then(
-            (res) => {setCsrfToken(res.data.csrf_token);}
-        )
 
         service.getBoard(page).then( // 플라스크에서 데이터를 가져옴
             (res) => {setData(res.data);} // 응답받은 값을 data에 저장
         )
     }, [location.search]) // 주소가 변경될 때마다 실행
+
+    return [data];
+}
+
+function useCsrfToken() {
+    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
+
+    useEffect(() => {
+        // CSRF 토큰
+        service.getCsrfToken().then(
+            (res) => {setCsrfToken(res.data.csrf_token);}
+        )
+    }, []) // 한 번만 실행
+
+    return [csrfToken];
+}
+
+function useValues() {
+    const [values, setValues] = useState(''); // 입력값 반영
+
+    useEffect(() => {
+        if (localStorage.getItem('token') === null) return;
+    
+        setValues((prevValues) => ({ // values의 값을 갱신
+            ...prevValues, // 이전에 입력된 값을 복사
+            username: '관리자',
+            password: 'admin'
+        }))
+    }, [])
+
+    return [values, setValues];
+}
+
+function useIsDisabled() {
+    const [isDisabled, setIsDisabled] = useState(false);
+
+    useEffect(() => {
+        if (localStorage.getItem('token') !== null) setIsDisabled(true);
+        else setIsDisabled(false);
+    }, [])
+
+    return [isDisabled];
+}
+
+export default function Board() {
+    // 출력값 처리 부분
+    const [data] = useData();
+    
+    // 입력값 처리 부분
+    const [csrfToken] = useCsrfToken();
+    const [values, setValues] = useValues();
+    const [isDisabled] = useIsDisabled();
+    const [password, setPassword] = useState({}); // 비밀번호 입력값 반영
+    const [showPasswordInput, setShowPasswordInput] = useState(null); // 비밀번호 입력 필드
+
+    const inputNameFocus = useRef(null); // 유저명 참조
+    const inputPwFocus = useRef(null); // 비밀번호 참조
+    const inputContentFocus = useRef(null); // 내용 참조
+    const inputDeletePwFocus = useRef(null); // 방명록 삭제 비밀번호 참조
 
     // 방명록 입력값이 변경될 때마다 자동으로 상태를 반영
     const handleChange = (e) => {
