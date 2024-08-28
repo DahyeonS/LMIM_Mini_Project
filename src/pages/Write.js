@@ -14,6 +14,12 @@ import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import Prism from 'prismjs';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
+function useLoginCheck(navigate) {
+    useEffect(() => {
+        if (localStorage.getItem('token') === null) navigate('../');
+    }, [navigate])
+}
+
 function useTitle(index) {
     const [title, setTitle] = useState('');
     
@@ -60,6 +66,7 @@ function useCsrfToken() {
 export default function Write() {
     // 라우팅 부분
     const navigate = useNavigate();
+    useLoginCheck(navigate);
 
     // 출력값 처리 부분
     const location = useLocation(null); // 현재 페이지 위치 추출
@@ -71,10 +78,6 @@ export default function Write() {
     const csrfRef = useCsrfToken();
     const titleRef = useRef(null); // 제목 참조
     const editorRef = useRef(null); // 에디터 참조
-
-    useEffect(() => {
-        if (localStorage.getItem('token') === null) navigate('../');
-    }, [navigate])
 
     // 제목 입력값 반영
     const handleTitleChange = (e) => {

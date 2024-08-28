@@ -4,6 +4,12 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import service from '../service';
 
+function useLoginCheck(navigate) {
+    useEffect(() => {
+        if (localStorage.getItem('token') === null) navigate('../');
+    }, [navigate])
+}
+
 function useCsrfToken() {
     const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
 
@@ -32,7 +38,8 @@ function useIsChecked() {
 export default function Update() {
     // 라우팅 부분
     const navigate = useNavigate();
-    
+    useLoginCheck(navigate);
+
     // 입력값 처리 부분
     const [csrfToken] = useCsrfToken();
     const [isChecked, setIsChecked] = useIsChecked();
@@ -41,10 +48,6 @@ export default function Update() {
     const passwordFocus = useRef(null); // 비밀번호 확인 참조
     const idFocus = useRef(null); // 아이디 참조
     const emailFocus = useRef(null) // 이메일 참조
-
-    useEffect(() => {
-        if (localStorage.getItem('token') === null) navigate('../');
-    }, [navigate])
 
     // 입력값이 변경될 때마다 자동으로 상태를 반영
     const handleChange = (e) => {
