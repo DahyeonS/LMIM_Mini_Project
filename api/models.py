@@ -8,6 +8,7 @@ class Member(db.Model) :
 
 class Post(db.Model) :
     idx = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
     photo = db.Column(db.String(500))
     content = db.Column(db.String(2000), nullable=False)
     postdate = db.Column(db.DateTime(), nullable=False)

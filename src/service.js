@@ -36,8 +36,8 @@ const getPost = (page) => {
     return axios.get(API.POSTLOAD, {params: {page}})
 }
 
-const createPost = (content, csrfToken) => {
-    return axios.post(API.POSTINSERT, content, {headers:{'X-CSRFToken':csrfToken}})
+const createPost = (values, csrfToken) => {
+    return axios.post(API.POSTINSERT, values, {headers:{'X-CSRFToken':csrfToken}})
 }
 
 const uploadImage = (formData, csrfToken) => {
@@ -50,15 +50,15 @@ const loadImage = (type, name) => {
 }
 
 const loadPost = (idx) => {
-
+    return axios.get(API.POSTSELECT, {idx})
 }
 
-const updatePost = () => {
-    
+const updatePost = (values, csrfToken) => {
+    return axios.post(API.POSTUPDATE, values, {headers:{'X-CSRFToken':csrfToken}})
 }
 
-const deletePost = (idx) => {
-    return axios.post(API.POSTDELETE, {idx})
+const deletePost = (idx, csrfToken) => {
+    return axios.post(API.POSTDELETE, {idx}, {headers:{'X-CSRFToken':csrfToken}})
 }
 
 // 방명록

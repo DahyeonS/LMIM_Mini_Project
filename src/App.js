@@ -12,10 +12,11 @@ import Write from './pages/Write';
 import View from './pages/View';
 import Board from './pages/Board';
 import Contact from './pages/Contact'
+import { Fragment } from 'react';
 
 export default function App() {
   return (
-    <>
+    <Fragment>
       <Header/>
       <main className='main'>
         <Routes>
@@ -33,6 +34,6 @@ export default function App() {
         </Routes>
       </main>
       <Footer/>
-    </>
+    </Fragment>
   );
 }
