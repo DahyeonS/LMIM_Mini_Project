@@ -37,14 +37,12 @@ function useTitle(index) {
 }
 
 function useEditorData(index) {
-    const [editorData, setEditorData] = useState(''); // 내용 참조
+    const [editorData, setEditorData] = useState(''); // 내용 반영
 
     useEffect(() => {
         if (index === 0) return;
         service.loadUpdatePost(index).then(
-            (res) => {
-                setEditorData(res.data.content);
-            }
+            (res) => {setEditorData(res.data.content);}
         )
     }, [index])
 
@@ -56,11 +54,23 @@ function useCsrfToken() {
 
     useEffect(() => {
         service.getCsrfToken().then(
-            (res) => {csrfRef.current = res.data.csrf_token}
+            (res) => {csrfRef.current = res.data.csrf_token;}
         )
     }, [])
 
     return csrfRef;
+}
+
+function useEditorRef(editorData) {
+    const editorRef = useRef(null); // 에디터 참조
+
+    useEffect(() => {
+        if (!editorData) return;
+        editorRef.current.getInstance().setHTML(editorData); // 에디터 데이터 설정
+    }, [editorData]);
+
+    return editorRef;
+
 }
 
 export default function Write() {
@@ -70,14 +80,14 @@ export default function Write() {
 
     // 출력값 처리 부분
     const location = useLocation(null); // 현재 페이지 위치 추출
-    const index = (location.state !== null) ? (location.state.idx) : 0; // 현제 페이지 번호 추출
+    const index = location.state ? location.state.idx : 0; // 현제 페이지 번호 추출
 
     // 입력값 처리 부분
     const [title, setTitle] = useTitle(index);
     const [editorData, setEditorData] = useEditorData(index);
     const csrfRef = useCsrfToken();
     const titleRef = useRef(null); // 제목 참조
-    const editorRef = useRef(null); // 에디터 참조
+    const editorRef = useEditorRef(editorData);
 
     // 제목 입력값 반영
     const handleTitleChange = (e) => {
@@ -124,21 +134,46 @@ export default function Write() {
             }
         )
     }
+    
+    // 수정 처리 함수
+    const editorUpdate = async(e) => {
+        e.preventDefault();
+        const rawDataUpdate = editorData.replace('<p>', '').replace('</p>', '').replace('<br>', '');
+    
+        if (!editorData || !rawDataUpdate || !title) {
+            if (!title) {
+                alert('제목을 입력하세요.');
+                titleRef.current.focus();
+            } else {
+                alert('내용을 입력하세요.');
+            }
+            return false
+        }
+        
+        await service.updatePost({idx:index, title, content:editorData}, csrfRef.current).then(
+            (res) => {
+                if (res.data.rs === 1) {
+                    alert('게시물이 수정되었습니다.');
+                    navigate('/post')
+                }
+            }
+        )
+    }
 
     // 화면 출력 부분
     return (
         <div className='container-fluid container-xl'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>글쓰기</h1>
-            <input className='form-control mb-4' placeholder='제목을 입력하세요.' ref={titleRef} name='title' onChange={handleTitleChange} value={(title) ? (title) : ''}></input>
+            <input className='form-control mb-4' placeholder='제목을 입력하세요.' ref={titleRef} name='title' onChange={handleTitleChange} value={title || ''}></input>
             <Editor previewStyle='vertical' initialEditType='wysiwyg' hooks={{addImageBlobHook: onUploadImage}}
             toolbarItems = {[['heading', 'bold', 'italic', 'strike'], ['hr', 'quote'], ['indent', 'outdent'],
-                ['ul', 'ol', 'task'], ['image', 'link', 'code', 'codeblock']]} initialValue={(editorData) ? (editorData) : ('')}
+                ['ul', 'ol', 'task'], ['image', 'link', 'code', 'codeblock']]} initialValue={editorData} placeholder={''}
             hideModeSwitch={true} onChange={() => {setEditorData(editorRef.current.getInstance().getHTML());}}
             ref={editorRef} plugins={[colorSyntax, [codeSyntaxHighlight, {highlighter: Prism }]]} language='ko-KR'/>
             {(index > 0) ? (
-                <button className='btn btn-secondary mt-4'>수정하기</button>
+                <button onClick={editorUpdate} className='btn btn-secondary mt-4'>수정하기</button>
             ) : (
-            <button onClick={editorSubmit} className='btn btn-secondary mt-4'>작성하기</button>
+                <button onClick={editorSubmit} className='btn btn-secondary mt-4'>작성하기</button>
             )}
         </div>
     )

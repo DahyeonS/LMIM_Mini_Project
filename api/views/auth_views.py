@@ -52,11 +52,11 @@ def update() :
         data = request.get_json()
 
         if data.get('pw') :
-            update = {'id':data.get('id'), 'pw':generate_password_hash(data.get('pw')), 'email':data.get('email')}
+            a_update = {'id':data.get('id'), 'pw':generate_password_hash(data.get('pw')), 'email':data.get('email')}
         else :
-            update = {'id':data.get('id'), 'email':data.get('email')}
+            a_update = {'id':data.get('id'), 'email':data.get('email')}
 
-        db.session.query(Member).filter(Member.idx==1).update(update)
+        db.session.query(Member).filter(Member.idx==1).update(a_update)
         db.session.commit()
 
         return jsonify({'rs':1})

@@ -12,6 +12,7 @@ class Post(db.Model) :
     photo = db.Column(db.String(500))
     content = db.Column(db.String(2000), nullable=False)
     postdate = db.Column(db.DateTime(), nullable=False)
+    modified_date = db.Column(db.DateTime())
 
 class Memo(db.Model) :
     idx = db.Column(db.Integer, primary_key=True)

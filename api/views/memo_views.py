@@ -11,7 +11,8 @@ def load() :
     page = request.args.get('page', type=int, default=1)
     memos = Memo.query.order_by(Memo.postdate.desc()).paginate(page=page, per_page=10)
 
-    data = [{'idx':m.idx, 'username':m.username, 'content':m.content} for m in memos]
+    data = [{'idx':m.idx, 'username':m.username, 'content':m.content,
+            'postdate':m.postdate.strftime('%Y년 %m월 %d일 %I:%M %p')} for m in memos]
     result = {
         'items':data, 'hasPrev':memos.has_prev, 'hasNext':memos.has_next, 'page':page,
         'iterPages':list(memos.iter_pages()), 'prevNum':memos.prev_num, 'nextNum':memos.next_num

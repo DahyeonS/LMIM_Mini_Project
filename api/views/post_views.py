@@ -17,7 +17,10 @@ def load() :
     page = request.args.get('page', type=int, default=1)
     posts = Post.query.order_by(Post.postdate.desc()).paginate(page=page, per_page=10)
     
-    data = [{'idx':p.idx, 'title':p.title, 'content':html_parse(p.content), 'photo':p.photo} for p in posts]
+    data = [{'idx':p.idx, 'title':p.title, 'content':html_parse(p.content),
+            'photo':p.photo, 'postdate':p.postdate.strftime('%Y년 %m월 %d일 %I:%M %p'),
+            'modified_date':p.modified_date.strftime('%Y년 %m월 %d일 %I:%M %p') if p.modified_date else p.modified_date}
+            for p in posts]
     result = {
         'items':data, 'hasPrev':posts.has_prev, 'hasNext':posts.has_next, 'page':page,
         'iterPages':list(posts.iter_pages()), 'prevNum':posts.prev_num, 'nextNum':posts.next_num
@@ -40,7 +43,7 @@ def insert() :
         for f in os.scandir(UPLOAD_FOLDER + '/temp') :
             os.remove(f.path)
 
-        content.replace('<img src="./post/load_image?type=temp', '<img src="./post/load_image?type=uploads')
+        content = content.replace('<img src="./post/load_image?type=temp', '<img src="./post/load_image?type=uploads')
         post = Post(title=title, content=content, photo=', '.join(files), postdate=datetime.now())
     else :
         post = Post(title=title, content=content, postdate=datetime.now())
@@ -72,12 +75,40 @@ def load_image() :
 def select() :
     idx = request.args.get('idx', type=int)
     result = Post.query.get(idx)
-    return jsonify({'title':result.title, 'content':result.content, 'photo':result.photo})
+    return jsonify({'title':result.title, 'content':result.content, 'photo':result.photo, 'postdate':result.postdate,
+                    'modified_date':result.modified_date.strftime('%Y년 %m월 %d일 %I:%M %p') if result.modified_date else result.modified_date})
 
 @bp.route('/update', methods=['GET', 'POST'])
 def update() :
     if request.method == 'POST' :
-        return jsonify({'rs':0})
+        data = request.get_json()
+        idx = data.get('idx')
+        title = data.get('title')
+        content = data.get('content')
+
+        url = re.findall(r'<img src="([^"]+)"', content)
+        new_files = [u.replace('./post/load_image?type=temp&amp;name=', '') for u in url]
+        files = [u.replace('./post/load_image?type=uploads&amp;name=', '') for u in url]
+
+        prev_photo = Post.query.get(idx).photo
+
+        if prev_photo and files :
+            if not prev_photo.split(', ') == files :
+                for p in prev_photo.split(', ') :
+                    if p not in files :
+                        os.remove(f'{UPLOAD_FOLDER}/uploads/{p}')
+
+        if files or new_files :
+            content = content.replace('<img src="./post/load_image?type=temp', '<img src="./post/load_image?type=uploads')
+            photos = [u.replace('./post/load_image?type=uploads&amp;name=', '') for u in url]
+            p_update = {'title':title, 'content':content, 'photo':', '.join(photos), 'modified_date':datetime.now()}
+        else :
+            p_update = {'title':title, 'content':content, 'modified_date':datetime.now()}
+
+        db.session.query(Post).filter(Post.idx==idx).update(p_update)
+        db.session.commit()
+
+        return jsonify({'rs':1})
 
     idx = request.args.get('idx', type=int)
     post = Post.query.get(idx)
