@@ -41,7 +41,7 @@ export default function Post() {
                                     {(item.photo) ? (
                                         <div className='col-3 float-right'><img src={`./post/load_image?type=uploads&name=${item.photo.split(', ')[0]}`} alt={item.photo.split(', ')[0]} width='300px' height='200px'/></div>
                                     ) : (
-                                        <div className='col-3 float-right'><img src={'./post/load_image?type=static&name=empty_image'} alt='empty'></img></div>
+                                        <div className='col-3 float-right'><img src={'./post/load_image?type=static&name=empty_image'} alt='empty'/></div>
                                     )}
                             </div>
                         </Link>

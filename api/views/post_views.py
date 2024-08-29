@@ -56,7 +56,7 @@ def insert() :
 @bp.route('/upload', methods=['POST'])
 def upload() :
     file = request.files['image']
-    file.filename = re.sub('\W', '_', str(datetime.now()).split('.')[0]) + '_' + file.filename
+    file.filename = re.sub('\W', '_', str(datetime.now())[:22]) + '_' + file.filename
     file.save(os.path.join(f'{UPLOAD_FOLDER}/temp', file.filename))
     return jsonify({'type':'temp', 'name':file.filename})
 
@@ -87,20 +87,39 @@ def update() :
         content = data.get('content')
 
         url = re.findall(r'<img src="([^"]+)"', content)
-        new_files = [u.replace('./post/load_image?type=temp&amp;name=', '') for u in url]
-        files = [u.replace('./post/load_image?type=uploads&amp;name=', '') for u in url]
+        new_files = [
+            u.replace('./post/load_image?type=temp&amp;name=', '') for u in url
+            if './post/load_image?type=uploads&amp;name=' not in u
+            ]
+        files = [
+            u.replace('./post/load_image?type=uploads&amp;name=', '') for u in url
+            if './post/load_image?type=temp&amp;name=' not in u
+            ]
 
         prev_photo = Post.query.get(idx).photo
 
+        print(prev_photo.split(', '))
+        print(files)
+        print(new_files)
+        print(datetime.now())
+
         if prev_photo and files :
-            if not prev_photo.split(', ') == files :
+            if prev_photo.split(', ') != files :
                 for p in prev_photo.split(', ') :
                     if p not in files :
                         os.remove(f'{UPLOAD_FOLDER}/uploads/{p}')
 
+        if new_files :
+            for file in new_files :
+                shutil.move(f'{UPLOAD_FOLDER}/temp/{file}', f'{UPLOAD_FOLDER}/uploads/{file}')
+            
+            for f in os.scandir(UPLOAD_FOLDER + '/temp') :
+                os.remove(f.path)
+
         if files or new_files :
             content = content.replace('<img src="./post/load_image?type=temp', '<img src="./post/load_image?type=uploads')
-            photos = [u.replace('./post/load_image?type=uploads&amp;name=', '') for u in url]
+            new_url = re.findall(r'<img src="([^"]+)"', content)
+            photos = [n.replace('./post/load_image?type=uploads&amp;name=', '') for n in new_url]
             p_update = {'title':title, 'content':content, 'photo':', '.join(photos), 'modified_date':datetime.now()}
         else :
             p_update = {'title':title, 'content':content, 'modified_date':datetime.now()}

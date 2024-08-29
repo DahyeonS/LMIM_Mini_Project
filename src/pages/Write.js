@@ -7,7 +7,7 @@ import 'tui-color-picker/dist/tui-color-picker.css';
 import 'prismjs/themes/prism.css';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
 import { Editor } from '@toast-ui/react-editor';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Fragment } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import service from '../service';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
@@ -110,6 +110,16 @@ export default function Write() {
         )
     }
 
+    // 작성 취소
+    const handleCancel = () => {
+        if (window.confirm('정말로 취소하시겠습니까?')) navigate('/post');
+    }
+
+    // 수정 취소
+    const handleUpdateCancel = (index) => {
+        if (window.confirm('정말로 취소하시겠습니까?')) navigate('/view', {state:{idx:index}});
+    }
+
     // 제출 처리 함수
     const editorSubmit = async(e) => {
         e.preventDefault();
@@ -170,11 +180,19 @@ export default function Write() {
                 ['ul', 'ol', 'task'], ['image', 'link', 'code', 'codeblock']]} initialValue={editorData} placeholder={''}
             hideModeSwitch={true} onChange={() => {setEditorData(editorRef.current.getInstance().getHTML());}}
             ref={editorRef} plugins={[colorSyntax, [codeSyntaxHighlight, {highlighter: Prism }]]} language='ko-KR'/>
-            {(index > 0) ? (
-                <button onClick={editorUpdate} className='btn btn-secondary mt-4'>수정하기</button>
-            ) : (
-                <button onClick={editorSubmit} className='btn btn-secondary mt-4'>작성하기</button>
-            )}
+            <div className='mt-4'>
+                {(index > 0) ? (
+                    <Fragment>
+                        <button onClick={editorUpdate} className='btn btn-secondary'>수정하기</button>
+                        <button className='btn btn-secondary ms-2' onClick={() => handleUpdateCancel(index)}>취소</button>
+                    </Fragment>
+                ) : (
+                    <Fragment>
+                        <button onClick={editorSubmit} className='btn btn-secondary'>작성하기</button>
+                        <button className='btn btn-secondary ms-2' onClick={handleCancel}>취소</button>
+                    </Fragment>
+                )}
+            </div>
         </div>
     )
 }
