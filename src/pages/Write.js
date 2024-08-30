@@ -174,7 +174,7 @@ export default function Write() {
 
     // 화면 출력 부분
     return (
-        <div className='container-fluid container-xl'>
+        <section className='container-fluid container-xl'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>글쓰기</h1>
             <input className='form-control mb-4' placeholder='제목을 입력하세요.' ref={titleRef} name='title' onChange={handleTitleChange} value={title || ''}/>
             <Editor previewStyle='vertical' initialEditType='wysiwyg' hooks={{addImageBlobHook: onUploadImage}}
@@ -183,18 +183,18 @@ export default function Write() {
             hideModeSwitch={true} onChange={() => {setEditorData(editorRef.current.getInstance().getHTML());}}
             ref={editorRef} plugins={[colorSyntax, [codeSyntaxHighlight, {highlighter: Prism }]]} language='ko-KR'/>
             <div className='mt-4'>
-                {(index > 0) ? (
+                {index > 0 ? (
                     <Fragment>
-                        <button onClick={editorUpdate} className='btn btn-secondary'>수정하기</button>
-                        <button className='btn btn-secondary ms-2' onClick={() => handleUpdateCancel(index)}>취소</button>
+                        <button onClick={editorUpdate} className='btn btn-primary'>수정하기</button>
+                        <button className='btn btn-primary ms-2' onClick={() => handleUpdateCancel(index)}>취소</button>
                     </Fragment>
                 ) : (
                     <Fragment>
-                        <button onClick={editorSubmit} className='btn btn-secondary'>작성하기</button>
-                        <button className='btn btn-secondary ms-2' onClick={handleCancel}>취소</button>
+                        <button onClick={editorSubmit} className='btn btn-primary'>작성하기</button>
+                        <button className='btn btn-primary ms-2' onClick={handleCancel}>취소</button>
                     </Fragment>
                 )}
             </div>
-        </div>
+        </section>
     )
 }

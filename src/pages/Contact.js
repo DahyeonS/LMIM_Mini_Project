@@ -53,7 +53,7 @@ export default function Contact() {
 
             return false;
         }
-
+        
         service.contact(values, csrfToken).then(
             (res) => {
                 if (res.data.rs === 1) {
@@ -66,15 +66,27 @@ export default function Contact() {
 
     // 화면 출력 부분
     return (
-        <div className="container-fluid container-xl">
+        <section className='container-fluid container-xl px-5'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>문의</h1>
             <form onSubmit={handleSubmit}>
-                <input type='text' className='form-control mb-3' name='name' placeholder='Name' onChange={handleChange} ref={nameRef}/>
-                <input type='email' className='form-control mb-3' name='email' placeholder='E-mail' onChange={handleChange} ref={emailRef}/>
-                <input type='text' className='form-control mb-3' name='phone' placeholder='Phone Number' onChange={handleChange}/>
-                <input type='text' className='form-control mb-3 py-5' name='content' placeholder='Message' onChange={handleChange} ref={contentRef}/>
-                <input type='submit' className='btn btn-secondary w-100' value={'전송'}/>
+                <div className='mb-3'>
+                    <label htmlFor='name' className='mb-1'>Name</label>
+                    <input type='text' className='form-control' id='name' name='name' onChange={handleChange} ref={nameRef}/>
+                </div>
+                <div className='mb-3'>
+                    <label htmlFor='email' className='mb-1'>E-mail</label>
+                    <input type='email' className='form-control' id='email' name='email' onChange={handleChange} ref={emailRef}/>
+                </div>
+                <div className='mb-3'>
+                    <label htmlFor='phone' className='mb-1'>Phone Number</label>
+                    <input type='text' className='form-control' id='phone' name='phone' onChange={handleChange}/>
+                </div>
+                <div className='mb-3'>
+                    <label htmlFor='content' className='mb-1'>Message</label>
+                    <textarea type='text' className='form-control py-5' id='content' name='content' onChange={handleChange} ref={contentRef}/>
+                </div>
+                <input type='submit' className='btn btn-primary w-100' value={'전송'}/>
             </form>
-        </div>
+        </section>
     );
 }

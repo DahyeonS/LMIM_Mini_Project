@@ -71,7 +71,7 @@ export default function Login() {
 
     // 화면 출력 부분
     return (
-        <div className='container-fluid container-xl'>
+        <section className='container-fluid container-xl'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>로그인</h1>
             <form onSubmit={handleSubmit}>
                 <div className='mb-3'>
@@ -83,9 +83,9 @@ export default function Login() {
                     <input type='password' id='pw' name='pw' className='form-control' ref={pwFocus} onChange={handleChange}/>
                 </div>
                 <div>
-                    <input type='submit' className='btn btn-secondary w-100 py-2' value={'로그인'}/>
+                    <input type='submit' className='btn btn-primary w-100 py-2' value={'로그인'}/>
                 </div>
             </form>
-        </div>
+        </section>
     );
 }

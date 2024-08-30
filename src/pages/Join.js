@@ -94,9 +94,9 @@ export default function Join() {
 
     // 화면 출력 부분
     return (
-        <div className='container-fluid container-xl'>
+        <section className='container-fluid container-xl'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>회원가입</h1>
-            {(data.rs < 1) ? (
+            {data.rs < 1 ? (
                 <form onSubmit={handleSubmit}>
                     <div className='mb-3'>
                         <label htmlFor='id'>아이디</label>
@@ -115,12 +115,12 @@ export default function Join() {
                         <input type='email' id='email' className='form-control' name='email' onChange={handleChange} ref={emailFocus}/>
                     </div>
                     <div>
-                        <input type='submit' className='btn btn-secondary w-100 py-2' value={'가입하기'}/>
+                        <input type='submit' className='btn btn-primary w-100 py-2' value={'가입하기'}/>
                     </div>
                 </form>
             ) : (
                 <h3>가입할 수 없습니다.</h3>
             )}
-        </div>
+        </section>
     );
 }

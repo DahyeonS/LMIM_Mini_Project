@@ -59,25 +59,25 @@ export default function View() {
 
     // 화면 출력 부분
     return (
-        <div className="container-fluid container-xl">
+        <section className="container-fluid container-xl">
             <h1 className='ms-3 mt-3 border-bottom'>게시물 보기</h1>
-            {(index > 0) ? (
+            {index > 0 ? (
                 <Fragment>
                     <h3 className='mt-4 mb-5'>{data.title}</h3>
                     <Viewer initialValue={data.content} key={data.content}/>
                     {(localStorage.getItem('token') !== null) ? (
                         <div className='mt-5'>
-                            <Link className='btn btn-secondary' to={'/write'} state={{idx:index}}>수정하기</Link>
-                            <button className='btn btn-secondary ms-2' onClick={() => handleDelete(index)}>삭제하기</button>
-                            <Link className='btn btn-secondary float-right ms-2' to={'/post'}>목록보기</Link>
+                            <Link className='btn btn-primary' to={'/write'} state={{idx:index}}>수정하기</Link>
+                            <button className='btn btn-primary ms-2' onClick={() => handleDelete(index)}>삭제하기</button>
+                            <Link className='btn btn-primary float-right ms-2' to={'/post'}>목록보기</Link>
                         </div>
                     ) : (
-                        <Link className='btn btn-secondary float-right' to={'/post'}>목록보기</Link>
+                        <Link className='btn btn-primary float-right' to={'/post'}>목록보기</Link>
                     )}
                 </Fragment>
             ) : (
                 <h3 className='mt-4'>유효하지 않은 페이지입니다.</h3>
             )}
-        </div>
+        </section>
     );
 }

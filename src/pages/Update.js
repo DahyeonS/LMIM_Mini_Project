@@ -131,9 +131,9 @@ export default function Update() {
 
     // 화면 출력 부분
     return (
-        <div className='container-fluid container-xl'>
+        <section className='container-fluid container-xl'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>회원정보 수정</h1>
-            {(isChecked) ? (
+            {isChecked ? (
                 <form onSubmit={handleSubmit}>
                     <div className='mb-3'>
                         <label htmlFor='id'>아이디</label>
@@ -148,7 +148,7 @@ export default function Update() {
                         <input type='email' id='email' className='form-control' name='email' onChange={handleChange} value={values.email} ref={emailFocus}/>
                     </div>
                     <div>
-                        <input type='submit' className='btn btn-secondary w-100 py-2' value={'수정하기'}/>
+                        <input type='submit' className='btn btn-primary w-100 py-2' value={'수정하기'}/>
                     </div>
                 </form>
             ) : (
@@ -158,10 +158,10 @@ export default function Update() {
                         <input type='password' id='password' name='password' className='form-control' onChange={handlePasswordChange} ref={passwordFocus}/>
                     </div>
                     <div>
-                        <input type='submit' className='btn btn-secondary w-100 py-2' value={'제출'}/>
+                        <input type='submit' className='btn btn-primary w-100 py-2' value={'제출'}/>
                     </div>
                 </form>
             )}
-        </div>
+        </section>
     );
 }

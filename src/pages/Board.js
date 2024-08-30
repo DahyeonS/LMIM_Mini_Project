@@ -164,8 +164,10 @@ export default function Board() {
 
     // 화면 출력 부분
     return (
-        <div className='container-fluid container-xl'>
-            <h1 className='pb-2 ms-3 my-3 border-bottom'>방명록</h1>
+        <section className='container-fluid container-xl px-5'>
+            <div className='py-5 mb-5 border-bottom'>
+                <h1 className='ms-5'>방명록</h1>
+            </div>
             <form className='row g-2' onSubmit={handleSubmit}>
                 <div className='col-6'>
                     <input type='text' className='form-control' name='username' placeholder='Name' onChange={handleChange} ref={inputNameFocus} disabled={isDisabled}/>
@@ -178,7 +180,7 @@ export default function Board() {
                 </div>
                 <div className='col-10'/>
                 <div className='col-2'>
-                    <input type='submit' className='btn btn-secondary w-100 py-2' value={'작성'}/>
+                    <input type='submit' className='btn btn-primary w-100 py-2' value={'작성'}/>
                 </div>
             </form>
             {Array.isArray(data.items) ? (
@@ -186,21 +188,21 @@ export default function Board() {
                     {data.items.map((item) => (
                         <div key={item.idx} className='row g-3 my-3'>
                             <div className='col-3 mt-4'>{item.username}</div>
-                            {(item.content.length <= 30) ? (
+                            {item.content.length <= 30 ? (
                                 <div className='col-3 mt-4'>{item.content}</div>
                             ) : (
                                 <div className='col-3 mt-4' dangerouslySetInnerHTML={{ __html: item.content.match(/.{1,30}/g).join('<br />') }} />
                             )}
                             <div className='col-3 mt-4'>{item.postdate}</div>
                             {/* 삭제 버튼 */}
-                            {(localStorage.getItem('token') !== null) ? (
+                            {localStorage.getItem('token') !== null ?
                                 <Fragment>
                                     <div className='col-2'/>
                                     <div className='col-1 px-3'>
-                                        <button onClick={() => handleDeleteAdmin(item.idx)} className='btn btn-secondary'>삭제</button>
+                                        <button onClick={() => handleDeleteAdmin(item.idx)} className='btn btn-primary'>삭제</button>
                                     </div>
                                 </Fragment>
-                            ) : (
+                            : (
                                 <Fragment>
                                     {showPasswordInput === item.idx ? ( /* 삭제할 방명록의 인덱스 값과 일치할 경우 */
                                         <Fragment key={`memo-fragment-${item.idx}`}>
@@ -208,22 +210,20 @@ export default function Board() {
                                                 <input type='password' onChange={handlePasswordChange} className='form-control' placeholder='비밀번호 확인' ref={inputDeletePwFocus}/>
                                             </div>
                                             <div className='col-1'>
-                                                <button onClick={() => handleDelete(item.idx)} className='btn btn-secondary ms-2'>삭제</button>
+                                                <button onClick={() => handleDelete(item.idx)} className='btn btn-primary ms-2'>삭제</button>
                                             </div>
                                         </Fragment>
                                     ) : (
                                         <Fragment key={`memo-fragment-${item.idx}`}>
-                                            {(item.username !== '관리자') ? (
+                                            {item.username !== '관리자' ? (
                                                 <Fragment>
                                                     <div className='col-2'/>
                                                     <div className='col-1 px-3'>
-                                                        <button className='btn btn-secondary' onClick={() => handleShowPasswordInput(item.idx)}>삭제</button>
+                                                        <button className='btn btn-primary' onClick={() => handleShowPasswordInput(item.idx)}>삭제</button>
                                                     </div>
                                                 </Fragment>
                                             ) : (
-                                                <Fragment>
-                                                    <div className='col-3'/>
-                                                </Fragment>
+                                                <div className='col-3'/>
                                             )}
                                         </Fragment>
                                     )}
@@ -233,7 +233,7 @@ export default function Board() {
                     ))}
                     {/* 페이징 */}
                     <ul className='pagination justify-content-center py-5'>
-                        {(data.hasPrev) ? (
+                        {data.hasPrev ? (
                             <li className='page-item'>
                                 <Link className='page-link text-secondary' to={`?page=${data.prevNum}`}>이전</Link>
                             </li>
@@ -244,15 +244,15 @@ export default function Board() {
                         )}
                         {data.iterPages.map((pageNum) => (
                             <Fragment key={`paging-${pageNum}`}>
-                            {(pageNum !== null) ? (
+                            {pageNum !== null ? (
                                 <Fragment key={`paging-fragment-${pageNum}`}>
-                                {(pageNum !== data.page) ? (
+                                {pageNum !== data.page ? (
                                     <li className='page-item' >
                                         <Link className='page-link text-secondary' to={`?page=${pageNum}`}>{pageNum}</Link>
                                     </li>
                                 ) : (
                                     <li className='page-item active' aria-current='page'>
-                                        <Link className='page-link bg-secondary' tabIndex={-1} to={()=>false} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
+                                        <Link className='page-link' style={{backgroundColor:'rgba(119, 182, 202, 0.9)', border:'rgba(119, 182, 202, 0.9)'}} tabIndex={-1} to={()=>false} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
                                     </li>                            
                                 )}
                                 </Fragment>
@@ -263,7 +263,7 @@ export default function Board() {
                             )}
                             </Fragment>
                         ))}
-                        {(data.hasNext) ? (
+                        {data.hasNext ? (
                             <li>
                                 <Link className='page-link text-secondary' to={`?page=${data.nextNum}`}>다음</Link>
                             </li>
@@ -278,6 +278,6 @@ export default function Board() {
                 // 로딩 대기 문구
                 <h4 className='text-center fw-bold my-5'>데이터가 아직 로드되지 않았습니다.</h4>
             )}
-        </div>
+        </section>
     );
 }

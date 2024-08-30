@@ -12,6 +12,16 @@ code {
     monospace;
 }
 
+.btn-primary {
+  background-color: rgba(119, 182, 202, 0.9) !important;
+  border-color: rgba(119, 182, 202, 0.9) !important;
+}
+
+.btn-primary:hover, .btn-primary:active {
+  background-color: rgba(102, 157, 173, 0.9);
+  border-color: rgba(102, 157, 173, 0.9) !important;
+}
+
 /**
 * Template Name: QuickStart
 * Template URL: https://bootstrapmade.com/quickstart-bootstrap-startup-website-template/
@@ -64,7 +74,8 @@ body {
 }
 
 main {
-  padding: 150px 0;
+  padding: 115px 0 15px 0;
+  background-color: rgba(119, 182, 202, 0.15);
 }
 
 a {
@@ -97,6 +108,10 @@ h6 {
   padding: 20px 0;
   transition: all 0.5s;
   z-index: 997;
+}
+
+.header.scrolled {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .header .logo {
@@ -170,6 +185,10 @@ h6 {
 
   .nav li {
     position: relative;
+  }
+
+  .nav ul li ul {
+    padding-bottom: 0;
   }
 
   .nav a,
@@ -352,6 +371,14 @@ h6 {
   .mobile-nav-active nav>ul {
     display: block;
   }
+}
+
+/*--------------------------------------------------------------
+# Global Section
+--------------------------------------------------------------*/
+
+section {
+  background-color: #fff;
 }
 
 /*--------------------------------------------------------------

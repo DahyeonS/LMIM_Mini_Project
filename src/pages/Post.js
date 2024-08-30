@@ -27,7 +27,7 @@ export default function Post() {
 
     // 화면 출력 부분
     return (
-        <div className='container-fluid container-xl'>
+        <section className='container-fluid container-xl'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>게시판</h1>
             {Array.isArray(data.items) ? (
                 <div className='py-3'>
@@ -48,7 +48,7 @@ export default function Post() {
                     ))}
                     {/* 페이징 */}
                     <ul className='pagination justify-content-center py-5'>
-                        {(data.hasPrev) ? (
+                        {data.hasPrev ? (
                             <li className='page-item'>
                                 <Link className='page-link text-secondary' to={`?page=${data.prevNum}`}>이전</Link>
                             </li>
@@ -59,15 +59,15 @@ export default function Post() {
                         )}
                         {data.iterPages.map((pageNum) => (
                             <Fragment key={`paging-${pageNum}`}>
-                            {(pageNum !== null) ? (
+                            {pageNum !== null ? (
                                 <Fragment key={`paging-fragment-${pageNum}`}>
-                                {(pageNum !== data.page) ? (
+                                {pageNum !== data.page ? (
                                     <li className='page-item' >
                                         <Link className='page-link text-secondary' to={`?page=${pageNum}`}>{pageNum}</Link>
                                     </li>
                                 ) : (
                                     <li className='page-item active' aria-current='page'>
-                                        <Link className='page-link bg-secondary' tabIndex={-1} to={()=>false} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
+                                        <Link className='page-link' style={{backgroundColor:'rgba(119, 182, 202, 0.9)', border:'rgba(119, 182, 202, 0.9)'}} tabIndex={-1} to={()=>false} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
                                     </li>                            
                                 )}
                                 </Fragment>
@@ -78,7 +78,7 @@ export default function Post() {
                             )}
                             </Fragment>
                         ))}
-                        {(data.hasNext) ? (
+                        {data.hasNext ? (
                             <li>
                                 <Link className='page-link text-secondary' to={`?page=${data.nextNum}`}>다음</Link>
                             </li>
@@ -93,11 +93,9 @@ export default function Post() {
                 // 로딩 대기 문구
                 <div className='text-center fw-bold'>데이터가 아직 로드되지 않았습니다.</div>
             )}
-            {(localStorage.getItem('token') !== null) ? (
-                <Link className='btn btn-secondary' to={'/write'}>글쓰기</Link>
-            ) : (
-                <Fragment/>
+            {localStorage.getItem('token') !== null && (
+                <Link className='btn btn-primary' to={'/write'}>글쓰기</Link>
             )}
-        </div>
+        </section>
     );
 }

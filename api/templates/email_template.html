@@ -5,16 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <div style="font-family: sans-serif;">
-        <h2 style="margin-bottom: 20px;">{{name}}님께서 보낸 메시지입니다.</h2>
-        {% if email and phone %}
-            <h3>이메일: {{email}} 전화번호: {{phone}}</h3>
-        {% elif email %}
-            <h3>이메일: {{email}}</h3>
-        {% else %}
-            <h3>전화번호: {{phone}}</h3>
-        {% endif %}
-        <h4>{{content}}</h4>
+    <div style="font-family: sans-serif; width: 800px; padding-bottom: 80px;">
+        <div style="background-color: rgba(127, 255, 212, 0.5); padding: 10px 30px 20px 30px;">
+            <h1 style="text-align: center; margin-bottom: 50px;">{{name}}님께서 보낸 메시지입니다.</h1>
+            {% if email and phone %}
+                <h3>이메일: {{email}}</h3>
+                <h3>전화번호: {{phone}}</h3>
+            {% elif email %}
+                <h3>이메일: {{email}}</h3>
+            {% else %}
+                <h3>전화번호: {{phone}}</h3>
+            {% endif %}
+        </div>
+        <h3><pre>{{content}}</pre></h3>
     </div>
 </body>
 </html>
