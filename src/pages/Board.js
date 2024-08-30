@@ -35,7 +35,7 @@ function useCsrfToken() {
 }
 
 function useValues() {
-    const [values, setValues] = useState(''); // 입력값 반영
+    const [values, setValues] = useState({}); // 입력값 반영
 
     useEffect(() => {
         if (localStorage.getItem('token') === null) return;
@@ -166,19 +166,19 @@ export default function Board() {
     return (
         <div className='container-fluid container-xl'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>방명록</h1>
-            <form className='row g-2' onSubmit={handleSubmit} method='post'>
+            <form className='row g-2' onSubmit={handleSubmit}>
                 <div className='col-6'>
-                    <input type='text' className='form-control' name='username' placeholder='Name' onChange={handleChange} ref={inputNameFocus} disabled={isDisabled}></input>
+                    <input type='text' className='form-control' name='username' placeholder='Name' onChange={handleChange} ref={inputNameFocus} disabled={isDisabled}/>
                 </div>
                 <div className='col-6'>
-                    <input type='password' className='form-control' name='password' placeholder='Password' onChange={handleChange} ref={inputPwFocus} disabled={isDisabled}></input>
+                    <input type='password' className='form-control' name='password' placeholder='Password' onChange={handleChange} ref={inputPwFocus} disabled={isDisabled}/>
                 </div>
                 <div className='col-12'>
-                    <input type='text' className='form-control py-5' name='content' onChange={handleChange} ref={inputContentFocus}></input>
+                    <input type='text' className='form-control py-5' name='content' onChange={handleChange} ref={inputContentFocus}/>
                 </div>
                 <div className='col-10'/>
                 <div className='col-2'>
-                    <input type='submit' className='btn btn-secondary w-100 py-2' value={'작성'}></input>
+                    <input type='submit' className='btn btn-secondary w-100 py-2' value={'작성'}/>
                 </div>
             </form>
             {Array.isArray(data.items) ? (
@@ -205,7 +205,7 @@ export default function Board() {
                                     {showPasswordInput === item.idx ? ( /* 삭제할 방명록의 인덱스 값과 일치할 경우 */
                                         <Fragment key={`memo-fragment-${item.idx}`}>
                                             <div className='col-2'>
-                                                <input type='password' onChange={handlePasswordChange} className='form-control' placeholder='비밀번호 확인' ref={inputDeletePwFocus}></input>
+                                                <input type='password' onChange={handlePasswordChange} className='form-control' placeholder='비밀번호 확인' ref={inputDeletePwFocus}/>
                                             </div>
                                             <div className='col-1'>
                                                 <button onClick={() => handleDelete(item.idx)} className='btn btn-secondary ms-2'>삭제</button>

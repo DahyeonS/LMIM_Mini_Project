@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from flask_jwt_extended import JWTManager
+from flask_mail import Mail
 from sqlalchemy import MetaData
 
 naming_convention = {
@@ -18,9 +19,11 @@ db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate()
 csrf = CSRFProtect()
 jwt = JWTManager()
+mail = Mail()
 
 def create_app() :
     app = Flask(__name__)
+    app.config.from_envvar('APP_CONFIG_FILE') # 설정 불러오기
 
     # CSRF 설정
     csrf.init_app(app)
@@ -30,7 +33,9 @@ def create_app() :
 
     # CORS 설정
     CORS(app, resources=app.config.get('CORS_RESOURCES', {r'/*': {'origins': '*'}}))
-    app.config.from_envvar('APP_CONFIG_FILE')
+
+    # 메일 설정
+    mail.init_app(app)
 
     # ORM
     db.init_app(app)
@@ -41,11 +46,10 @@ def create_app() :
     import models
 
     # Route
-    from views import main_views, auth_views, post_views, memo_views, contact_views
+    from views import main_views, auth_views, post_views, memo_views
     app.register_blueprint(main_views.bp)
     app.register_blueprint(auth_views.bp)
     app.register_blueprint(post_views.bp)
-    app.register_blueprint(contact_views.bp)
     app.register_blueprint(memo_views.bp)
 
     return app

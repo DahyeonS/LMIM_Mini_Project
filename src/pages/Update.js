@@ -45,6 +45,7 @@ export default function Update() {
     const [isChecked, setIsChecked] = useIsChecked();
     const [values, setValues] = useState({}) // 입력값 반영
     const [password, setPassword] = useState('') // 비밀번호 입력값 반영
+
     const passwordFocus = useRef(null); // 비밀번호 확인 참조
     const idFocus = useRef(null); // 아이디 참조
     const emailFocus = useRef(null) // 이메일 참조
@@ -73,10 +74,10 @@ export default function Update() {
 
         if (!values.id || !values.email) {
             if (!values.id) {
-                alert('아이디를 입력하세요.');
+                alert('아이디를 입력해주세요.');
                 idFocus.current.focus();
             } else {
-                alert('이메일을 입력하세요.');
+                alert('이메일을 입력해주세요.');
                 emailFocus.current.focus();
             }
 
@@ -136,28 +137,28 @@ export default function Update() {
                 <form onSubmit={handleSubmit}>
                     <div className='mb-3'>
                         <label htmlFor='id'>아이디</label>
-                        <input type='text' id='id' className='form-control' name='id' onChange={handleChange} value={values.id} ref={idFocus}></input>
+                        <input type='text' id='id' className='form-control' name='id' onChange={handleChange} value={values.id} ref={idFocus}/>
                     </div>
                     <div className='mb-3'>
                         <label htmlFor='pw'>비밀번호</label>
-                        <input type='password' id='pw' className='form-control' name='pw' onChange={handleChange}></input>
+                        <input type='password' id='pw' className='form-control' name='pw' onChange={handleChange}/>
                     </div>
                     <div className='mb-3'>
                         <label htmlFor='email'>이메일</label>
-                        <input type='email' id='email' className='form-control' name='email' onChange={handleChange} value={values.email} ref={emailFocus}></input>
+                        <input type='email' id='email' className='form-control' name='email' onChange={handleChange} value={values.email} ref={emailFocus}/>
                     </div>
                     <div>
-                        <input type='submit' className='btn btn-secondary w-100 py-2' value={'수정하기'}></input>
+                        <input type='submit' className='btn btn-secondary w-100 py-2' value={'수정하기'}/>
                     </div>
                 </form>
             ) : (
                 <form onSubmit={handlePasswordSubmit}>
                     <div className='mb-3'>
                         <label htmlFor='password'>비밀번호 확인</label>
-                        <input type='password' id='password' name='password' className='form-control' onChange={handlePasswordChange} ref={passwordFocus}></input>
+                        <input type='password' id='password' name='password' className='form-control' onChange={handlePasswordChange} ref={passwordFocus}/>
                     </div>
                     <div>
-                        <input type='submit' className='btn btn-secondary w-100 py-2' value={'제출'}></input>
+                        <input type='submit' className='btn btn-secondary w-100 py-2' value={'제출'}/>
                     </div>
                 </form>
             )}

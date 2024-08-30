@@ -1,8 +1,7 @@
 from config.default import *
 from logging.config import dictConfig
-from dotenv import load_dotenv
+from base64 import b64decode
 
-load_dotenv(os.path.join(BASE_DIR, '.env'))
 user = os.getenv('DB_USER') # 사용자 이름
 pw = os.getenv('DB_PASSWORD') # 암호
 url = os.getenv('DB_HOST') # 데이터베이스 주소
@@ -10,8 +9,8 @@ db = os.getenv('DB_NAME') # 데이터베이스 이름
 
 SQLALCHEMY_DATABASE_URI = f'postgresql+psycopg2://{user}:{pw}@{url}/{db}'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-SECRET_KEY = os.getenv('SECRET_KEY') # 시크릿 키
-JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY') # JWT 시크릿 키
+SECRET_KEY = b64decode(os.getenv('SECRET_KEY')) # 시크릿 키
+JWT_SECRET_KEY = b64decode(os.getenv('JWT_SECRET_KEY')) # JWT 시크릿 키
 CORS_RESOURCES = {r'/*': {'origins': ''}} # CORS 허용 주소
 
 dictConfig({

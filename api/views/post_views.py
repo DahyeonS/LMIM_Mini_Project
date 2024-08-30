@@ -98,11 +98,6 @@ def update() :
 
         prev_photo = Post.query.get(idx).photo
 
-        print(prev_photo.split(', '))
-        print(files)
-        print(new_files)
-        print(datetime.now())
-
         if prev_photo and files :
             if prev_photo.split(', ') != files :
                 for p in prev_photo.split(', ') :

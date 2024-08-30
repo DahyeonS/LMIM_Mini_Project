@@ -20,6 +20,7 @@ function useLoginCheck(navigate) {
     }, [navigate])
 }
 
+// 저장된 데이터 로드
 function useTitle(index) {
     const [title, setTitle] = useState('');
     
@@ -85,6 +86,7 @@ export default function Write() {
     // 입력값 처리 부분
     const [title, setTitle] = useTitle(index);
     const [editorData, setEditorData] = useEditorData(index);
+
     const csrfRef = useCsrfToken();
     const titleRef = useRef(null); // 제목 참조
     const editorRef = useEditorRef(editorData);
@@ -127,10 +129,10 @@ export default function Write() {
 
         if (!editorData || !rawData || !title) {
             if (!title) {
-                alert('제목을 입력하세요.');
+                alert('제목을 입력해주세요.');
                 titleRef.current.focus();
             } else {
-                alert('내용을 입력하세요.');
+                alert('내용을 입력해주세요.');
             }
             return false
         }
@@ -174,7 +176,7 @@ export default function Write() {
     return (
         <div className='container-fluid container-xl'>
             <h1 className='pb-2 ms-3 my-3 border-bottom'>글쓰기</h1>
-            <input className='form-control mb-4' placeholder='제목을 입력하세요.' ref={titleRef} name='title' onChange={handleTitleChange} value={title || ''}></input>
+            <input className='form-control mb-4' placeholder='제목을 입력하세요.' ref={titleRef} name='title' onChange={handleTitleChange} value={title || ''}/>
             <Editor previewStyle='vertical' initialEditType='wysiwyg' hooks={{addImageBlobHook: onUploadImage}}
             toolbarItems = {[['heading', 'bold', 'italic', 'strike'], ['hr', 'quote'], ['indent', 'outdent'],
                 ['ul', 'ol', 'task'], ['image', 'link', 'code', 'codeblock']]} initialValue={editorData} placeholder={''}

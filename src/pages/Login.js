@@ -26,6 +26,7 @@ export default function Login() {
     // 입력값 처리 부분
     const [csrfToken] = useCsrfToken();
     const [values, setValues] = useState({}); // 입력값 반영
+
     const idFocus = useRef(null); // 아이디 참조
     const pwFocus = useRef(null); // 비밀번호 참조
 
@@ -44,10 +45,10 @@ export default function Login() {
 
         if (!values.id || !values.pw) {
             if (!values.id) {
-                alert('아이디를 입력하세요.')
+                alert('아이디를 입력해주세요.')
                 idFocus.current.focus();
             } else {
-                alert('비밀번호를 입력하세요.')
+                alert('비밀번호를 입력해주세요.')
                 pwFocus.current.focus();
             }
 
@@ -75,14 +76,14 @@ export default function Login() {
             <form onSubmit={handleSubmit}>
                 <div className='mb-3'>
                     <label htmlFor='id'>아이디</label>
-                    <input type='text' id='id' name='id' className='form-control' ref={idFocus} onChange={handleChange}></input>
+                    <input type='text' id='id' name='id' className='form-control' ref={idFocus} onChange={handleChange}/>
                 </div>
                 <div className='mb-3'>
                     <label htmlFor='pw'>비밀번호</label>
-                    <input type='password' id='pw' name='pw' className='form-control' ref={pwFocus} onChange={handleChange}></input>
+                    <input type='password' id='pw' name='pw' className='form-control' ref={pwFocus} onChange={handleChange}/>
                 </div>
                 <div>
-                    <input type='submit' className='btn btn-secondary w-100 py-2' value={'로그인'}></input>
+                    <input type='submit' className='btn btn-secondary w-100 py-2' value={'로그인'}/>
                 </div>
             </form>
         </div>

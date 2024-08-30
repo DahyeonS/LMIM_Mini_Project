@@ -41,6 +41,7 @@ export default function Join() {
     // 입력값 처리 부분
     const [csrfToken] = useCsrfToken();
     const [values, setValues] = useState({}); // 입력값 반영
+
     const idFocus = useRef(null); // 아이디 참조
     const pwFocus = useRef(null); // 비밀번호 참조
     const pw2Focus = useRef(null); // 비밀번호 확인 참조
@@ -62,16 +63,16 @@ export default function Join() {
         // 빈 공간이 있거나 비밀번호가 일치하지 않으면 전송 X
         if (!values.id || !values.pw || !values.pw2 || !values.email || values.pw !== values.pw2) {
             if (!values.id) {
-                alert('아이디를 입력하세요.');
+                alert('아이디를 입력해주세요.');
                 idFocus.current.focus();
             } else if (!values.pw) {
-                alert('비밀번호를 입력하세요.');
+                alert('비밀번호를 입력해주세요.');
                 pwFocus.current.focus();
             } else if (!values.pw2) {
                 alert('비밀번호 확인이 필요합니다.');
                 pw2Focus.current.focus();
             } else if (!values.email) {
-                alert('이메일을 입력하세요.');
+                alert('이메일을 입력해주세요.');
                 emailFocus.current.focus();
             } else {
                 alert('비밀번호가 일치하지 않습니다');
@@ -99,28 +100,26 @@ export default function Join() {
                 <form onSubmit={handleSubmit}>
                     <div className='mb-3'>
                         <label htmlFor='id'>아이디</label>
-                        <input type='text' id='id' className='form-control' name='id' onChange={handleChange} ref={idFocus}></input>
+                        <input type='text' id='id' className='form-control' name='id' onChange={handleChange} ref={idFocus}/>
                     </div>
                     <div className='mb-3'>
                         <label htmlFor='pw'>비밀번호</label>
-                        <input type='password' id='pw' className='form-control' name='pw' onChange={handleChange} ref={pwFocus}></input>
+                        <input type='password' id='pw' className='form-control' name='pw' onChange={handleChange} ref={pwFocus}/>
                     </div>
                     <div className='mb-3'>
                         <label htmlFor='pw2'>비밀번호 확인</label>
-                        <input type='password' id='pw2' className='form-control' name='pw2' onChange={handleChange} ref={pw2Focus}></input>
+                        <input type='password' id='pw2' className='form-control' name='pw2' onChange={handleChange} ref={pw2Focus}/>
                     </div>
                     <div className='mb-3'>
                         <label htmlFor='email'>이메일</label>
-                        <input type='email' id='email' className='form-control' name='email' onChange={handleChange} ref={emailFocus}></input>
+                        <input type='email' id='email' className='form-control' name='email' onChange={handleChange} ref={emailFocus}/>
                     </div>
                     <div>
-                        <input type='submit' className='btn btn-secondary w-100 py-2' value={'가입하기'}></input>
+                        <input type='submit' className='btn btn-secondary w-100 py-2' value={'가입하기'}/>
                     </div>
                 </form>
             ) : (
-                <div>
-                    <h3>가입할 수 없습니다.</h3>
-                </div>
+                <h3>가입할 수 없습니다.</h3>
             )}
         </div>
     );

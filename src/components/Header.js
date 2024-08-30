@@ -12,6 +12,7 @@ export default function Header() {
         if (window.confirm('로그아웃 하시겠습니까?')) {
             localStorage.removeItem('token');
             navigate('../');
+            window.location.reload();
         }
     }
 
@@ -22,7 +23,7 @@ export default function Header() {
                 <Link to={'/'} className='logo d-flex align-items-center me-auto'>자기소개</Link>
                 <nav className='nav'>
                     <button className='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
-                        <span className='navbar-toggler-icon'></span>
+                        <span className='navbar-toggler-icon'/>
                     </button>
                     <ul>
                         <li><NavLink to={'/'}>Home</NavLink></li>
