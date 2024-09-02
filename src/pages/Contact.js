@@ -67,7 +67,9 @@ export default function Contact() {
     // 화면 출력 부분
     return (
         <section className='container-fluid container-xl px-5'>
-            <h1 className='pb-2 ms-3 my-3 border-bottom'>문의</h1>
+            <div className='py-5 mb-5 border-bottom'>
+                <h1 className='ms-5'>문의</h1>
+            </div>
             <form onSubmit={handleSubmit}>
                 <div className='mb-3'>
                     <label htmlFor='name' className='mb-1'>Name</label>

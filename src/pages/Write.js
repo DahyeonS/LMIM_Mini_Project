@@ -174,10 +174,12 @@ export default function Write() {
 
     // 화면 출력 부분
     return (
-        <section className='container-fluid container-xl'>
-            <h1 className='pb-2 ms-3 my-3 border-bottom'>글쓰기</h1>
-            <input className='form-control mb-4' placeholder='제목을 입력하세요.' ref={titleRef} name='title' onChange={handleTitleChange} value={title || ''}/>
-            <Editor previewStyle='vertical' initialEditType='wysiwyg' hooks={{addImageBlobHook: onUploadImage}}
+        <section className='container-fluid container-xl px-5'>
+            <div className='mb-5'>
+                <h1 className='ms-5'>글쓰기</h1>
+            </div>
+            <input className='form-control mb-4' placeholder='제목을 입력하세요.' ref={titleRef} name='title' onChange={handleTitleChange} value={title || ''} maxLength={100}/>
+            <Editor previewStyle='vertical' initialEditType='wysiwyg' hooks={{addImageBlobHook: onUploadImage}} maxLength={2000}
             toolbarItems = {[['heading', 'bold', 'italic', 'strike'], ['hr', 'quote'], ['indent', 'outdent'],
                 ['ul', 'ol', 'task'], ['image', 'link', 'code', 'codeblock']]} initialValue={editorData} placeholder={''}
             hideModeSwitch={true} onChange={() => {setEditorData(editorRef.current.getInstance().getHTML());}}

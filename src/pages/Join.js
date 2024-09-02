@@ -94,25 +94,27 @@ export default function Join() {
 
     // 화면 출력 부분
     return (
-        <section className='container-fluid container-xl'>
-            <h1 className='pb-2 ms-3 my-3 border-bottom'>회원가입</h1>
+        <section className='container-fluid container-xl px-5'>
+            <div className='mb-5 border-bottom'>
+                <h1 className='ms-5'>회원가입</h1>
+            </div>
             {data.rs < 1 ? (
                 <form onSubmit={handleSubmit}>
                     <div className='mb-3'>
                         <label htmlFor='id'>아이디</label>
-                        <input type='text' id='id' className='form-control' name='id' onChange={handleChange} ref={idFocus}/>
+                        <input type='text' id='id' className='form-control' name='id' onChange={handleChange} ref={idFocus} maxLength={20}/>
                     </div>
                     <div className='mb-3'>
                         <label htmlFor='pw'>비밀번호</label>
-                        <input type='password' id='pw' className='form-control' name='pw' onChange={handleChange} ref={pwFocus}/>
+                        <input type='password' id='pw' className='form-control' name='pw' onChange={handleChange} ref={pwFocus} maxLength={150}/>
                     </div>
                     <div className='mb-3'>
                         <label htmlFor='pw2'>비밀번호 확인</label>
-                        <input type='password' id='pw2' className='form-control' name='pw2' onChange={handleChange} ref={pw2Focus}/>
+                        <input type='password' id='pw2' className='form-control' name='pw2' onChange={handleChange} ref={pw2Focus} maxLength={150}/>
                     </div>
                     <div className='mb-3'>
                         <label htmlFor='email'>이메일</label>
-                        <input type='email' id='email' className='form-control' name='email' onChange={handleChange} ref={emailFocus}/>
+                        <input type='email' id='email' className='form-control' name='email' onChange={handleChange} ref={emailFocus} maxLength={120}/>
                     </div>
                     <div>
                         <input type='submit' className='btn btn-primary w-100 py-2' value={'가입하기'}/>

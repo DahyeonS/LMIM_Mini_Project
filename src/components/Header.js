@@ -5,7 +5,7 @@ import { Fragment, useState, useEffect } from 'react';
 
 // 스크롤 이벤트 핸들러
 function useScroll() {
-    const [hasScrolled, setHasScrolled] = useState(false);
+    const [hasScrolled, setHasScrolled] = useState(false); // 스크롤 상태 관리
 
     useEffect(() => {
         const handleScroll = () => {
@@ -64,7 +64,7 @@ export default function Header() {
                                     <ul className='border position-absolute dropdown-menu pe-2' style={{display:'block', width:'5rem'}}>
                                         <Fragment>
                                             <li><NavLink to={'update'} >Update</NavLink></li>
-                                            <li><Link to={()=>false} onClick={logout}>Logout</Link></li>
+                                            <li><Link onClick={logout}>Logout</Link></li>
                                         </Fragment>
                                     </ul>
                                 )}

@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
 from models import Memo
 from app import db
 
@@ -11,8 +10,8 @@ def load() :
     page = request.args.get('page', type=int, default=1)
     memos = Memo.query.order_by(Memo.postdate.desc()).paginate(page=page, per_page=10)
 
-    data = [{'idx':m.idx, 'username':m.username, 'content':m.content,
-            'postdate':m.postdate.strftime('%Y년 %m월 %d일 %I:%M %p')} for m in memos]
+    data = [{'num':idx + 1, 'idx':m.idx, 'username':m.username, 'content':m.content,
+            'postdate':m.postdate.strftime('%Y.%m.%d %I:%M %p')} for idx, m in enumerate(memos)]
     result = {
         'items':data, 'hasPrev':memos.has_prev, 'hasNext':memos.has_next, 'page':page,
         'iterPages':list(memos.iter_pages()), 'prevNum':memos.prev_num, 'nextNum':memos.next_num
@@ -26,8 +25,7 @@ def insert() :
     memo = Memo(
         username=data.get('username'),
         pw=generate_password_hash(data.get('password')),
-        content=data.get('content'),
-        postdate=datetime.now()
+        content=data.get('content')
         )
     
     db.session.add(memo)

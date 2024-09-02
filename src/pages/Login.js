@@ -71,16 +71,18 @@ export default function Login() {
 
     // 화면 출력 부분
     return (
-        <section className='container-fluid container-xl'>
-            <h1 className='pb-2 ms-3 my-3 border-bottom'>로그인</h1>
+        <section className='container-fluid container-xl px-5'>
+            <div className='mb-5 border-bottom'>
+                <h1 className='ms-5'>로그인</h1>
+            </div>
             <form onSubmit={handleSubmit}>
                 <div className='mb-3'>
                     <label htmlFor='id'>아이디</label>
-                    <input type='text' id='id' name='id' className='form-control' ref={idFocus} onChange={handleChange}/>
+                    <input type='text' id='id' name='id' className='form-control' ref={idFocus} onChange={handleChange} maxLength={20}/>
                 </div>
                 <div className='mb-3'>
                     <label htmlFor='pw'>비밀번호</label>
-                    <input type='password' id='pw' name='pw' className='form-control' ref={pwFocus} onChange={handleChange}/>
+                    <input type='password' id='pw' name='pw' className='form-control' ref={pwFocus} onChange={handleChange} maxLength={150}/>
                 </div>
                 <div>
                     <input type='submit' className='btn btn-primary w-100 py-2' value={'로그인'}/>

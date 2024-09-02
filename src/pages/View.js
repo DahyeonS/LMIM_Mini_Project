@@ -59,8 +59,10 @@ export default function View() {
 
     // 화면 출력 부분
     return (
-        <section className="container-fluid container-xl">
-            <h1 className='ms-3 mt-3 border-bottom'>게시물 보기</h1>
+        <section className='container-fluid container-xl px-5'>
+            <div className='mb-5 border-bottom'>
+                <h1 className='ms-5'>게시물 보기</h1>
+            </div>
             {index > 0 ? (
                 <Fragment>
                     <h3 className='mt-4 mb-5'>{data.title}</h3>

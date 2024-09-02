@@ -18,8 +18,8 @@ def load() :
     posts = Post.query.order_by(Post.postdate.desc()).paginate(page=page, per_page=10)
     
     data = [{'idx':p.idx, 'title':p.title, 'content':html_parse(p.content),
-            'photo':p.photo, 'postdate':p.postdate.strftime('%Y년 %m월 %d일 %I:%M %p'),
-            'modified_date':p.modified_date.strftime('%Y년 %m월 %d일 %I:%M %p') if p.modified_date else p.modified_date}
+            'photo':p.photo, 'postdate':p.postdate.strftime('%Y.%m.%d %I:%M %p'),
+            'modified_date':p.modified_date.strftime('%Y.%m.%d %I:%M %p') if p.modified_date else p.modified_date}
             for p in posts]
     result = {
         'items':data, 'hasPrev':posts.has_prev, 'hasNext':posts.has_next, 'page':page,
@@ -44,9 +44,9 @@ def insert() :
             os.remove(f.path)
 
         content = content.replace('<img src="./post/load_image?type=temp', '<img src="./post/load_image?type=uploads')
-        post = Post(title=title, content=content, photo=', '.join(files), postdate=datetime.now())
+        post = Post(title=title, content=content, photo=', '.join(files))
     else :
-        post = Post(title=title, content=content, postdate=datetime.now())
+        post = Post(title=title, content=content)
 
     db.session.add(post)
     db.session.commit()
@@ -115,9 +115,9 @@ def update() :
             content = content.replace('<img src="./post/load_image?type=temp', '<img src="./post/load_image?type=uploads')
             new_url = re.findall(r'<img src="([^"]+)"', content)
             photos = [n.replace('./post/load_image?type=uploads&amp;name=', '') for n in new_url]
-            p_update = {'title':title, 'content':content, 'photo':', '.join(photos), 'modified_date':datetime.now()}
+            p_update = {'title':title, 'content':content, 'photo':', '.join(photos)}
         else :
-            p_update = {'title':title, 'content':content, 'modified_date':datetime.now()}
+            p_update = {'title':title, 'content':content}
 
         db.session.query(Post).filter(Post.idx==idx).update(p_update)
         db.session.commit()

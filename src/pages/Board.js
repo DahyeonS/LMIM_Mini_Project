@@ -7,16 +7,14 @@ import { Link, useLocation } from 'react-router-dom';
 // 저장된 데이터 로드
 function useData() {
     const [data, setData] = useState({}); // 불러온 데이터 상태 관리
-    const location = useLocation(); // 현재 페이지 위치 추출
+    const location = useLocation(null); // 현재 페이지 위치 추출
+    const page = location.state ? location.state.page : 1; // 현제 페이지 번호 추출
 
     useEffect(() => { // 페이지 로드시 실행
-        const queryParams = new URLSearchParams(location.search); // 주소창 문자열 처리
-        const page = queryParams.get('page'); // 주소창 파라미터 추출
-
         service.getBoard(page).then( // 플라스크에서 데이터를 가져옴
             (res) => {setData(res.data);} // 응답받은 값을 data에 저장
         )
-    }, [location.search]) // 주소가 변경될 때마다 실행
+    }, [page]) // 주소가 변경될 때마다 실행
 
     return [data];
 }
@@ -166,17 +164,17 @@ export default function Board() {
     return (
         <section className='container-fluid container-xl px-5'>
             <div className='py-5 mb-5 border-bottom'>
-                <h1 className='ms-5'>방명록</h1>
+                <h1 className='py-5 text-secondary fw-blid fst-italic'>방명록</h1>
             </div>
-            <form className='row g-2' onSubmit={handleSubmit}>
+            <form className='row g-2 mb-5' onSubmit={handleSubmit}>
                 <div className='col-6'>
-                    <input type='text' className='form-control' name='username' placeholder='Name' onChange={handleChange} ref={inputNameFocus} disabled={isDisabled}/>
+                    <input type='text' className='form-control' name='username' placeholder='Name' onChange={handleChange} ref={inputNameFocus} disabled={isDisabled} maxLength={30}/>
                 </div>
                 <div className='col-6'>
-                    <input type='password' className='form-control' name='password' placeholder='Password' onChange={handleChange} ref={inputPwFocus} disabled={isDisabled}/>
+                    <input type='password' className='form-control' name='password' placeholder='Password' onChange={handleChange} ref={inputPwFocus} disabled={isDisabled} maxLength={150}/>
                 </div>
                 <div className='col-12'>
-                    <input type='text' className='form-control py-5' name='content' onChange={handleChange} ref={inputContentFocus}/>
+                    <input type='text' className='form-control py-5' name='content' onChange={handleChange} ref={inputContentFocus} maxLength={500}/>
                 </div>
                 <div className='col-10'/>
                 <div className='col-2'>
@@ -186,60 +184,75 @@ export default function Board() {
             {Array.isArray(data.items) ? (
                 <div className='py-3'>
                     {data.items.map((item) => (
-                        <div key={item.idx} className='row g-3 my-3'>
-                            <div className='col-3 mt-4'>{item.username}</div>
-                            {item.content.length <= 30 ? (
-                                <div className='col-3 mt-4'>{item.content}</div>
-                            ) : (
-                                <div className='col-3 mt-4' dangerouslySetInnerHTML={{ __html: item.content.match(/.{1,30}/g).join('<br />') }} />
-                            )}
-                            <div className='col-3 mt-4'>{item.postdate}</div>
-                            {/* 삭제 버튼 */}
-                            {localStorage.getItem('token') !== null ?
-                                <Fragment>
-                                    <div className='col-2'/>
-                                    <div className='col-1 px-3'>
-                                        <button onClick={() => handleDeleteAdmin(item.idx)} className='btn btn-primary'>삭제</button>
-                                    </div>
-                                </Fragment>
-                            : (
-                                <Fragment>
-                                    {showPasswordInput === item.idx ? ( /* 삭제할 방명록의 인덱스 값과 일치할 경우 */
-                                        <Fragment key={`memo-fragment-${item.idx}`}>
-                                            <div className='col-2'>
-                                                <input type='password' onChange={handlePasswordChange} className='form-control' placeholder='비밀번호 확인' ref={inputDeletePwFocus}/>
-                                            </div>
-                                            <div className='col-1'>
-                                                <button onClick={() => handleDelete(item.idx)} className='btn btn-primary ms-2'>삭제</button>
-                                            </div>
-                                        </Fragment>
+                        <Fragment>
+                            <div key={item.idx} className='row g-3 border-top py-5'>
+                                <div className='col-2' style={{marginTop:0}}>
+                                    {item.username.length <= 15 ? (
+                                        <h6 style={{marginTop:10}}>{item.username}</h6>
                                     ) : (
-                                        <Fragment key={`memo-fragment-${item.idx}`}>
-                                            {item.username !== '관리자' ? (
-                                                <Fragment>
-                                                    <div className='col-2'/>
-                                                    <div className='col-1 px-3'>
-                                                        <button className='btn btn-primary' onClick={() => handleShowPasswordInput(item.idx)}>삭제</button>
-                                                    </div>
-                                                </Fragment>
-                                            ) : (
-                                                <div className='col-3'/>
-                                            )}
-                                        </Fragment>
+                                        <h6 dangerouslySetInnerHTML={{ __html: item.username.match(/.{1,15}/g).join('<br/>') }}/>
                                     )}
-                                </Fragment>
+                                </div>
+                                <div className='col-5 mt-2'>
+                                    {item.content.length <= 40 ? (
+                                        <p>{item.content}</p>
+                                    ) : (
+                                        <p dangerouslySetInnerHTML={{ __html: item.content.match(/.{1,40}/g).join('<br />') }}/>
+                                    )}
+                                </div>
+                                <div className='col-2 mt-2'>
+                                    <p className='fst-italic text-secondary'>{item.postdate}</p>
+                                </div>
+                                {/* 삭제 버튼 */}
+                                {localStorage.getItem('token') !== null ?
+                                    <Fragment>
+                                        <div className='col-2'/>
+                                        <div className='col-1 px-3' style={{marginTop:0}}>
+                                            <button onClick={() => handleDeleteAdmin(item.idx)} className='btn btn-primary'>삭제</button>
+                                        </div>
+                                    </Fragment>
+                                : (
+                                    <Fragment>
+                                        {showPasswordInput === item.idx ? ( /* 삭제할 방명록의 인덱스 값과 일치할 경우 */
+                                            <Fragment key={`memo-fragment-${item.idx}`}>
+                                                <div className='col-2' style={{marginTop:0}}>
+                                                    <input type='password' onChange={handlePasswordChange} className='form-control' placeholder='비밀번호 확인' ref={inputDeletePwFocus}/>
+                                                </div>
+                                                <div className='col-1' style={{marginTop:0}}>
+                                                    <button onClick={() => handleDelete(item.idx)} className='btn btn-primary ms-2'>삭제</button>
+                                                </div>
+                                            </Fragment>
+                                        ) : (
+                                            <Fragment key={`memo-fragment-${item.idx}`}>
+                                                {item.username !== '관리자' ? (
+                                                    <Fragment>
+                                                        <div className='col-2'/>
+                                                        <div className='col-1 px-3' style={{marginTop:0}}>
+                                                            <button className='btn btn-primary' onClick={() => handleShowPasswordInput(item.idx)}>삭제</button>
+                                                        </div>
+                                                    </Fragment>
+                                                ) : (
+                                                    <div className='col-3'/>
+                                                )}
+                                            </Fragment>
+                                        )}
+                                    </Fragment>
+                                )}
+                            </div>
+                            {item.num === data.items.length && (
+                                <div className='row g-3 pt-5 border-top'/>
                             )}
-                        </div>
+                        </Fragment>
                     ))}
                     {/* 페이징 */}
-                    <ul className='pagination justify-content-center py-5'>
+                    <ul className='pagination justify-content-center py-5 mb-4'>
                         {data.hasPrev ? (
                             <li className='page-item'>
-                                <Link className='page-link text-secondary' to={`?page=${data.prevNum}`}>이전</Link>
+                                <Link className='page-link text-secondary' state={{page:data.prevNum}}>이전</Link>
                             </li>
                         ) : (
                             <li className='page-item disabled'>
-                                <Link className='page-link' to={()=>false} aria-disabled='true'>이전</Link>
+                                <Link className='page-link' aria-disabled='true'>이전</Link>
                             </li>
                         )}
                         {data.iterPages.map((pageNum) => (
@@ -248,35 +261,37 @@ export default function Board() {
                                 <Fragment key={`paging-fragment-${pageNum}`}>
                                 {pageNum !== data.page ? (
                                     <li className='page-item' >
-                                        <Link className='page-link text-secondary' to={`?page=${pageNum}`}>{pageNum}</Link>
+                                        <Link className='page-link text-secondary' state={{page:pageNum}}>{pageNum}</Link>
                                     </li>
                                 ) : (
                                     <li className='page-item active' aria-current='page'>
-                                        <Link className='page-link' style={{backgroundColor:'rgba(119, 182, 202, 0.9)', border:'rgba(119, 182, 202, 0.9)'}} tabIndex={-1} to={()=>false} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
+                                        <Link className='page-link' style={{backgroundColor:'rgba(119, 182, 202, 0.9)', border:'rgba(119, 182, 202, 0.9)'}} tabIndex={-1} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
                                     </li>                            
                                 )}
                                 </Fragment>
                             ) : (
                                 <li className='disabled'>
-                                    <Link className='page-link' to={()=>false}>...</Link>
+                                    <Link className='page-link'>...</Link>
                                 </li>
                             )}
                             </Fragment>
                         ))}
                         {data.hasNext ? (
                             <li>
-                                <Link className='page-link text-secondary' to={`?page=${data.nextNum}`}>다음</Link>
+                                <Link className='page-link text-secondary' state={{page:data.nextNum}}>다음</Link>
                             </li>
                         ) : (
                             <li className='page-item disabled'>
-                                <Link className='page-link' to={()=>false} tabIndex={-1} aria-disabled='true'>다음</Link>
+                                <Link className='page-link' tabIndex={-1} aria-disabled='true'>다음</Link>
                             </li>
                         )}
                     </ul>
                 </div>
             ) : (
                 // 로딩 대기 문구
-                <h4 className='text-center fw-bold my-5'>데이터가 아직 로드되지 않았습니다.</h4>
+                <div className='py-5'>
+                    <h4 className='text-center fw-bold pb-5'>데이터가 아직 로드되지 않았습니다.</h4>
+                </div>
             )}
         </section>
     );

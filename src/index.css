@@ -18,8 +18,19 @@ code {
 }
 
 .btn-primary:hover, .btn-primary:active {
-  background-color: rgba(102, 157, 173, 0.9);
+  background-color: rgba(102, 157, 173, 0.9) !important;
   border-color: rgba(102, 157, 173, 0.9) !important;
+}
+
+.btn-outline-custom {
+  border-color: #77b6ca !important;
+  color: #77b6ca !important;
+}
+
+.btn-outline-custom:hover, .btn-outline-custom:active {
+  border-color: #77b6ca !important;
+  background-color: #77b6ca !important;
+  color: #fff !important;
 }
 
 /**
@@ -468,33 +479,25 @@ section {
 --------------------------------------------------------------*/
 .scroll-top {
   position: fixed;
-  visibility: hidden;
-  opacity: 0;
-  right: 15px;
-  bottom: -15px;
+  right: 150px;
+  bottom: 50px;
   z-index: 99999;
-  background-color: var(--accent-color);
-  width: 44px;
-  height: 44px;
   border-radius: 50px;
-  transition: all 0.4s;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease !important;
+  pointer-events: none;
 }
 
-.scroll-top i {
-  font-size: 24px;
-  color: var(--contrast-color);
-  line-height: 0;
+.scroll-top svg {
+  vertical-align: top;
+  margin-top: 5px;
 }
 
-.scroll-top:hover {
-  background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
-  color: var(--contrast-color);
-}
-
-.scroll-top.active {
-  visibility: visible;
+.scroll-top.show {
   opacity: 1;
-  bottom: 15px;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 /*--------------------------------------------------------------

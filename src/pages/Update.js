@@ -131,8 +131,10 @@ export default function Update() {
 
     // 화면 출력 부분
     return (
-        <section className='container-fluid container-xl'>
-            <h1 className='pb-2 ms-3 my-3 border-bottom'>회원정보 수정</h1>
+        <section className='container-fluid container-xl px-5'>
+            <div className='mb-5 border-bottom'>
+                <h1 className='ms-5'>회원정보 수정</h1>
+            </div>
             {isChecked ? (
                 <form onSubmit={handleSubmit}>
                     <div className='mb-3'>

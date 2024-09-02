@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import Scroll from './components/Scroll';
 import Home from './pages/Home'
 import Join from './pages/Join';
 import Login from './pages/Login';
@@ -17,6 +18,7 @@ import { Fragment } from 'react';
 export default function App() {
   return (
     <Fragment>
+      <Scroll/>
       <Header/>
       <main className='main'>
         <Routes>
