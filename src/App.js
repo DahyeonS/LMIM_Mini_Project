@@ -13,9 +13,22 @@ import Write from './pages/Write';
 import View from './pages/View';
 import Board from './pages/Board';
 import Contact from './pages/Contact'
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
+
+// 우클릭 방지
+function useBlockClick() {
+  useEffect(() => {
+    document.oncontextmenu = function() {
+      return false;
+    }
+  })
+}
 
 export default function App() {
+  // 관련 함수
+  useBlockClick();
+
+  // 화면 출력 부분
   return (
     <Fragment>
       <Scroll/>

@@ -5,13 +5,13 @@ import service from '../service';
 
 // 저장된 데이터 로드
 function useCsrfToken() {
-    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
+    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 반영
 
     useEffect(() => {
         service.getCsrfToken().then(
-            (res) => {setCsrfToken(res.data.csrf_token);}
+            (res) => {setCsrfToken(res.data.csrf_token);} // CSRF 토큰 저장
         )
-    }, [])
+    }, []) // 페이지가 로드될 때 한 번만 실행
 
     return [csrfToken];
 }
@@ -19,13 +19,13 @@ function useCsrfToken() {
 export default function Contact() {
     // 입력값 처리 부분
     const [csrfToken] = useCsrfToken();
-    const [values, setValues] = useState({});
+    const [values, setValues] = useState({}); // 입력값 반영
 
-    const nameRef = useRef(null);
-    const emailRef = useRef(null);
-    const contentRef = useRef(null);
+    const nameRef = useRef(null); // 이름 참조
+    const emailRef = useRef(null); // 이메일 참조
+    const contentRef = useRef(null); // 내용 참조
 
-    // 입력값이 변경될 때마다 자동으로 상태를 반영
+    // 입력값이 변경될 때마다 자동으로 상태를 갱신
     const handleChange = (e) => {
         const {name, value} = e.target; // 입력값의 name, value 추출
         setValues((prevValues) => ({ // values의 값을 갱신
@@ -42,23 +42,24 @@ export default function Contact() {
         if (!values.name || (!values.email && !values.phone) || !values.content) {
             if (!values.name) {
                 alert('이름을 입력해주세요.');
-                nameRef.current.focus();
+                nameRef.current.focus(); // 이름에 포커스
             } else if (!values.content) {
                 alert('내용을 입력해주세요.')
-                contentRef.current.focus();
+                contentRef.current.focus(); // 내용에 포커스
             } else {
                 alert('연락처를 입력해주세요.')
-                emailRef.current.focus();
+                emailRef.current.focus(); // 이메일에 포커스
             }
 
             return false;
         }
         
+        // 값 전송 함수 호출
         service.contact(values, csrfToken).then(
             (res) => {
                 if (res.data.rs === 1) {
                     alert('전송이 완료되었습니다.');
-                    window.location.reload();
+                    window.location.reload(); // 새로고침
                 }
             }
         )
@@ -67,27 +68,32 @@ export default function Contact() {
     // 화면 출력 부분
     return (
         <section className='container-fluid container-xl px-5'>
-            <div className='py-5 mb-5 border-bottom'>
-                <h1 className='ms-5'>문의</h1>
+            <div className='pt-5 border-bottom'>
+                <h1 className='pt-5 text-secondary fw-bold fst-italic'>Contact</h1>
             </div>
-            <form onSubmit={handleSubmit}>
+            <div className='mt-3 mb-5'>
+                <h5 className='text-secondary fst-italic'>이름, 연락처와 함께 메시지를 보내면 메일이 전송됩니다.</h5>
+            </div>
+            <form className='pt-2 pb-5' onSubmit={handleSubmit}>
                 <div className='mb-3'>
-                    <label htmlFor='name' className='mb-1'>Name</label>
+                    <label htmlFor='name' className='mb-1 text-secondary'>Name</label>
                     <input type='text' className='form-control' id='name' name='name' onChange={handleChange} ref={nameRef}/>
                 </div>
                 <div className='mb-3'>
-                    <label htmlFor='email' className='mb-1'>E-mail</label>
+                    <label htmlFor='email' className='mb-1 text-secondary'>E-mail</label>
                     <input type='email' className='form-control' id='email' name='email' onChange={handleChange} ref={emailRef}/>
                 </div>
                 <div className='mb-3'>
-                    <label htmlFor='phone' className='mb-1'>Phone Number</label>
+                    <label htmlFor='phone' className='mb-1 text-secondary'>Phone Number</label>
                     <input type='text' className='form-control' id='phone' name='phone' onChange={handleChange}/>
                 </div>
-                <div className='mb-3'>
-                    <label htmlFor='content' className='mb-1'>Message</label>
+                <div className='mb-4'>
+                    <label htmlFor='content' className='mb-1 text-secondary'>Message</label>
                     <textarea type='text' className='form-control py-5' id='content' name='content' onChange={handleChange} ref={contentRef}/>
                 </div>
-                <input type='submit' className='btn btn-primary w-100' value={'전송'}/>
+                <div className='pb-5'>
+                    <input type='submit' className='btn btn-primary w-100' value={'전송'}/>
+                </div>
             </form>
         </section>
     );

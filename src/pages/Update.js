@@ -4,10 +4,11 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import service from '../service';
 
+// 로그인 확인
 function useLoginCheck(navigate) {
     useEffect(() => {
-        if (localStorage.getItem('token') === null) navigate('../');
-    }, [navigate])
+        if (!localStorage.getItem('token')) navigate('../'); // 비로그인 차단(페이지 이동)
+    }, [navigate]) // 페이지가 로드될 때 한 번만 실행
 }
 
 function useCsrfToken() {
@@ -15,11 +16,11 @@ function useCsrfToken() {
 
     // 바로 실행
     useEffect(() => {
-        if (localStorage.getItem('token') === null) return;
+        if (!localStorage.getItem('token')) return; // 비로그인시 적용 X
         service.getCsrfToken().then(
-            (res) => {setCsrfToken(res.data.csrf_token);}
+            (res) => {setCsrfToken(res.data.csrf_token);} // CSRF 토큰 저장
         )
-    }, []) // 한 번만 실행
+    }, []) // 페이지가 로드될 때 한 번만 실행
 
     return [csrfToken];
 }
@@ -28,9 +29,9 @@ function useIsChecked() {
     const [isChecked, setIsChecked] = useState(false); // 비밀번호 확인 여부 반영
 
     useEffect(() => {
-        if (localStorage.getItem('token') === null) return;
+        if (!localStorage.getItem('token')) return; // 비로그인시 적용 X
         setIsChecked(false);
-    }, [])
+    }, []) // 페이지가 로드될 때 한 번만 실행
 
     return [isChecked, setIsChecked];
 }
@@ -50,7 +51,7 @@ export default function Update() {
     const idFocus = useRef(null); // 아이디 참조
     const emailFocus = useRef(null) // 이메일 참조
 
-    // 입력값이 변경될 때마다 자동으로 상태를 반영
+    // 입력값이 변경될 때마다 자동으로 상태를 갱신
     const handleChange = (e) => {
         const {name, value} = e.target;
         setValues((prevValues) => ({
@@ -59,7 +60,7 @@ export default function Update() {
         }))
     }
 
-    // 비밀번호 입력 상태 반영
+    // 비밀번호 입력 상태 갱신
     const handlePasswordChange = (e) => {
         const {name, value} = e.target;
         setPassword((prevValues) => ({
@@ -132,8 +133,8 @@ export default function Update() {
     // 화면 출력 부분
     return (
         <section className='container-fluid container-xl px-5'>
-            <div className='mb-5 border-bottom'>
-                <h1 className='ms-5'>회원정보 수정</h1>
+            <div className='pt-5 border-bottom'>
+                <h1 className='pt-5 text-secondary fw-bold fst-italic'>회원정보 수정</h1>
             </div>
             {isChecked ? (
                 <form onSubmit={handleSubmit}>

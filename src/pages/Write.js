@@ -14,25 +14,26 @@ import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import Prism from 'prismjs';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
+// 로그인 확인
 function useLoginCheck(navigate) {
     useEffect(() => {
-        if (localStorage.getItem('token') === null) navigate('../');
-    }, [navigate])
+        if (!localStorage.getItem('token')) navigate('../'); // 비로그인 차단(페이지 이동)
+    }, [navigate]) // 한 번만 실행
 }
 
 // 저장된 데이터 로드
 function useTitle(index) {
-    const [title, setTitle] = useState('');
+    const [title, setTitle] = useState(''); // 불러온 데이터 상태 반영
     
     // 바로 실행
     useEffect(() => {
-        if (index === 0) return;
+        if (index === 0) return; // 수정 시에만 작동
         service.loadUpdatePost(index).then(
             (res) => {
-                setTitle(res.data.title);
+                setTitle(res.data.title); // 불러온 제목 데이터 저장
             }
         )
-    }, [index])
+    }, [index]) // 페이지가 로드될 때 한 번만 실행
 
     return [title, setTitle];
 }
@@ -41,11 +42,11 @@ function useEditorData(index) {
     const [editorData, setEditorData] = useState(''); // 내용 반영
 
     useEffect(() => {
-        if (index === 0) return;
+        if (index === 0) return; // 수정 시에만 작동
         service.loadUpdatePost(index).then(
             (res) => {setEditorData(res.data.content);}
         )
-    }, [index])
+    }, [index]) // 페이지가 로드될 때 한 번만 실행
 
     return [editorData, setEditorData];
 }
@@ -57,21 +58,20 @@ function useCsrfToken() {
         service.getCsrfToken().then(
             (res) => {csrfRef.current = res.data.csrf_token;}
         )
-    }, [])
+    }, []) // 페이지가 로드될 때 한 번만 실행
 
     return csrfRef;
 }
 
-function useEditorRef(editorData) {
+function useEditorRef(editorData) { // 불러온 내용을 실제 에디터에 적용
     const editorRef = useRef(null); // 에디터 참조
 
     useEffect(() => {
-        if (!editorData) return;
+        if (!editorData) return; // 수정 시에만 작동
         editorRef.current.getInstance().setHTML(editorData); // 에디터 데이터 설정
-    }, [editorData]);
+    }, [editorData]); // 페이지가 로드될 때 한 번만 실행
 
     return editorRef;
-
 }
 
 export default function Write() {
@@ -91,23 +91,20 @@ export default function Write() {
     const titleRef = useRef(null); // 제목 참조
     const editorRef = useEditorRef(editorData);
 
-    // 제목 입력값 반영
+    // 제목 입력값 갱신
     const handleTitleChange = (e) => {
-        setTitle(e.target.value)
+        setTitle(e.target.value);
     };
 
     // 이미지 업로드
     const onUploadImage = async(blob, callback) => {
         let formData = new FormData();
-        formData.append('image', blob);
+        formData.append('image', blob); // 전송할 실제 파일을 담음
 
         service.uploadImage(formData, csrfRef.current).then(
             (res) => {
-                const url = `./post/load_image?type=${res.data.type}&name=${res.data.name}`;
-
-                service.loadImage(res.data.type, res.data.name).then(
-                    (res) => {callback(url, blob.name);}
-                )
+                const url = `./post/load_image?type=temp&name=${res.data.name}`; // 실제 이미지가 저장된 URL
+                callback(url, blob.name); // 콜백 함수로 리턴값을 에디터에 적용하여 팝업 창 종료
             }
         )
     }
@@ -130,14 +127,14 @@ export default function Write() {
         if (!editorData || !rawData || !title) {
             if (!title) {
                 alert('제목을 입력해주세요.');
-                titleRef.current.focus();
+                titleRef.current.focus(); // 제목 포커스
             } else {
                 alert('내용을 입력해주세요.');
             }
             return false
         }
         
-        await service.createPost({title, content:editorData}, csrfRef.current).then(
+        await service.createPost({title, content:editorData}, csrfRef.current).then( // 페이지 로딩이 완료된 후 실행
             (res) => {
                 if (res.data.rs === 1) {
                     alert('게시물이 작성되었습니다.');
@@ -155,14 +152,14 @@ export default function Write() {
         if (!editorData || !rawDataUpdate || !title) {
             if (!title) {
                 alert('제목을 입력하세요.');
-                titleRef.current.focus();
+                titleRef.current.focus(); // 제목 포커스
             } else {
                 alert('내용을 입력하세요.');
             }
             return false
         }
         
-        await service.updatePost({idx:index, title, content:editorData}, csrfRef.current).then(
+        await service.updatePost({idx:index, title, content:editorData}, csrfRef.current).then( // 페이지 로딩이 완료된 후 실행
             (res) => {
                 if (res.data.rs === 1) {
                     alert('게시물이 수정되었습니다.');
@@ -175,25 +172,35 @@ export default function Write() {
     // 화면 출력 부분
     return (
         <section className='container-fluid container-xl px-5'>
-            <div className='mb-5'>
-                <h1 className='ms-5'>글쓰기</h1>
+            <div className='pt-5 border-bottom'>
+                <h1 className='pt-5 text-secondary fw-bold fst-italic'>글쓰기</h1>
             </div>
-            <input className='form-control mb-4' placeholder='제목을 입력하세요.' ref={titleRef} name='title' onChange={handleTitleChange} value={title || ''} maxLength={100}/>
+            <input className='form-control mt-5 mb-4' placeholder='제목을 입력하세요.' ref={titleRef} name='title' onChange={handleTitleChange} value={title || ''} maxLength={40}/>
             <Editor previewStyle='vertical' initialEditType='wysiwyg' hooks={{addImageBlobHook: onUploadImage}} maxLength={2000}
             toolbarItems = {[['heading', 'bold', 'italic', 'strike'], ['hr', 'quote'], ['indent', 'outdent'],
-                ['ul', 'ol', 'task'], ['image', 'link', 'code', 'codeblock']]} initialValue={editorData} placeholder={''}
+                ['ul', 'ol', 'task'], ['image', 'link', 'code', 'codeblock']]} initialValue={editorData}
             hideModeSwitch={true} onChange={() => {setEditorData(editorRef.current.getInstance().getHTML());}}
             ref={editorRef} plugins={[colorSyntax, [codeSyntaxHighlight, {highlighter: Prism }]]} language='ko-KR'/>
-            <div className='mt-4'>
-                {index > 0 ? (
+            <div className='mt-2 pb-5 row'>
+                {index > 0 ? ( // 수정 중
                     <Fragment>
-                        <button onClick={editorUpdate} className='btn btn-primary'>수정하기</button>
-                        <button className='btn btn-primary ms-2' onClick={() => handleUpdateCancel(index)}>취소</button>
+                        <div className='col-2'>
+                            <button className='btn btn-primary' onClick={() => handleUpdateCancel(index)}>취소</button>
+                        </div>
+                        <div className='col-8'/>
+                        <div className='col-2'>
+                            <button onClick={editorUpdate} className='btn btn-primary float-end'>수정하기</button>
+                        </div>
                     </Fragment>
-                ) : (
+                ) : ( // 작성 중
                     <Fragment>
-                        <button onClick={editorSubmit} className='btn btn-primary'>작성하기</button>
-                        <button className='btn btn-primary ms-2' onClick={handleCancel}>취소</button>
+                        <div className='col-2'>
+                            <button className='btn btn-primary' onClick={handleCancel}>취소</button>
+                        </div>
+                        <div className='col-8'/>
+                        <div className='col-2'>
+                            <button onClick={editorSubmit} className='btn btn-primary float-end'>작성하기</button>
+                        </div>
                     </Fragment>
                 )}
             </div>

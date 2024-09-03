@@ -6,7 +6,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 // 저장된 데이터 로드
 function useData() {
-    const [data, setData] = useState({}); // 불러온 데이터 상태 관리
+    const [data, setData] = useState({}); // 불러온 데이터 상태 반영
     const location = useLocation(null); // 현재 페이지 위치 추출
     const page = location.state ? location.state.page : 1; // 현제 페이지 번호 추출
 
@@ -14,20 +14,20 @@ function useData() {
         service.getBoard(page).then( // 플라스크에서 데이터를 가져옴
             (res) => {setData(res.data);} // 응답받은 값을 data에 저장
         )
-    }, [page]) // 주소가 변경될 때마다 실행
+    }, [page]) // 페이지가 변경될 때마다 한 번만 실행
 
     return [data];
 }
 
 function useCsrfToken() {
-    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
+    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 반영
 
     useEffect(() => {
         // CSRF 토큰
         service.getCsrfToken().then(
-            (res) => {setCsrfToken(res.data.csrf_token);}
+            (res) => {setCsrfToken(res.data.csrf_token);} // CSRF 토큰 저장
         )
-    }, []) // 한 번만 실행
+    }, []) // 페이지가 로드될 때 한 번만 실행
 
     return [csrfToken];
 }
@@ -36,14 +36,14 @@ function useValues() {
     const [values, setValues] = useState({}); // 입력값 반영
 
     useEffect(() => {
-        if (localStorage.getItem('token') === null) return;
+        if (!localStorage.getItem('token')) return; // 비로그인시 적용 X
     
         setValues((prevValues) => ({ // values의 값을 갱신
             ...prevValues, // 이전에 입력된 값을 복사
             username: '관리자',
             password: 'admin'
         }))
-    }, [])
+    }, []) // 페이지가 로드될 때 한 번만 실행
 
     return [values, setValues];
 }
@@ -52,9 +52,9 @@ function useIsDisabled() {
     const [isDisabled, setIsDisabled] = useState(false);
 
     useEffect(() => {
-        if (localStorage.getItem('token') !== null) setIsDisabled(true);
+        if (localStorage.getItem('token')) setIsDisabled(true); // 로그인시 적용
         else setIsDisabled(false);
-    }, [])
+    }, []) // 페이지가 로드될 때 한 번만 실행
 
     return [isDisabled];
 }
@@ -75,7 +75,7 @@ export default function Board() {
     const inputContentFocus = useRef(null); // 내용 참조
     const inputDeletePwFocus = useRef(null); // 방명록 삭제 비밀번호 참조
 
-    // 방명록 입력값이 변경될 때마다 자동으로 상태를 반영
+    // 방명록 입력값이 변경될 때마다 자동으로 상태를 갱신
     const handleChange = (e) => {
         const {name, value} = e.target; // 입력값의 name, value 추출
         setValues((prevValues) => ({ // values의 값을 갱신
@@ -89,7 +89,7 @@ export default function Board() {
         e.preventDefault(); // 페이지 변경 방지
 
         // 빈 공간이 있을 시 전송 X
-        if (!values.username || !values.password || !values.content || (localStorage.getItem('token') === null && values.username === '관리자')) {
+        if (!values.username || !values.password || !values.content || (!localStorage.getItem('token') && values.username === '관리자')) {
             if (!values.username) {
                 alert('이름을 입력해주세요.');
                 inputNameFocus.current.focus(); // 유저명에 포커스
@@ -126,7 +126,7 @@ export default function Board() {
         setPassword(''); // 비밀번호 값 초기화
     }
 
-    // 비밀번호 입력값이 변경될 때마다 자동으로 상태를 반영
+    // 비밀번호 입력값이 변경될 때마다 자동으로 상태를 갱신
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
     }
@@ -163,9 +163,10 @@ export default function Board() {
     // 화면 출력 부분
     return (
         <section className='container-fluid container-xl px-5'>
-            <div className='py-5 mb-5 border-bottom'>
-                <h1 className='py-5 text-secondary fw-blid fst-italic'>방명록</h1>
+            <div className='pt-5 mb-5 border-bottom'>
+                <h1 className='pt-5 text-secondary fw-bold fst-italic'>방명록</h1>
             </div>
+            {/* 방명록 작성 폼 */}
             <form className='row g-2 mb-5' onSubmit={handleSubmit}>
                 <div className='col-6'>
                     <input type='text' className='form-control' name='username' placeholder='Name' onChange={handleChange} ref={inputNameFocus} disabled={isDisabled} maxLength={30}/>
@@ -181,6 +182,7 @@ export default function Board() {
                     <input type='submit' className='btn btn-primary w-100 py-2' value={'작성'}/>
                 </div>
             </form>
+            {/* 방명록 목록 */}
             {Array.isArray(data.items) ? (
                 <div className='py-3'>
                     {data.items.map((item) => (
@@ -201,17 +203,17 @@ export default function Board() {
                                     )}
                                 </div>
                                 <div className='col-2 mt-2'>
-                                    <p className='fst-italic text-secondary'>{item.postdate}</p>
+                                    <p className='fst-italic text-secondary opacity-75'>{item.postdate}</p>
                                 </div>
                                 {/* 삭제 버튼 */}
-                                {localStorage.getItem('token') !== null ?
+                                {localStorage.getItem('token') ? /* 로그인 상태일 경우 */
                                     <Fragment>
                                         <div className='col-2'/>
                                         <div className='col-1 px-3' style={{marginTop:0}}>
                                             <button onClick={() => handleDeleteAdmin(item.idx)} className='btn btn-primary'>삭제</button>
                                         </div>
                                     </Fragment>
-                                : (
+                                : ( /* 로그인 상태가 아닐 경우 */
                                     <Fragment>
                                         {showPasswordInput === item.idx ? ( /* 삭제할 방명록의 인덱스 값과 일치할 경우 */
                                             <Fragment key={`memo-fragment-${item.idx}`}>
@@ -224,14 +226,14 @@ export default function Board() {
                                             </Fragment>
                                         ) : (
                                             <Fragment key={`memo-fragment-${item.idx}`}>
-                                                {item.username !== '관리자' ? (
+                                                {item.username !== '관리자' ? ( /* 로그인 상태가 아닐 경우*/
                                                     <Fragment>
                                                         <div className='col-2'/>
                                                         <div className='col-1 px-3' style={{marginTop:0}}>
                                                             <button className='btn btn-primary' onClick={() => handleShowPasswordInput(item.idx)}>삭제</button>
                                                         </div>
                                                     </Fragment>
-                                                ) : (
+                                                ) : ( /* 로그인 상태일 경우 */
                                                     <div className='col-3'/>
                                                 )}
                                             </Fragment>
@@ -246,6 +248,7 @@ export default function Board() {
                     ))}
                     {/* 페이징 */}
                     <ul className='pagination justify-content-center py-5 mb-4'>
+                        {/* 이전 */}
                         {data.hasPrev ? (
                             <li className='page-item'>
                                 <Link className='page-link text-secondary' state={{page:data.prevNum}}>이전</Link>
@@ -255,6 +258,7 @@ export default function Board() {
                                 <Link className='page-link' aria-disabled='true'>이전</Link>
                             </li>
                         )}
+                        {/* 페이지 번호 */}
                         {data.iterPages.map((pageNum) => (
                             <Fragment key={`paging-${pageNum}`}>
                             {pageNum !== null ? (
@@ -276,6 +280,7 @@ export default function Board() {
                             )}
                             </Fragment>
                         ))}
+                        {/* 다음 */}
                         {data.hasNext ? (
                             <li>
                                 <Link className='page-link text-secondary' state={{page:data.nextNum}}>다음</Link>
@@ -290,7 +295,7 @@ export default function Board() {
             ) : (
                 // 로딩 대기 문구
                 <div className='py-5'>
-                    <h4 className='text-center fw-bold pb-5'>데이터가 아직 로드되지 않았습니다.</h4>
+                    <h4 className='text-secondary text-center fst-italic pb-5 opacity-50'>데이터가 아직 로드되지 않았습니다.</h4>
                 </div>
             )}
         </section>

@@ -27,7 +27,9 @@ export default function Scroll() {
     const [hasScrolled] = useScroll();
 
     // 스크롤 처리
-    const scrollToTop = () => {
+    const scrollToTop = (e) => {
+        e.preventDefault(); // 페이지 이동 방지
+
         window.scroll({
             top: 0 // 맨 위까지 끌어올림
         })

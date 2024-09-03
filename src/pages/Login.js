@@ -6,7 +6,7 @@ import service from '../service';
 
 // 저장된 데이터 로드
 function useCsrfToken() {
-    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
+    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 반영
 
     // 바로 실행
     useEffect(() => {
@@ -30,7 +30,7 @@ export default function Login() {
     const idFocus = useRef(null); // 아이디 참조
     const pwFocus = useRef(null); // 비밀번호 참조
 
-    // 입력값이 변경될 때마다 자동으로 상태를 반영
+    // 입력값이 변경될 때마다 자동으로 상태를 갱신
     const handleChange = (e) => {
         const {name, value} = e.target;
         setValues((prevValues) => ({
@@ -72,8 +72,8 @@ export default function Login() {
     // 화면 출력 부분
     return (
         <section className='container-fluid container-xl px-5'>
-            <div className='mb-5 border-bottom'>
-                <h1 className='ms-5'>로그인</h1>
+            <div className='pt-5 border-bottom'>
+                <h1 className='pt-5 text-secondary fw-bold fst-italic'>로그인</h1>
             </div>
             <form onSubmit={handleSubmit}>
                 <div className='mb-3'>

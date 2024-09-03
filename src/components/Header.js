@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css'
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { Fragment, useState, useEffect } from 'react';
 
 // 스크롤 이벤트 핸들러
@@ -17,15 +17,12 @@ function useScroll() {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, []);
+    }, []); // 페이지가 로드될 때 한 번만 실행
 
     return [hasScrolled];
 }
 
 export default function Header() {
-    // 라우팅 부분
-    const navigate = useNavigate();
-
     // 화면 출력용 변수
     const [view, setView] = useState(false); // 드롭다운 트리거
     const [hasScrolled] = useScroll(); // 스크롤 트리거
@@ -34,8 +31,7 @@ export default function Header() {
     const logout = () => {
         if (window.confirm('로그아웃 하시겠습니까?')) {
             localStorage.removeItem('token');
-            navigate('../');
-            window.location.reload();
+            window.location.reload(); // 새로고침
         }
     }
 
@@ -53,7 +49,7 @@ export default function Header() {
                         <li><NavLink to={'board'}>Board</NavLink></li>
                         <li><NavLink to={'contact'}>Contact</NavLink></li>
                         {/* 로그인 한정 */}
-                        {(localStorage.getItem('token') !== null) && (
+                        {localStorage.getItem('token') && (
                             <li onMouseEnter={() => {setView(true)}} onMouseLeave={() => {setView(!view)}}>
                                 <Link className='px-3' to={()=>false}>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">

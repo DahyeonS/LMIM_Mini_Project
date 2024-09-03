@@ -6,7 +6,7 @@ import service from '../service';
 
 // 저장된 데이터 로드
 function useCsrfToken() {
-    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 관리
+    const [csrfToken, setCsrfToken] = useState({}); // 불러온 CSRF 토큰 반영
 
     useEffect(() => { // 페이지 로드시 실행
         // CSRF 토큰
@@ -19,7 +19,7 @@ function useCsrfToken() {
 }
 
 function useData() {
-    const [data, setData] = useState({}); // 불러온 데이터 상태 관리
+    const [data, setData] = useState({}); // 불러온 데이터 상태 반영
 
     useEffect(() => { 
         // 계정 생성 가능 여부
@@ -47,7 +47,7 @@ export default function Join() {
     const pw2Focus = useRef(null); // 비밀번호 확인 참조
     const emailFocus = useRef(null); // 이메일 참조
 
-    // 입력값이 변경될 때마다 자동으로 상태를 반영
+    // 입력값이 변경될 때마다 자동으로 상태를 갱신
     const handleChange = (e) => {
         const {name, value} = e.target;
         setValues((prevValues) => ({
@@ -95,8 +95,8 @@ export default function Join() {
     // 화면 출력 부분
     return (
         <section className='container-fluid container-xl px-5'>
-            <div className='mb-5 border-bottom'>
-                <h1 className='ms-5'>회원가입</h1>
+            <div className='pt-5 border-bottom'>
+                <h1 className='pt-5 text-secondary fw-bold fst-italic'>회원가입</h1>
             </div>
             {data.rs < 1 ? (
                 <form onSubmit={handleSubmit}>

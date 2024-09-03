@@ -15,7 +15,7 @@ def html_parse(html_text) :
 @bp.route('/load')
 def load() :
     page = request.args.get('page', type=int, default=1)
-    posts = Post.query.order_by(Post.postdate.desc()).paginate(page=page, per_page=10)
+    posts = Post.query.order_by(Post.postdate.desc()).paginate(page=page, per_page=5)
     
     data = [{'idx':p.idx, 'title':p.title, 'content':html_parse(p.content),
             'photo':p.photo, 'postdate':p.postdate.strftime('%Y.%m.%d %I:%M %p'),
@@ -58,7 +58,7 @@ def upload() :
     file = request.files['image']
     file.filename = re.sub('\W', '_', str(datetime.now())[:22]) + '_' + file.filename
     file.save(os.path.join(f'{UPLOAD_FOLDER}/temp', file.filename))
-    return jsonify({'type':'temp', 'name':file.filename})
+    return jsonify({'name':file.filename})
 
 @bp.route('/load_image')
 def load_image() :
