@@ -30,7 +30,7 @@ export default function Header() {
     // 로그아웃
     const logout = () => {
         if (window.confirm('로그아웃 하시겠습니까?')) {
-            localStorage.removeItem('token');
+            localStorage.removeItem('token'); // 로그인 정보 삭제
             window.location.reload(); // 새로고침
         }
     }

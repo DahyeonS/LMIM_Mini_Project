@@ -43,7 +43,8 @@ export default function Post() {
                         <Link key={item.idx} className='text-dark' to={'/view'} state={{idx:item.idx}}>
                             <div className='row g-3 my-4 border-bottom'>
                                 <div className='col-9 float-left'>
-                                    <h2 className='mb-5 fw-bold'>{(item.title.length <= 30) ? (item.title) : (item.title.substring(0, 30) + '...')}</h2>
+                                    <h2 className='fw-bold mb-2'>{(item.title.length <= 30) ? (item.title) : (item.title.substring(0, 30) + '...')}</h2>
+                                    <h5 className='text-secondary fst-italic mb-5 opacity-75'>{item.postdate}</h5>
                                     <h5 className='mt-5 text-secondary'>{(item.content.length <= 50) ? (item.content) : (item.content.substring(0, 50) + '...')}</h5>
                                 </div>
                                 <div className='col-3 float-right mb-4'>

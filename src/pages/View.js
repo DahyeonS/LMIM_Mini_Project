@@ -54,7 +54,7 @@ export default function View() {
 
     // 게시물 삭제
     const handleDelete = (e) => {
-        e.preventDefault(); // 페이지 이동 방지
+        e.preventDefault(); // 페이지 변경 방지
 
         if (window.confirm('정말로 삭제하시겠습니까?')) {
             service.deletePost(index, csrfToken).then(
@@ -74,10 +74,21 @@ export default function View() {
             <div className='pt-5 border-bottom'>
                 <h1 className='pt-5 text-secondary fw-bold'>{data.title}</h1>
             </div>
+            <div className='row text-secondary fst-italic opacity-75 mt-2'>
+                <h5 className='col-4'>작성일 {data.postdate}</h5>
+                {data.modified_date && (
+                    <Fragment>
+                        <div className='col-4'/>
+                        <div className='col-4'>
+                            <h5 className='float-end'>수정일 {data.modified_date}</h5>
+                        </div>
+                    </Fragment>
+                )}
+            </div>
             {index > 0 && (
                 <Fragment>
                     {localStorage.getItem('token') ? ( // 관리자 로그인
-                        <div className='pt-3 row'>
+                        <div className='pt-2 row'>
                             <div className='col-2'>
                                 <Link className='btn btn-primary' to={'/post'}>목록보기</Link>
                             </div>
@@ -88,11 +99,14 @@ export default function View() {
                             </div>
                         </div>
                     ) : ( // 비로그인
-                        <div className='pt-3'>
-                            <Link className='btn btn-primary float-end' to={'/post'}>목록보기</Link>
+                        <div className='pt-2 row'>
+                            <div className='col-10'/>
+                            <div className='col-2'>
+                                <Link className='btn btn-primary float-end' to={'/post'}>목록보기</Link>
+                            </div>
                         </div>
                     )}
-                    <div className='py-5'>
+                    <div className='pt-4 pb-5'>
                         <Viewer initialValue={data.content} key={data.content}/>
                     </div>
                         {localStorage.getItem('token') ? ( // 관리자 로그인
@@ -107,8 +121,11 @@ export default function View() {
                                 </div>
                             </div>
                         ) : ( // 비로그인
-                            <div className='border-top pt-2 pb-5'>
-                                <Link className='text-secondary float-end' to={'/post'}>목록보기</Link>
+                            <div className='border-top row pt-2 pb-5'>
+                                <div className='col-10'/>
+                                <div className='col-2'>
+                                    <Link className='text-secondary float-end' to={'/post'}>목록보기</Link>
+                                </div>
                             </div>
                         )}
                 </Fragment>

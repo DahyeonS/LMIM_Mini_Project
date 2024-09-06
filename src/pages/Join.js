@@ -11,9 +11,9 @@ function useCsrfToken() {
     useEffect(() => { // 페이지 로드시 실행
         // CSRF 토큰
         service.getCsrfToken().then(
-            (res) => {setCsrfToken(res.data.csrf_token);}
+            (res) => {setCsrfToken(res.data.csrf_token);} // CSRF 토큰 저장
         )
-    }, []) // 한 번만 실행
+    }, []) // 페이지가 로드될 때 한 번만 실행
 
     return [csrfToken];
 }
@@ -24,9 +24,9 @@ function useData() {
     useEffect(() => { 
         // 계정 생성 가능 여부
         service.loadUser().then(
-            (res) => {setData(res.data);}
+            (res) => {setData(res.data);} // 결과값을 저장
         )
-    }, [])
+    }, []) // 페이지가 로드될 때 한 번만 실행
 
     return [data];
 }
@@ -49,10 +49,10 @@ export default function Join() {
 
     // 입력값이 변경될 때마다 자동으로 상태를 갱신
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setValues((prevValues) => ({
-            ...prevValues,
-            [name]: value
+        const {name, value} = e.target; // 입력값의 name, value 추출
+        setValues((prevValues) => ({ // values의 값을 갱신
+            ...prevValues, // 이전에 입력된 값을 복사
+            [name]: value // 새로운 값을 추가하거나 갱신된 값을 적용
         }))
     }
 
@@ -64,19 +64,19 @@ export default function Join() {
         if (!values.id || !values.pw || !values.pw2 || !values.email || values.pw !== values.pw2) {
             if (!values.id) {
                 alert('아이디를 입력해주세요.');
-                idFocus.current.focus();
+                idFocus.current.focus(); // 아이디에 포커스
             } else if (!values.pw) {
                 alert('비밀번호를 입력해주세요.');
-                pwFocus.current.focus();
+                pwFocus.current.focus(); // 비밀번호에 포커스
             } else if (!values.pw2) {
                 alert('비밀번호 확인이 필요합니다.');
-                pw2Focus.current.focus();
+                pw2Focus.current.focus(); // 비밀번호 확인에 포커스
             } else if (!values.email) {
                 alert('이메일을 입력해주세요.');
-                emailFocus.current.focus();
+                emailFocus.current.focus(); // 이메일에 포커스
             } else {
                 alert('비밀번호가 일치하지 않습니다');
-                pw2Focus.current.focus();
+                pw2Focus.current.focus(); // 비밀번호 확인에 포커스
             }
 
             return false;
@@ -86,7 +86,7 @@ export default function Join() {
             (res) => {
                 if (res.data.rs === 1) {
                     alert('회원가입이 완료되었습니다.');
-                    navigate('/login');
+                    navigate('/login'); // 로그인으로 페이지 이동
                 }
             }
         )
@@ -95,33 +95,35 @@ export default function Join() {
     // 화면 출력 부분
     return (
         <section className='container-fluid container-xl px-5'>
-            <div className='pt-5 border-bottom'>
+            <div className='pt-5 mb-5 border-bottom'>
                 <h1 className='pt-5 text-secondary fw-bold fst-italic'>회원가입</h1>
             </div>
-            {data.rs < 1 ? (
-                <form onSubmit={handleSubmit}>
+            {data.rs < 1 ? ( // 회원가입 가능
+                <form className='pb-5' onSubmit={handleSubmit}>
                     <div className='mb-3'>
-                        <label htmlFor='id'>아이디</label>
+                        <label htmlFor='id' className='mb-1 text-secondary'>아이디</label>
                         <input type='text' id='id' className='form-control' name='id' onChange={handleChange} ref={idFocus} maxLength={20}/>
                     </div>
                     <div className='mb-3'>
-                        <label htmlFor='pw'>비밀번호</label>
+                        <label htmlFor='pw' className='mb-1 text-secondary'>비밀번호</label>
                         <input type='password' id='pw' className='form-control' name='pw' onChange={handleChange} ref={pwFocus} maxLength={150}/>
                     </div>
                     <div className='mb-3'>
-                        <label htmlFor='pw2'>비밀번호 확인</label>
+                        <label htmlFor='pw2' className='mb-1 text-secondary'>비밀번호 확인</label>
                         <input type='password' id='pw2' className='form-control' name='pw2' onChange={handleChange} ref={pw2Focus} maxLength={150}/>
                     </div>
                     <div className='mb-3'>
-                        <label htmlFor='email'>이메일</label>
+                        <label htmlFor='email' className='mb-1 text-secondary'>이메일</label>
                         <input type='email' id='email' className='form-control' name='email' onChange={handleChange} ref={emailFocus} maxLength={120}/>
                     </div>
                     <div>
-                        <input type='submit' className='btn btn-primary w-100 py-2' value={'가입하기'}/>
+                        <input type='submit' className='btn btn-primary w-100 py-2 mt-3 mb-5' value={'가입하기'}/>
                     </div>
                 </form>
-            ) : (
-                <h3>가입할 수 없습니다.</h3>
+            ) : ( // 회원가입 불가
+                <div className='pb-5'>
+                    <h3 className='text-secondary opacity-75'>가입할 수 없습니다.</h3>
+                </div>
             )}
         </section>
     );

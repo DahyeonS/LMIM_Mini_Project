@@ -40,8 +40,8 @@ function useValues() {
     
         setValues((prevValues) => ({ // values의 값을 갱신
             ...prevValues, // 이전에 입력된 값을 복사
-            username: '관리자',
-            password: 'admin'
+            username: '관리자', // username을 '관리자'로 설정
+            password: 'admin' // password를 임의로 설정
         }))
     }, []) // 페이지가 로드될 때 한 번만 실행
 
@@ -122,8 +122,10 @@ export default function Board() {
 
     // 삭제할 방명록의 인덱스 값 설정
     const handleShowPasswordInput = (idx) => {
-        setShowPasswordInput(idx);
-        setPassword(''); // 비밀번호 값 초기화
+        if (window.confirm('정말 삭제하시겠습니까?')) {
+            setShowPasswordInput(idx);
+            setPassword(''); // 비밀번호 값 초기화
+        }
     }
 
     // 비밀번호 입력값이 변경될 때마다 자동으로 상태를 갱신
@@ -168,17 +170,17 @@ export default function Board() {
             </div>
             {/* 방명록 작성 폼 */}
             <form className='row g-2 mb-5' onSubmit={handleSubmit}>
-                <div className='col-6'>
+                <div className='col-12 col-md-6'>
                     <input type='text' className='form-control' name='username' placeholder='Name' onChange={handleChange} ref={inputNameFocus} disabled={isDisabled} maxLength={30}/>
                 </div>
-                <div className='col-6'>
+                <div className='col-12 col-md-6'>
                     <input type='password' className='form-control' name='password' placeholder='Password' onChange={handleChange} ref={inputPwFocus} disabled={isDisabled} maxLength={150}/>
                 </div>
                 <div className='col-12'>
                     <input type='text' className='form-control py-5' name='content' onChange={handleChange} ref={inputContentFocus} maxLength={500}/>
                 </div>
-                <div className='col-10'/>
-                <div className='col-2'>
+                <div className='col-8 col-md-9 col-lg-10'/>
+                <div className='col-4 col-md-3 col-lg-2'>
                     <input type='submit' className='btn btn-primary w-100 py-2' value={'작성'}/>
                 </div>
             </form>
@@ -186,8 +188,8 @@ export default function Board() {
             {Array.isArray(data.items) ? (
                 <div className='py-3'>
                     {data.items.map((item) => (
-                        <Fragment>
-                            <div key={item.idx} className='row g-3 border-top py-5'>
+                        <Fragment key={item.idx}>
+                            <div className='row g-3 border-top py-5'>
                                 <div className='col-2' style={{marginTop:0}}>
                                     {item.username.length <= 15 ? (
                                         <h6 style={{marginTop:10}}>{item.username}</h6>
@@ -203,7 +205,7 @@ export default function Board() {
                                     )}
                                 </div>
                                 <div className='col-2 mt-2'>
-                                    <p className='fst-italic text-secondary opacity-75'>{item.postdate}</p>
+                                    <p className='fst-italic text-secondary opacity-50'>{item.postdate}</p>
                                 </div>
                                 {/* 삭제 버튼 */}
                                 {localStorage.getItem('token') ? /* 로그인 상태일 경우 */
@@ -216,7 +218,7 @@ export default function Board() {
                                 : ( /* 로그인 상태가 아닐 경우 */
                                     <Fragment>
                                         {showPasswordInput === item.idx ? ( /* 삭제할 방명록의 인덱스 값과 일치할 경우 */
-                                            <Fragment key={`memo-fragment-${item.idx}`}>
+                                            <Fragment>
                                                 <div className='col-2' style={{marginTop:0}}>
                                                     <input type='password' onChange={handlePasswordChange} className='form-control' placeholder='비밀번호 확인' ref={inputDeletePwFocus}/>
                                                 </div>
@@ -225,7 +227,7 @@ export default function Board() {
                                                 </div>
                                             </Fragment>
                                         ) : (
-                                            <Fragment key={`memo-fragment-${item.idx}`}>
+                                            <Fragment>
                                                 {item.username !== '관리자' ? ( /* 로그인 상태가 아닐 경우*/
                                                     <Fragment>
                                                         <div className='col-2'/>

@@ -75,7 +75,7 @@ def load_image() :
 def select() :
     idx = request.args.get('idx', type=int)
     result = Post.query.get(idx)
-    return jsonify({'title':result.title, 'content':result.content, 'photo':result.photo, 'postdate':result.postdate,
+    return jsonify({'title':result.title, 'content':result.content, 'photo':result.photo, 'postdate':result.postdate.strftime('%Y년 %m월 %d일 %I:%M %p'),
                     'modified_date':result.modified_date.strftime('%Y년 %m월 %d일 %I:%M %p') if result.modified_date else result.modified_date})
 
 @bp.route('/update', methods=['GET', 'POST'])

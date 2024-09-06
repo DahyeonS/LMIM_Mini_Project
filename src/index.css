@@ -87,8 +87,19 @@ body {
 }
 
 main {
-  padding: 115px 0 15px 0;
   background-color: rgba(119, 182, 202, 0.15);
+}
+
+@media (min-width: 1200px) {
+  main {
+    padding: 115px 0 15px 0;
+  }
+}
+
+@media (max-width: 1199px) {
+  main {
+    padding: 70px 0 15px 0;
+  }
 }
 
 a {

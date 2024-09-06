@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { Fragment, useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Scroll from './components/Scroll';
@@ -13,7 +14,6 @@ import Write from './pages/Write';
 import View from './pages/View';
 import Board from './pages/Board';
 import Contact from './pages/Contact'
-import { Fragment, useEffect } from 'react';
 
 // 우클릭 방지
 function useBlockClick() {

@@ -121,20 +121,22 @@ export default function Write() {
 
     // 제출 처리 함수
     const editorSubmit = async(e) => {
-        e.preventDefault();
+        e.preventDefault(); // 페이지 변경 방지
         const rawData = editorData.replace('<p>', '').replace('</p>', '').replace('<br>', '');
 
+        // 빈 공간이 있을 시 전송 X
         if (!editorData || !rawData || !title) {
             if (!title) {
                 alert('제목을 입력해주세요.');
-                titleRef.current.focus(); // 제목 포커스
+                titleRef.current.focus(); // 제목에 포커스
             } else {
                 alert('내용을 입력해주세요.');
             }
             return false
         }
         
-        await service.createPost({title, content:editorData}, csrfRef.current).then( // 페이지 로딩이 완료된 후 실행
+        // 페이지 로딩이 완료된 후 실행
+        await service.createPost({title, content:editorData}, csrfRef.current).then(
             (res) => {
                 if (res.data.rs === 1) {
                     alert('게시물이 작성되었습니다.');
@@ -146,9 +148,10 @@ export default function Write() {
     
     // 수정 처리 함수
     const editorUpdate = async(e) => {
-        e.preventDefault();
+        e.preventDefault(); // 페이지 변경 방지
         const rawDataUpdate = editorData.replace('<p>', '').replace('</p>', '').replace('<br>', '');
     
+        // 빈 공간이 있을 시 전송 X
         if (!editorData || !rawDataUpdate || !title) {
             if (!title) {
                 alert('제목을 입력하세요.');
@@ -159,7 +162,8 @@ export default function Write() {
             return false
         }
         
-        await service.updatePost({idx:index, title, content:editorData}, csrfRef.current).then( // 페이지 로딩이 완료된 후 실행
+        // 페이지 로딩이 완료된 후 실행
+        await service.updatePost({idx:index, title, content:editorData}, csrfRef.current).then(
             (res) => {
                 if (res.data.rs === 1) {
                     alert('게시물이 수정되었습니다.');
