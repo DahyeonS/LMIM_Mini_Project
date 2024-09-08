@@ -140,7 +140,7 @@ export default function Update() {
             <div className='pt-5 mb-5 border-bottom'>
                 <h1 className='pt-5 text-secondary fw-bold fst-italic'>회원정보 수정</h1>
             </div>
-            {isChecked ? ( // 회원정보 수정
+            {isChecked ? // 회원정보 수정
                 <form className='pb-5' onSubmit={handleSubmit}>
                     <div className='mb-3'>
                         <label htmlFor='id' className='mb-1 text-secondary'>아이디</label>
@@ -158,13 +158,13 @@ export default function Update() {
                         <input type='submit' className='btn btn-primary w-100 py-2 mt-3 mb-5' value={'수정하기'}/>
                     </div>
                 </form>
-            ) : ( // 비밀번호 확인
+             : // 비밀번호 확인
                 <form className='pb-5' onSubmit={handlePasswordSubmit}>
                     <label htmlFor='password' className='mb-1 text-secondary'>비밀번호 확인</label>
                     <input type='password' id='password' name='password' className='form-control' onChange={handlePasswordChange} ref={passwordFocus}/>
                     <input type='submit' className='btn btn-primary w-100 py-2 mt-3 mb-5' value={'확인'}/>
                 </form>
-            )}
+            }
         </section>
     );
 }

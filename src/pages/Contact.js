@@ -72,7 +72,7 @@ export default function Contact() {
                 <h1 className='pt-5 text-secondary fw-bold fst-italic'>Contact</h1>
             </div>
             <div className='mt-3 mb-5'>
-                <h5 className='text-secondary fst-italic'>이름, 연락처와 함께 메시지를 보내면 메일이 전송됩니다.</h5>
+                <h5 className='text-secondary fst-italic'>이름, 연락처와 함께 메시지를 보내면 관리자에게 메일이 전송됩니다.</h5>
             </div>
             <form className='pt-2 pb-5' onSubmit={handleSubmit}>
                 <div className='mb-3'>

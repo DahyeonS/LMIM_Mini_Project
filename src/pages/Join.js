@@ -98,7 +98,7 @@ export default function Join() {
             <div className='pt-5 mb-5 border-bottom'>
                 <h1 className='pt-5 text-secondary fw-bold fst-italic'>회원가입</h1>
             </div>
-            {data.rs < 1 ? ( // 회원가입 가능
+            {data.rs < 1 ? // 회원가입 가능
                 <form className='pb-5' onSubmit={handleSubmit}>
                     <div className='mb-3'>
                         <label htmlFor='id' className='mb-1 text-secondary'>아이디</label>
@@ -120,11 +120,11 @@ export default function Join() {
                         <input type='submit' className='btn btn-primary w-100 py-2 mt-3 mb-5' value={'가입하기'}/>
                     </div>
                 </form>
-            ) : ( // 회원가입 불가
+             : // 회원가입 불가
                 <div className='pb-5'>
                     <h3 className='text-secondary opacity-75'>가입할 수 없습니다.</h3>
                 </div>
-            )}
+            }
         </section>
     );
 }

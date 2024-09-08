@@ -4,6 +4,20 @@ import { useState, useRef, useEffect, Fragment } from 'react';
 import service from '../service';
 import { Link, useLocation } from 'react-router-dom';
 
+// 모바일 확인
+function UseIsMoblie() {
+    const [isMobile, setIsMobile] = useState(false); // 모바일 상태 반영
+
+    useEffect(() => {
+        if (typeof window) {
+            if (window.innerWidth > 768) setIsMobile(false);
+            else setIsMobile(true);
+        }
+    }, []) // 페이지가 로드될 때 한 번만 실행
+
+    return [isMobile]
+}
+
 // 저장된 데이터 로드
 function useData() {
     const [data, setData] = useState({}); // 불러온 데이터 상태 반영
@@ -62,6 +76,7 @@ function useIsDisabled() {
 export default function Board() {
     // 출력값 처리 부분
     const [data] = useData();
+    const [isMobile] = UseIsMoblie();
     
     // 입력값 처리 부분
     const [csrfToken] = useCsrfToken();
@@ -185,121 +200,170 @@ export default function Board() {
                 </div>
             </form>
             {/* 방명록 목록 */}
-            {Array.isArray(data.items) ? (
+            {Array.isArray(data.items) ?
                 <div className='py-3'>
-                    {data.items.map((item) => (
+                    {data.items.map(item => 
                         <Fragment key={item.idx}>
                             <div className='row g-3 border-top py-5'>
-                                <div className='col-2' style={{marginTop:0}}>
-                                    {item.username.length <= 15 ? (
+                                <div className='col-12 col-md-6 col-lg-2' style={{marginTop:0}}>
+                                    {item.username.length <= 15 ? 
                                         <h6 style={{marginTop:10}}>{item.username}</h6>
-                                    ) : (
+                                    : 
                                         <h6 dangerouslySetInnerHTML={{ __html: item.username.match(/.{1,15}/g).join('<br/>') }}/>
-                                    )}
+                                    }
                                 </div>
-                                <div className='col-5 mt-2'>
-                                    {item.content.length <= 40 ? (
+                                <div className='col-12 col-md-6 col-lg-5 mt-2'>
+                                    {item.content.length <= 30 ? 
                                         <p>{item.content}</p>
-                                    ) : (
-                                        <p dangerouslySetInnerHTML={{ __html: item.content.match(/.{1,40}/g).join('<br />') }}/>
-                                    )}
+                                    : 
+                                        <p dangerouslySetInnerHTML={{ __html: item.content.match(/.{1,30}/g).join('<br />') }}/>
+                                    }
                                 </div>
-                                <div className='col-2 mt-2'>
-                                    <p className='fst-italic text-secondary opacity-50'>{item.postdate}</p>
+                                <div className='col-12 col-md-6 col-lg-2 mt-2'>
+                                    <p className='fst-italic text-secondary opacity-50 board-lower'>{item.postdate}</p>
                                 </div>
                                 {/* 삭제 버튼 */}
                                 {localStorage.getItem('token') ? /* 로그인 상태일 경우 */
                                     <Fragment>
-                                        <div className='col-2'/>
-                                        <div className='col-1 px-3' style={{marginTop:0}}>
+                                        <div className='col-8 col-md-4 col-lg-2 board-lower'/>
+                                        <div className='col-4 col-md-2 col-lg-1 px-3 board-delete'>
                                             <button onClick={() => handleDeleteAdmin(item.idx)} className='btn btn-primary'>삭제</button>
                                         </div>
                                     </Fragment>
-                                : ( /* 로그인 상태가 아닐 경우 */
+                                : /* 로그인 상태가 아닐 경우 */
                                     <Fragment>
-                                        {showPasswordInput === item.idx ? ( /* 삭제할 방명록의 인덱스 값과 일치할 경우 */
+                                        {showPasswordInput === item.idx ? /* 삭제할 방명록의 인덱스 값과 일치할 경우 */
                                             <Fragment>
-                                                <div className='col-2' style={{marginTop:0}}>
+                                                <div className='col-8 col-md-4 col-lg-2 board-delete'>
                                                     <input type='password' onChange={handlePasswordChange} className='form-control' placeholder='비밀번호 확인' ref={inputDeletePwFocus}/>
                                                 </div>
-                                                <div className='col-1' style={{marginTop:0}}>
+                                                <div className='col-4 col-md-2 col-lg-1 board-delete'>
                                                     <button onClick={() => handleDelete(item.idx)} className='btn btn-primary ms-2'>삭제</button>
                                                 </div>
                                             </Fragment>
-                                        ) : (
+                                        : 
                                             <Fragment>
-                                                {item.username !== '관리자' ? ( /* 로그인 상태가 아닐 경우*/
+                                                {item.username !== '관리자' ? /* 관리자가 작성한 글이 아닐 경우 */
                                                     <Fragment>
-                                                        <div className='col-2'/>
-                                                        <div className='col-1 px-3' style={{marginTop:0}}>
+                                                        <div className='col-8 col-md-4 col-lg-2 board-lower'/>
+                                                        <div className='col-4 col-md-2 col-lg-1 px-3 board-delete'>
                                                             <button className='btn btn-primary' onClick={() => handleShowPasswordInput(item.idx)}>삭제</button>
                                                         </div>
                                                     </Fragment>
-                                                ) : ( /* 로그인 상태일 경우 */
-                                                    <div className='col-3'/>
-                                                )}
+                                                : /* 관리자가 작성한 글인 경우*/
+                                                    <div className='col-12 col-md-6 col-lg-3 board-lower'/>
+                                                }
                                             </Fragment>
-                                        )}
+                                        }
                                     </Fragment>
-                                )}
+                                }
                             </div>
-                            {item.num === data.items.length && (
+                            {item.num === data.items.length && 
                                 <div className='row g-3 pt-5 border-top'/>
-                            )}
+                            }
                         </Fragment>
-                    ))}
+                    )}
                     {/* 페이징 */}
                     <ul className='pagination justify-content-center py-5 mb-4'>
-                        {/* 이전 */}
-                        {data.hasPrev ? (
-                            <li className='page-item'>
-                                <Link className='page-link text-secondary' state={{page:data.prevNum}}>이전</Link>
-                            </li>
-                        ) : (
-                            <li className='page-item disabled'>
-                                <Link className='page-link' aria-disabled='true'>이전</Link>
-                            </li>
-                        )}
-                        {/* 페이지 번호 */}
-                        {data.iterPages.map((pageNum) => (
-                            <Fragment key={`paging-${pageNum}`}>
-                            {pageNum !== null ? (
-                                <Fragment key={`paging-fragment-${pageNum}`}>
-                                {pageNum !== data.page ? (
-                                    <li className='page-item' >
-                                        <Link className='page-link text-secondary' state={{page:pageNum}}>{pageNum}</Link>
-                                    </li>
-                                ) : (
-                                    <li className='page-item active' aria-current='page'>
-                                        <Link className='page-link' style={{backgroundColor:'rgba(119, 182, 202, 0.9)', border:'rgba(119, 182, 202, 0.9)'}} tabIndex={-1} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
-                                    </li>                            
+                        {isMobile ? // 모바일
+                            <Fragment>
+                                {/* 처음 */}
+                                {data.hasPrev ? 
+                                    <Fragment>
+                                        <li className='page-item'>
+                                            <Link className='page-link text-secondary' state={{page:1}}>{'<<'}</Link>
+                                        </li>
+                                    </Fragment>
+                                :
+                                    <Fragment>
+                                        <li className='page-item disabled'>
+                                            <Link className='page-link' aria-disabled='true'>{'<<'}</Link>
+                                        </li>
+                                    </Fragment>
+                                }
+                                {/* 페이지 번호 */}
+                                {data.iterPages.map(pageNum => 
+                                    <Fragment key={`paging-${pageNum || Math.random()}`}>
+                                    {pageNum !== null && pageNum < data.page + 3 && pageNum > data.page - 3 &&
+                                        <Fragment key={`paging-fragment-${pageNum || Math.random()}`}>
+                                        {pageNum !== data.page ? 
+                                            <li className='page-item' >
+                                                <Link className='page-link text-secondary' state={{page:pageNum}}>{pageNum}</Link>
+                                            </li>
+                                        : 
+                                            <li className='page-item active' aria-current='page'>
+                                                <Link className='page-link' style={{backgroundColor:'rgba(119, 182, 202, 0.9)', border:'rgba(119, 182, 202, 0.9)'}} tabIndex={-1} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
+                                            </li>                            
+                                        }
+                                        </Fragment>
+                                    }
+                                    </Fragment>
                                 )}
-                                </Fragment>
-                            ) : (
-                                <li className='disabled'>
-                                    <Link className='page-link'>...</Link>
-                                </li>
-                            )}
+                                {/* 마지막 */}
+                                {data.hasNext ? 
+                                    <li className='page-item'>
+                                        <Link className='page-link text-secondary' state={{page:data.iterPages[data.iterPages.length-1]}}>{'>>'}</Link>
+                                    </li>
+                                :
+                                    <li className='page-item disabled'>
+                                        <Link className='page-link' tabIndex={-1} aria-disabled='true'>{'>>'}</Link>
+                                    </li>
+                                }
                             </Fragment>
-                        ))}
-                        {/* 다음 */}
-                        {data.hasNext ? (
-                            <li>
-                                <Link className='page-link text-secondary' state={{page:data.nextNum}}>다음</Link>
-                            </li>
-                        ) : (
-                            <li className='page-item disabled'>
-                                <Link className='page-link' tabIndex={-1} aria-disabled='true'>다음</Link>
-                            </li>
-                        )}
+                        : // 데스크톱
+                            <Fragment>
+                                {/* 이전 */}
+                                {data.hasPrev ? 
+                                    <li className='page-item'>
+                                        <Link className='page-link text-secondary' state={{page:data.prevNum}}>이전</Link>
+                                    </li>
+                                :
+                                    <li className='page-item disabled'>
+                                        <Link className='page-link' aria-disabled='true'>이전</Link>
+                                    </li>
+                                }
+                                {/* 페이지 번호 */}
+                                {data.iterPages.map(pageNum => 
+                                    <Fragment key={`paging-${pageNum || Math.random()}`}>
+                                        {pageNum !== null ?
+                                            <Fragment key={`paging-fragment-${pageNum || Math.random()}`}>
+                                                {pageNum !== data.page ? 
+                                                    <li className='page-item' >
+                                                        <Link className='page-link text-secondary' state={{page:pageNum}}>{pageNum}</Link>
+                                                    </li>
+                                                : 
+                                                    <li className='page-item active' aria-current='page'>
+                                                        <Link className='page-link' style={{backgroundColor:'rgba(119, 182, 202, 0.9)', border:'rgba(119, 182, 202, 0.9)'}} tabIndex={-1} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
+                                                    </li>                            
+                                                }
+                                            </Fragment>
+                                        : 
+                                            <li className='disabled'>
+                                                <Link className='page-link'>...</Link>
+                                            </li>
+                                        }
+                                    </Fragment>
+                                )}
+                                {/* 다음 */}
+                                {data.hasNext ? 
+                                    <li>
+                                        <Link className='page-link text-secondary' state={{page:data.nextNum}}>다음</Link>
+                                    </li>
+                                : 
+                                    <li className='page-item disabled'>
+                                        <Link className='page-link' tabIndex={-1} aria-disabled='true'>다음</Link>
+                                    </li>
+                                }
+                            </Fragment>
+                        }
                     </ul>
                 </div>
-            ) : (
+            :
                 // 로딩 대기 문구
                 <div className='py-5'>
                     <h4 className='text-secondary text-center fst-italic pb-5 opacity-50'>데이터가 아직 로드되지 않았습니다.</h4>
                 </div>
-            )}
+            }
         </section>
     );
 }

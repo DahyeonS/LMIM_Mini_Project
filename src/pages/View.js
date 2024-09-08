@@ -13,6 +13,34 @@ function useBlockNoData(index, navigate) {
     }, [index, navigate]) // 페이지가 로드될 때 한 번만 실행
 }
 
+// 모바일 확인
+function UseIsMoblie() {
+    const [isMobile, setIsMobile] = useState(false); // 모바일 상태 반영
+
+    useEffect(() => {
+        if (typeof window) {
+            if (window.innerWidth > 768) setIsMobile(false);
+            else setIsMobile(true);
+        }
+    }, []) // 페이지가 로드될 때 한 번만 실행
+
+    return [isMobile]
+}
+
+// 데스크톱 확인
+function UseIsDeskTop() {
+    const [isDeskTop, setIsDeskTop] = useState(false); // 데스크톱 상태 반영
+
+    useEffect(() => {
+        if (typeof window) {
+            if (window.innerWidth < 1200) setIsDeskTop(false);
+            else setIsDeskTop(true);
+        }
+    }, []) // 페이지가 로드될 때 한 번만 실행
+
+    return [isDeskTop]
+}
+
 // 저장된 데이터 로드
 function useData(index) {
     const [data, setData] = useState({}); // 불러온 데이터 반영
@@ -48,6 +76,8 @@ export default function View() {
     
     // 출력값 처리 부분
     const [data] = useData(index);
+    const [isMobile] = UseIsMoblie();
+    const [isDeskTop] = UseIsDeskTop();
 
     // 입력값 처리 부분
     const [csrfToken] = useCsrfToken();
@@ -75,12 +105,12 @@ export default function View() {
                 <h1 className='pt-5 text-secondary fw-bold'>{data.title}</h1>
             </div>
             <div className='row text-secondary fst-italic opacity-75 mt-2'>
-                <h5 className='col-4'>작성일 {data.postdate}</h5>
+                <h5 className={`col-12 col-md-5 col-lg-4 ${!isDeskTop && 'h6'}`}>작성일 {data.postdate}</h5>
                 {data.modified_date && (
                     <Fragment>
-                        <div className='col-4'/>
-                        <div className='col-4'>
-                            <h5 className='float-end'>수정일 {data.modified_date}</h5>
+                        <div className='col-md-2 col-lg-4'/>
+                        <div className='col-12 col-md-5 col-lg-4'>
+                            <h5 className={`${!isDeskTop && 'h6'} ${!isMobile && 'float-end'}`}>수정일 {data.modified_date}</h5>
                         </div>
                     </Fragment>
                 )}
@@ -89,19 +119,19 @@ export default function View() {
                 <Fragment>
                     {localStorage.getItem('token') ? ( // 관리자 로그인
                         <div className='pt-2 row'>
-                            <div className='col-2'>
+                            <div className='col-4 col-md-2'>
                                 <Link className='btn btn-primary' to={'/post'}>목록보기</Link>
                             </div>
-                            <div className='col-7'/>
-                            <div className='col-3'>
-                                <Link className='btn btn-primary ms-2 float-end' onClick={handleDelete}>삭제하기</Link>
+                            {!isMobile && <div className='col-8 col-md-6 col-lg-7'/>}
+                            <div className='col-8 col-md-4 col-lg-3'>
+                                <Link className='btn btn-secondary ms-2 float-end' onClick={handleDelete}>삭제하기</Link>
                                 <Link className='btn btn-primary float-end' to={'/write'} state={{idx:index}}>수정하기</Link>
                             </div>
                         </div>
                     ) : ( // 비로그인
-                        <div className='pt-2 row'>
-                            <div className='col-10'/>
-                            <div className='col-2'>
+                        <div className={`row ${!isMobile ? 'pt-2' : 'pt-1'}`}>
+                            <div className='col-7 col-md-10'/>
+                            <div className='col-5 col-md-2'>
                                 <Link className='btn btn-primary float-end' to={'/post'}>목록보기</Link>
                             </div>
                         </div>
@@ -111,19 +141,19 @@ export default function View() {
                     </div>
                         {localStorage.getItem('token') ? ( // 관리자 로그인
                             <div className='border-top row pt-2 pb-5'>
-                                <div className='col-2'>
+                                <div className='col-4 col-md-2'>
                                     <Link className='text-secondary' to={'/post'}>목록보기</Link>
                                 </div>
-                                <div className='col-7'/>
-                                <div className='col-3'>
-                                    <Link className='text-secondary ms-2 float-end' onClick={handleDelete}>삭제하기</Link>
+                                <div className='col-1 col-md-7'/>
+                                <div className='col-7 col-md-3'>
+                                    <Link className='text-danger ms-2 float-end' onClick={handleDelete}>삭제하기</Link>
                                     <Link className='text-secondary float-end' to={'/write'}>수정하기</Link>
                                 </div>
                             </div>
                         ) : ( // 비로그인
                             <div className='border-top row pt-2 pb-5'>
-                                <div className='col-10'/>
-                                <div className='col-2'>
+                                <div className='col-8 col-md-10'/>
+                                <div className='col-4 col-md-2'>
                                     <Link className='text-secondary float-end' to={'/post'}>목록보기</Link>
                                 </div>
                             </div>
