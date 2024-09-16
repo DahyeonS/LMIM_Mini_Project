@@ -16,8 +16,8 @@ def html_parse(html_text) :
 def load() :
     page = request.args.get('page', type=int, default=1)
     posts = Post.query.order_by(Post.postdate.desc()).paginate(page=page, per_page=5)
-    
-    data = [{'idx':p.idx, 'title':p.title, 'content':html_parse(p.content),
+
+    data = [{'idx':p.idx, 'title':p.title, 'content':html_parse(p.content), 'tag':p.tag,
             'photo':p.photo, 'postdate':p.postdate.strftime('%Y.%m.%d %I:%M %p'),
             'modified_date':p.modified_date.strftime('%Y.%m.%d %I:%M %p') if p.modified_date else p.modified_date}
             for p in posts]
@@ -33,6 +33,8 @@ def insert() :
     data = request.get_json()
     title = data.get('title')
     content = data.get('content')
+    tag = data.get('tag')
+
     url = re.findall(r'<img src="([^"]+)"', content)
     files = [u.replace('./post/load_image?type=temp&amp;name=', '') for u in url]
 
@@ -44,14 +46,21 @@ def insert() :
             os.remove(f.path)
 
         content = content.replace('<img src="./post/load_image?type=temp', '<img src="./post/load_image?type=uploads')
-        post = Post(title=title, content=content, photo=', '.join(files))
+
+        if tag :
+            post = Post(title=title, content=content, tag=' '.join(tag), photo=', '.join(files))
+        else :
+            post = Post(title=title, content=content, photo=', '.join(files))
     else :
-        post = Post(title=title, content=content)
+        if tag :
+            post = Post(title=title, content=content, tag=' '.join(tag))
+        else :
+            post = Post(title=title, content=content)
 
     db.session.add(post)
     db.session.commit()
 
-    return jsonify({'rs':1})
+    return jsonify({'rs':1, 'idx':post.idx})
 
 @bp.route('/upload', methods=['POST'])
 def upload() :
@@ -75,7 +84,7 @@ def load_image() :
 def select() :
     idx = request.args.get('idx', type=int)
     result = Post.query.get(idx)
-    return jsonify({'title':result.title, 'content':result.content, 'photo':result.photo, 'postdate':result.postdate.strftime('%Y년 %m월 %d일 %I:%M %p'),
+    return jsonify({'title':result.title, 'content':result.content, 'tag':result.tag, 'photo':result.photo, 'postdate':result.postdate.strftime('%Y년 %m월 %d일 %I:%M %p'),
                     'modified_date':result.modified_date.strftime('%Y년 %m월 %d일 %I:%M %p') if result.modified_date else result.modified_date})
 
 @bp.route('/update', methods=['GET', 'POST'])
@@ -85,6 +94,7 @@ def update() :
         idx = data.get('idx')
         title = data.get('title')
         content = data.get('content')
+        tag = data.get('tag')
 
         url = re.findall(r'<img src="([^"]+)"', content)
         new_files = [
@@ -115,9 +125,15 @@ def update() :
             content = content.replace('<img src="./post/load_image?type=temp', '<img src="./post/load_image?type=uploads')
             new_url = re.findall(r'<img src="([^"]+)"', content)
             photos = [n.replace('./post/load_image?type=uploads&amp;name=', '') for n in new_url]
-            p_update = {'title':title, 'content':content, 'photo':', '.join(photos)}
+            if tag :
+                p_update = {'title':title, 'content':content, 'tag':' '.join(tag), 'photo':', '.join(photos)}
+            else :
+                p_update = {'title':title, 'content':content, 'photo':', '.join(photos)}
         else :
-            p_update = {'title':title, 'content':content}
+            if tag :
+                p_update = {'title':title, 'content':content, 'tag':' '.join(tag)}
+            else :
+                p_update = {'title':title, 'content':content}
 
         db.session.query(Post).filter(Post.idx==idx).update(p_update)
         db.session.commit()
@@ -126,7 +142,7 @@ def update() :
 
     idx = request.args.get('idx', type=int)
     post = Post.query.get(idx)
-    return jsonify({'title':post.title, 'content':post.content})
+    return jsonify({'title':post.title, 'content':post.content, 'tag':post.tag})
 
 @bp.route('/delete', methods=['POST'])
 def delete() :

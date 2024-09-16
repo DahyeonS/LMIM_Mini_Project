@@ -79,7 +79,7 @@ export default function Join() {
                 pw2Focus.current.focus(); // 비밀번호 확인에 포커스
             }
 
-            return false;
+            return;
         }
 
         service.createUser(values, csrfToken).then(

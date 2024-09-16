@@ -15,7 +15,7 @@ function UseIsMoblie() {
         }
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [isMobile]
+    return isMobile;
 }
 
 // 저장된 데이터 로드
@@ -36,7 +36,7 @@ function useData() {
 export default function Post() {
     // 출력값 처리 부분
     const [data] = useData();
-    const [isMobile] = UseIsMoblie();
+    const isMobile = UseIsMoblie();
 
     // 화면 출력 부분
     return (
@@ -80,6 +80,11 @@ export default function Post() {
                                                 {item.content.length <= 50 ? item.content : item.content.substring(0, 50) + '...'}
                                             </Fragment>
                                         }
+                                    </h5>
+                                    <h5 className='mt-3'>
+                                        {item.tag && item.tag.split(' ').map((tag, index) => 
+                                            <span key={`tag-${index}`} className='me-2 fst-italic text-secondary opacity-50'>#{tag}</span>
+                                        )}
                                     </h5>
                                 </div>
                                 {!isMobile && // 데스크톱으로만 출력

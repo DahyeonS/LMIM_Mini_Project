@@ -14,7 +14,7 @@ function UseIsMoblie() {
         }
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [isMobile]
+    return isMobile;
 }
 
 // 스크롤 이벤트 핸들러
@@ -31,15 +31,15 @@ function useScroll() {
         return () => {
             window.removeEventListener('scroll', handleScroll); // 함수 제거
         };
-    }, []);
+    }, []); // 페이지가 로드될 때 한 번만 실행
 
-    return [hasScrolled];
+    return hasScrolled;
 }
 
 export default function Scroll() {
     // 화면 출력용 변수
-    const [isMobile] = UseIsMoblie();
-    const [hasScrolled] = useScroll();
+    const isMobile = UseIsMoblie();
+    const hasScrolled = useScroll();
 
     // 스크롤 처리
     const scrollToTop = (e) => {

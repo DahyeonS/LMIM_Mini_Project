@@ -85,7 +85,7 @@ export default function Update() {
                 emailFocus.current.focus(); // 이메일에 포커스
             }
 
-            return false
+            return;
         }
 
         service.updateUser(values, csrfToken).then(
@@ -107,7 +107,7 @@ export default function Update() {
             alert('비밀번호를 입력하세요.')
             passwordFocus.current.focus(); // 비밀번호에 포커스
 
-            return false
+            return;
         }
 
         service.checkUser(password, csrfToken).then(

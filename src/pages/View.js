@@ -24,7 +24,7 @@ function UseIsMoblie() {
         }
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [isMobile]
+    return isMobile;
 }
 
 // 데스크톱 확인
@@ -38,7 +38,7 @@ function UseIsDeskTop() {
         }
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [isDeskTop]
+    return isDeskTop;
 }
 
 // 저장된 데이터 로드
@@ -76,8 +76,8 @@ export default function View() {
     
     // 출력값 처리 부분
     const [data] = useData(index);
-    const [isMobile] = UseIsMoblie();
-    const [isDeskTop] = UseIsDeskTop();
+    const isMobile = UseIsMoblie();
+    const isDeskTop = UseIsDeskTop();
 
     // 입력값 처리 부분
     const [csrfToken] = useCsrfToken();
@@ -119,14 +119,28 @@ export default function View() {
                 <Fragment>
                     {localStorage.getItem('token') ? ( // 관리자 로그인
                         <div className='pt-2 row'>
-                            <div className='col-4 col-md-2'>
-                                <Link className='btn btn-primary' to={'/post'}>목록보기</Link>
-                            </div>
-                            {!isMobile && <div className='col-8 col-md-6 col-lg-7'/>}
-                            <div className='col-8 col-md-4 col-lg-3'>
-                                <Link className='btn btn-secondary ms-2 float-end' onClick={handleDelete}>삭제하기</Link>
-                                <Link className='btn btn-primary float-end' to={'/write'} state={{idx:index}}>수정하기</Link>
-                            </div>
+                            {isMobile ? // 모바일
+                                <Fragment>
+                                    <div className='col-12'>
+                                        <Link className='btn btn-primary' to={'/write'} state={{idx:index}}>수정하기</Link>
+                                        <Link className='btn btn-secondary ms-2' onClick={handleDelete}>삭제하기</Link>
+                                    </div>
+                                    <div className='mt-2'>
+                                        <Link className='btn btn-primary' to={'/post'}>목록보기</Link>
+                                    </div>
+                                </Fragment>
+                            : // 데스크톱
+                                <Fragment>
+                                <div className='col-2'>
+                                    <Link className='btn btn-primary' to={'/post'}>목록보기</Link>
+                                </div>
+                                <div className='col-6 col-lg-7'/>
+                                <div className='col-4 col-lg-3'>
+                                    <Link className='btn btn-secondary ms-2 float-end' onClick={handleDelete}>삭제하기</Link>
+                                    <Link className='btn btn-primary float-end' to={'/write'} state={{idx:index}}>수정하기</Link>
+                                </div>
+                                </Fragment>
+                            }
                         </div>
                     ) : ( // 비로그인
                         <div className={`row ${!isMobile ? 'pt-2' : 'pt-1'}`}>
@@ -139,25 +153,32 @@ export default function View() {
                     <div className='pt-4 pb-5'>
                         <Viewer initialValue={data.content} key={data.content}/>
                     </div>
-                        {localStorage.getItem('token') ? ( // 관리자 로그인
-                            <div className='border-top row pt-2 pb-5'>
-                                <div className='col-4 col-md-2'>
-                                    <Link className='text-secondary' to={'/post'}>목록보기</Link>
-                                </div>
-                                <div className='col-1 col-md-7'/>
-                                <div className='col-7 col-md-3'>
-                                    <Link className='text-danger ms-2 float-end' onClick={handleDelete}>삭제하기</Link>
-                                    <Link className='text-secondary float-end' to={'/write'}>수정하기</Link>
-                                </div>
+                    {data.tag && 
+                        <div className='mb-1'>
+                            {data.tag.split(' ').map((tag, index) => 
+                                <Link key={`tag-${index}`} className='fst-italic text-custom me-2'>#{tag}</Link>
+                            )}
+                        </div>
+                    }
+                    {localStorage.getItem('token') ? ( // 관리자 로그인
+                        <div className='border-top row pt-2 pb-5'>
+                            <div className='col-4 col-md-2'>
+                                <Link className='text-secondary' to={'/post'}>목록보기</Link>
                             </div>
-                        ) : ( // 비로그인
-                            <div className='border-top row pt-2 pb-5'>
-                                <div className='col-8 col-md-10'/>
-                                <div className='col-4 col-md-2'>
-                                    <Link className='text-secondary float-end' to={'/post'}>목록보기</Link>
-                                </div>
+                            <div className='col-1 col-md-7'/>
+                            <div className='col-7 col-md-3'>
+                                <Link className='text-danger ms-2 float-end' onClick={handleDelete}>삭제하기</Link>
+                                <Link className='text-secondary float-end' to={'/write'} state={{idx:index}}>수정하기</Link>
                             </div>
-                        )}
+                        </div>
+                    ) : ( // 비로그인
+                        <div className='border-top row pt-2 pb-5'>
+                            <div className='col-8 col-md-10'/>
+                            <div className='col-4 col-md-2'>
+                                <Link className='text-secondary float-end' to={'/post'}>목록보기</Link>
+                            </div>
+                        </div>
+                    )}
                 </Fragment>
             )}
         </section>

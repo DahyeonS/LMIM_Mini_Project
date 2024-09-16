@@ -51,7 +51,7 @@ export default function Contact() {
                 emailRef.current.focus(); // 이메일에 포커스
             }
 
-            return false;
+            return;
         }
         
         // 값 전송 함수 호출

@@ -15,7 +15,7 @@ function UseIsMoblie() {
         }
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [isMobile]
+    return isMobile;
 }
 
 // 저장된 데이터 로드
@@ -70,18 +70,18 @@ function useIsDisabled() {
         else setIsDisabled(false);
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [isDisabled];
+    return isDisabled;
 }
 
 export default function Board() {
     // 출력값 처리 부분
     const [data] = useData();
-    const [isMobile] = UseIsMoblie();
+    const isMobile = UseIsMoblie();
     
     // 입력값 처리 부분
     const [csrfToken] = useCsrfToken();
     const [values, setValues] = useValues();
-    const [isDisabled] = useIsDisabled();
+    const isDisabled = useIsDisabled();
     const [password, setPassword] = useState({}); // 비밀번호 입력값 반영
     const [showPasswordInput, setShowPasswordInput] = useState(null); // 비밀번호 입력 필드
 
@@ -121,7 +121,7 @@ export default function Board() {
                 inputNameFocus.current.focus(); // 유저명에 포커스
             }
             
-            return false;
+            return;
         }
 
         // DB 저장 함수 호출

@@ -16,7 +16,7 @@ function useCsrfToken() {
         )
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [csrfToken]
+    return [csrfToken];
 }
 
 export default function Login() {
@@ -53,7 +53,7 @@ export default function Login() {
                 pwFocus.current.focus(); // 비밀번호에 포커스
             }
 
-            return false
+            return;
         }
 
         service.login(values, csrfToken).then(

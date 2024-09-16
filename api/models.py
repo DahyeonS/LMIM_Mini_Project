@@ -12,6 +12,7 @@ class Post(db.Model) :
     title = db.Column(db.String(40), nullable=False)
     photo = db.Column(db.Text)
     content = db.Column(db.Text, nullable=False)
+    tag = db.Column(db.String(200))
     postdate = db.Column(db.DateTime, nullable=False, default=datetime.now())
     modified_date = db.Column(db.DateTime, onupdate=datetime.now())
 
