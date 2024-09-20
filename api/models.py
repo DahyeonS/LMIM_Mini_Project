@@ -13,12 +13,12 @@ class Post(db.Model) :
     photo = db.Column(db.Text)
     content = db.Column(db.Text, nullable=False)
     tag = db.Column(db.String(200))
-    postdate = db.Column(db.DateTime, nullable=False, default=datetime.now())
-    modified_date = db.Column(db.DateTime, onupdate=datetime.now())
+    postdate = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    modified_date = db.Column(db.DateTime, onupdate=datetime.now)
 
 class Memo(db.Model) :
     idx = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), nullable=False)
     pw = db.Column(db.String(200), nullable=False)
     content = db.Column(db.String(500), nullable=False)
-    postdate = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    postdate = db.Column(db.DateTime, nullable=False, default=datetime.now)
