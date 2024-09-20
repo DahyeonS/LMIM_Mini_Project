@@ -15,14 +15,20 @@ def html_parse(html_text) :
 @bp.route('/load')
 def load() :
     page = request.args.get('page', type=int, default=1)
-    posts = Post.query.order_by(Post.postdate.desc()).paginate(page=page, per_page=5)
+    search_tag = request.args.get('tag')
 
+    if search_tag :
+        posts = Post.query.filter(Post.tag.contains(search_tag)).order_by(Post.postdate.desc()).paginate(page=page, per_page=5)
+    else :
+        posts = Post.query.order_by(Post.postdate.desc()).paginate(page=page, per_page=5)
+        
+    tags = list(set(tag for post in Post.query.all() if post.tag for tag in post.tag.split(' ')))
     data = [{'idx':p.idx, 'title':p.title, 'content':html_parse(p.content), 'tag':p.tag,
             'photo':p.photo, 'postdate':p.postdate.strftime('%Y.%m.%d %I:%M %p'),
             'modified_date':p.modified_date.strftime('%Y.%m.%d %I:%M %p') if p.modified_date else p.modified_date}
             for p in posts]
     result = {
-        'items':data, 'hasPrev':posts.has_prev, 'hasNext':posts.has_next, 'page':page,
+        'tags':tags, 'items':data, 'hasPrev':posts.has_prev, 'hasNext':posts.has_next, 'page':page,
         'iterPages':list(posts.iter_pages()), 'prevNum':posts.prev_num, 'nextNum':posts.next_num
         }
 
@@ -84,8 +90,12 @@ def load_image() :
 def select() :
     idx = request.args.get('idx', type=int)
     result = Post.query.get(idx)
-    return jsonify({'title':result.title, 'content':result.content, 'tag':result.tag, 'photo':result.photo, 'postdate':result.postdate.strftime('%Y년 %m월 %d일 %I:%M %p'),
+
+    if result :
+        return jsonify({'rs':1, 'title':result.title, 'content':result.content, 'tag':result.tag, 'photo':result.photo, 'postdate':result.postdate.strftime('%Y년 %m월 %d일 %I:%M %p'),
                     'modified_date':result.modified_date.strftime('%Y년 %m월 %d일 %I:%M %p') if result.modified_date else result.modified_date})
+    
+    return jsonify({'rs':0})
 
 @bp.route('/update', methods=['GET', 'POST'])
 def update() :

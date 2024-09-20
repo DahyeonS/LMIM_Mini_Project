@@ -5,14 +5,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Fragment, useEffect, useState } from 'react';
 import service from '../service';
 
-// 잘못된 페이지 이동 방지
-function useBlockNoData(index, navigate) {
-    useEffect(() => {
-        if (index !== 0) return;
-        navigate('/post');
-    }, [index, navigate]) // 페이지가 로드될 때 한 번만 실행
-}
-
 // 모바일 확인
 function UseIsMoblie() {
     const [isMobile, setIsMobile] = useState(false); // 모바일 상태 반영
@@ -42,17 +34,20 @@ function UseIsDeskTop() {
 }
 
 // 저장된 데이터 로드
-function useData(index) {
+function useData(index, navigate) {
     const [data, setData] = useState({}); // 불러온 데이터 반영
 
     useEffect(() => {
-        if (index === 0) return;
+        if (index === 0) navigate('/post'); // 잘못된 페이지 이동 방지
         service.loadPost(index).then(
-            (res) => {setData(res.data);} // 응답받은 값을 data에 저장
+            (res) => {
+                if (res.data.rs === 1) setData(res.data); // 응답받은 값을 data에 저장
+                else navigate('/post'); // 잘못된 페이지 이동 방지
+            }
         )
-    }, [index])
+    }, [index, navigate]) // 페이지가 로드될 때 한 번만 실행
 
-    return [data]; // 페이지가 로드될 때 한 번만 실행
+    return [data];
 }
 
 function useCsrfToken() {
@@ -70,12 +65,14 @@ function useCsrfToken() {
 export default function View() {
     // 라우팅 부분
     const location = useLocation(null); // 현재 페이지 위치 추출
-    const index = location.state ? location.state.idx : 0; // 현제 페이지 번호 추출
     const navigate = useNavigate(); // 페이지 이동
-    useBlockNoData(index, navigate);
+
+    let index = location.state ? location.state.idx : 0; // 현재 페이지 번호 추출
+    const params = new URLSearchParams(location.search); // 주소창에서 페이지 번호 추출
+    if (params.get('num')) index = params.get('num'); // 주소창에 페이지 번호가 있으면 대체
     
     // 출력값 처리 부분
-    const [data] = useData(index);
+    const [data] = useData(index, navigate);
     const isMobile = UseIsMoblie();
     const isDeskTop = UseIsDeskTop();
 
@@ -154,9 +151,9 @@ export default function View() {
                         <Viewer initialValue={data.content} key={data.content}/>
                     </div>
                     {data.tag && 
-                        <div className='mb-1'>
+                        <div className='mb-1 text-break'>
                             {data.tag.split(' ').map((tag, index) => 
-                                <Link key={`tag-${index}`} className='fst-italic text-custom me-2'>#{tag}</Link>
+                                <Link to={'/post'} state={{tag:tag}} className='fst-italic text-custom me-2' key={`tag-${index}`}>#{tag}</Link>
                             )}
                         </div>
                     }

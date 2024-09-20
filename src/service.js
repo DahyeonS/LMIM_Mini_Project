@@ -32,8 +32,8 @@ const updateUser = (values, csrfToken) => {
 }
 
 // 게시판
-const getPost = (page) => {
-    return axios.get(API.POSTLOAD, {params: {page}})
+const getPost = (page, searchTag) => {
+    return axios.get(API.POSTLOAD, {params: {page, 'tag':searchTag}})
 }
 
 const createPost = (values, csrfToken) => {

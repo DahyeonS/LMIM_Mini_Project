@@ -212,12 +212,8 @@ export default function Board() {
                                         <h6 dangerouslySetInnerHTML={{ __html: item.username.match(/.{1,15}/g).join('<br/>') }}/>
                                     }
                                 </div>
-                                <div className='col-12 col-md-6 col-lg-5 mt-2'>
-                                    {item.content.length <= 30 ? 
-                                        <p>{item.content}</p>
-                                    : 
-                                        <p dangerouslySetInnerHTML={{ __html: item.content.match(/.{1,30}/g).join('<br />') }}/>
-                                    }
+                                <div className='col-12 col-md-6 col-lg-5 mt-2 text-break'>
+                                    <p>{item.content}</p>
                                 </div>
                                 <div className='col-12 col-md-6 col-lg-2 mt-2'>
                                     <p className='fst-italic text-secondary opacity-50 board-lower'>{item.postdate}</p>

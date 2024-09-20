@@ -19,16 +19,17 @@ function UseIsMoblie() {
 }
 
 // 저장된 데이터 로드
-function useData() {
+function useData() { // 페이지별 로드
     const [data, setData] = useState({}); // 불러온 데이터 반영
     const location = useLocation(null); // 현재 페이지 위치 추출
     const page = location.state ? location.state.page : 1; // 현제 페이지 번호 추출
+    const searchTag = location.state ? location.state.tag : '';
 
     useEffect(() => { // 페이지 로드시 실행
-        service.getPost(page).then(
+        service.getPost(page, searchTag).then(
             (res) => {setData(res.data);} // 응답받은 값을 data에 저장
         )
-    }, [page]) // 페이지가 변경될 때마다 한 번만 실행
+    }, [page, searchTag]) // 페이지가 변경될 때마다 한 번만 실행
 
     return [data];
 }
@@ -44,27 +45,36 @@ export default function Post() {
             <div className='pt-5 border-bottom'>
                 <h1 className='pt-5 text-secondary fw-bold fst-italic'>게시판</h1>
             </div>
-            {/* 관리자 한정 글쓰기 버튼 */}
-            {localStorage.getItem('token') && (
-                <div className='mt-3'>
-                    <Link className='btn btn-primary float-end' to={'/write'}>글쓰기</Link>
+            {/* 태그 목록 */}
+            {Array.isArray(data.tags) && 
+                <div className='mt-3 mb-4 text-break'>
+                    {data.tags.map((tag, index) => 
+                        <Link className='fw-bold bg-custom me-2' state={{tag:tag}} key={`tag-link-${index}`}>#{tag}</Link>
+                    )}
                 </div>
-            )}
+            }
+            {/* 관리자 한정 글쓰기 버튼 */}
+            <div className='mt-3'>
+            {localStorage.getItem('token') && 
+                <Link className='btn btn-primary float-end ms-2' to={'/write'}>글쓰기</Link>
+            }
+            <Link className='btn btn-primary float-end'>전체보기</Link>
+            </div>
             {/* 게시판 목록 */}
-            {Array.isArray(data.items) ? (
+            {Array.isArray(data.items) ?
                 <div className='pt-5 pb-1'>
-                    {data.items.map((item) => (
+                    {data.items.map((item) => 
                         // state에 게시물의 고유번호를 넣은 채로 페이지 이동
                         <Link key={item.idx} className='text-dark' to={'/view'} state={{idx:item.idx}}>
-                            <div className='row g-3 my-4 border-bottom'>
+                            <div className='row g-3 mt-4 mb-5 border-bottom'>
                                 <div className={`col-12 col-md-7 col-lg-9 float-left ${isMobile && 'mb-4'}`}>
                                     <h2 className='fw-bold mb-2'>
                                         {isMobile ? // 모바일
-                                            <Fragment>
+                                            <Fragment key={`title-${item.idx}`}>
                                                 {item.title.length <= 15 ? item.title : item.title.substring(0, 15) + '...'}
                                             </Fragment>
                                         : // 데스크톱
-                                            <Fragment>
+                                            <Fragment key={`title-${item.idx}`}>
                                                 {item.title.length <= 30 ? item.title : item.title.substring(0, 30) + '...'}
                                             </Fragment>
                                         }
@@ -72,25 +82,25 @@ export default function Post() {
                                     <h5 className='text-secondary fst-italic mb-5 opacity-75'>{item.postdate}</h5>
                                     <h5 className='mt-5 text-secondary'>
                                         {isMobile ? // 모바일
-                                            <Fragment>
+                                            <Fragment key={`content-${item.idx}`}>
                                                 {item.content.length <= 20 ? item.content : item.content.substring(0, 20) + '...'}
                                             </Fragment>
                                         : // 데스크톱
-                                            <Fragment>
+                                            <Fragment key={`content-${item.idx}`}>
                                                 {item.content.length <= 50 ? item.content : item.content.substring(0, 50) + '...'}
                                             </Fragment>
                                         }
                                     </h5>
-                                    <h5 className='mt-3'>
+                                    <h5 className='my-3 text-break'>
                                         {item.tag && item.tag.split(' ').map((tag, index) => 
                                             <span key={`tag-${index}`} className='me-2 fst-italic text-secondary opacity-50'>#{tag}</span>
                                         )}
                                     </h5>
                                 </div>
                                 {!isMobile && // 데스크톱으로만 출력
-                                    <div className='col-5 col-lg-3 float-right mb-4'>
+                                    <div className='col-5 col-lg-3 float-right my-4'>
                                         {(item.photo) ? (
-                                            <img src={`./post/load_image?type=uploads&name=${item.photo.split(', ')[0]}`} alt={item.photo.split(', ')[0]} width='300px' height='200px'/>
+                                            <img src={`./post/load_image?type=uploads&name=${item.photo.split(', ')[0]}`} alt={item.photo.split(', ')[0]} width='250px' height='200px'/>
                                         ) : (
                                             <img src={'./post/load_image?type=static&name=empty_image'} alt='empty'/>
                                         )}
@@ -98,7 +108,7 @@ export default function Post() {
                                 }
                             </div>
                         </Link>
-                    ))}
+                    )}
                     {/* 페이징 */}
                     <ul className='pagination justify-content-center py-5 mb-4'>
                         {isMobile ? // 모바일
@@ -194,12 +204,12 @@ export default function Post() {
                         }
                     </ul>
                 </div>
-            ) : (
+            :
                 // 로딩 대기 문구
                 <div className='py-5'>
                     <h4 className='text-secondary text-center fst-italic pb-5 opacity-50'>데이터가 아직 로드되지 않았습니다.</h4>
                 </div>
-            )}
+            }
         </section>
     );
 }
