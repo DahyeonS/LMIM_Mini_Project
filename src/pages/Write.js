@@ -65,15 +65,15 @@ function useCsrfToken() {
     return csrfRef;
 }
 
-function useEditorRef(index, editorData) { // 불러온 내용을 실제 에디터에 적용
+function useEditorRef(editorData) { // 불러온 내용을 실제 에디터에 적용
     const editorRef = useRef(null); // 에디터 참조
-    const hasSetHTML = useState(false); // 수정 데이터 적용 여부
+    const hasSetHTML = useRef(false); // 수정 데이터 적용 여부
 
     useEffect(() => {
-        if (index === 0 || hasSetHTML.current) return; // 수정 시 단 한 번만 작동
+        if (!editorData || hasSetHTML.current) return; // 수정 시 단 한 번만 작동
         editorRef.current.getInstance().setHTML(editorData); // 에디터 데이터 설정
         hasSetHTML.current = true; // 데이터 적용 여부 설정
-    }, [index, editorData, hasSetHTML]); // 페이지가 로드될 때 한 번만 실행
+    }, [editorData]); // 페이지가 로드될 때 한 번만 실행
 
     return editorRef;
 }
@@ -94,7 +94,7 @@ export default function Write() {
 
     const csrfRef = useCsrfToken();
     const titleRef = useRef(null); // 제목 참조
-    const editorRef = useEditorRef(index, editorData);
+    const editorRef = useEditorRef(editorData);
 
     // 제목 입력값 갱신
     const handleTitleChange = (e) => {
