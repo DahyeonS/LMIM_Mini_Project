@@ -65,13 +65,15 @@ function useCsrfToken() {
     return csrfRef;
 }
 
-function useEditorRef(editorData) { // 불러온 내용을 실제 에디터에 적용
+function useEditorRef(index, editorData) { // 불러온 내용을 실제 에디터에 적용
     const editorRef = useRef(null); // 에디터 참조
+    const hasSetHTML = useState(false); // 수정 데이터 적용 여부
 
     useEffect(() => {
-        if (!editorData) return; // 수정 시에만 작동
+        if (index === 0 || hasSetHTML.current) return; // 수정 시 단 한 번만 작동
         editorRef.current.getInstance().setHTML(editorData); // 에디터 데이터 설정
-    }, [editorData]); // 페이지가 로드될 때 한 번만 실행
+        hasSetHTML.current = true; // 데이터 적용 여부 설정
+    }, [index, editorData, hasSetHTML]); // 페이지가 로드될 때 한 번만 실행
 
     return editorRef;
 }
@@ -92,7 +94,7 @@ export default function Write() {
 
     const csrfRef = useCsrfToken();
     const titleRef = useRef(null); // 제목 참조
-    const editorRef = useEditorRef(editorData);
+    const editorRef = useEditorRef(index, editorData);
 
     // 제목 입력값 갱신
     const handleTitleChange = (e) => {
@@ -223,7 +225,7 @@ export default function Write() {
             <Editor previewStyle='vertical' initialEditType='wysiwyg' hooks={{addImageBlobHook: onUploadImage}} maxLength={2000}
             toolbarItems = {[['heading', 'bold', 'italic', 'strike'], ['hr', 'quote'], ['indent', 'outdent'],
                 ['ul', 'ol', 'task'], ['image', 'link', 'code', 'codeblock']]} initialValue={editorData}
-            hideModeSwitch={true} onChange={() => {setEditorData(editorRef.current.getInstance().getHTML()); console.log(editorData);}}
+            hideModeSwitch={true} onChange={() => setEditorData(editorRef.current.getInstance().getHTML())}
             ref={editorRef} plugins={[colorSyntax, [codeSyntaxHighlight, {highlighter: Prism }]]} language='ko-KR'/>
             <div className='mt-3 mb-4 row'>
                 <div className='col-md-5 col-lg-3'>

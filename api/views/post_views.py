@@ -113,6 +113,9 @@ def update() :
                 for p in prev_photo.split(', ') :
                     if p not in files :
                         os.remove(f'{UPLOAD_FOLDER}/uploads/{p}')
+        elif prev_photo :
+            for p in prev_photo.split(', ') :
+                os.remove(f'{UPLOAD_FOLDER}/uploads/{p}')
 
         if new_files :
             for file in new_files :
@@ -131,9 +134,9 @@ def update() :
                 p_update = {'title':title, 'content':content, 'photo':', '.join(photos)}
         else :
             if tag :
-                p_update = {'title':title, 'content':content, 'tag':' '.join(tag)}
+                p_update = {'title':title, 'content':content, 'tag':' '.join(tag), 'photo':None}
             else :
-                p_update = {'title':title, 'content':content}
+                p_update = {'title':title, 'content':content, 'photo':None}
 
         db.session.query(Post).filter(Post.idx==idx).update(p_update)
         db.session.commit()
