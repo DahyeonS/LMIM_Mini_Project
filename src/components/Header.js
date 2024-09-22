@@ -95,12 +95,18 @@ export default function Header() {
                     }
                     {!isDeskTop && view &&
                         <ul className='border collapse dropdown-menu dropdown-menu-end mobile-menu'>
-                            <li><NavLink to={'/'}>Home</NavLink></li>
-                            <li><NavLink to={'about'}>About</NavLink></li>
-                            <li><NavLink to={'works'}>Works</NavLink></li>
-                            <li><NavLink to={'post'}>Post</NavLink></li>
-                            <li><NavLink to={'board'}>Board</NavLink></li>
-                            <li><NavLink to={'contact'}>Contact</NavLink></li>
+                            <li><NavLink to={'/'} onClick={() => setView(false)}>Home</NavLink></li>
+                            <li><NavLink to={'about'} onClick={() => setView(false)}>About</NavLink></li>
+                            <li><NavLink to={'works'} onClick={() => setView(false)}>Works</NavLink></li>
+                            <li><NavLink to={'post'} onClick={() => setView(false)}>Post</NavLink></li>
+                            <li><NavLink to={'board'} onClick={() => setView(false)}>Board</NavLink></li>
+                            <li><NavLink to={'contact'} onClick={() => setView(false)}>Contact</NavLink></li>
+                            {localStorage.getItem('token') &&
+                                <Fragment>
+                                    <li className='border-top mt-2 pt-2'><NavLink to={'update'} onClick={() => setView(false)}>Update</NavLink></li>
+                                    <li><Link onClick={logout}>Logout</Link></li>
+                                </Fragment>
+                            }
                         </ul>
                     }
                 </nav>
