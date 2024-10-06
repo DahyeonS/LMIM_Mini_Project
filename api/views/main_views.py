@@ -9,8 +9,12 @@ bp = Blueprint('main', __name__, url_prefix='/')
 UPLOAD_FOLDER = os.getcwd() + '/img' # 파일 절대 경로
 
 @bp.route('/')
-def index() :
-    return 'Hello world!'
+def serve_react():
+    return send_from_directory(current_app.static_folder, 'index.html')
+
+@bp.route('/<path:path>')
+def serve_static_files(path):
+    return send_from_directory(current_app.static_folder, path)
 
 @bp.route('/csrf_token')
 def csrf_token() :
