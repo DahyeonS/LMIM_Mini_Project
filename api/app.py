@@ -22,7 +22,8 @@ jwt = JWTManager()
 mail = Mail()
 
 def create_app() :
-    app = Flask(__name__)
+    # app = Flask(__name__) # 개발
+    app = Flask(__name__, static_folder='../build') # 배포
     app.config.from_envvar('APP_CONFIG_FILE') # 설정 불러오기
 
     # CSRF 설정
