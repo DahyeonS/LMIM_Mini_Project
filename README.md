@@ -24,7 +24,7 @@
 
 ## Database
 - SQLite(개발)
-- PostgreSQL(배포)
+- MySQL(배포)
 
 ## 사용 라이브러리
 - **React**
