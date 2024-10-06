@@ -44,4 +44,6 @@
 - https://kim-hasa.tistory.com/133
 - https://bootstrapmade.com/demo/templates/QuickStart/index.html
 - https://velog.io/@harimad/typewriter-effect
+- https://www.crypist.com/post/django/deployment/deploying-django-project-with-react-to-pythonanywhere/
+- https://velog.io/@thdusdl4767/Project-Pythonanywhere%EC%97%90-MySQL-%EC%84%B8%ED%8C%85%ED%95%98%EA%B3%A0-%EC%97%85%EB%A1%9C%EB%93%9C
 - https://www.remixicon.com/
