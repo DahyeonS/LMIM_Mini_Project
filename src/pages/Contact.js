@@ -13,12 +13,12 @@ function useCsrfToken() {
         )
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [csrfToken];
+    return csrfToken;
 }
 
 export default function Contact() {
     // 입력값 처리 부분
-    const [csrfToken] = useCsrfToken();
+    const csrfToken = useCsrfToken();
     const [values, setValues] = useState({}); // 입력값 반영
 
     const nameRef = useRef(null); // 이름 참조
@@ -67,7 +67,7 @@ export default function Contact() {
 
     // 화면 출력 부분
     return (
-        <section className='container-fluid container-xl px-5'>
+        <section className='container-fluid container-xl px-5 rounded'>
             <div className='pt-5 border-bottom'>
                 <h1 className='pt-5 text-secondary fw-bold fst-italic'>Contact</h1>
             </div>

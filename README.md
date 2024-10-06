@@ -43,4 +43,5 @@
 - https://seon1015.tistory.com/76
 - https://kim-hasa.tistory.com/133
 - https://bootstrapmade.com/demo/templates/QuickStart/index.html
+- https://velog.io/@harimad/typewriter-effect
 - https://www.remixicon.com/

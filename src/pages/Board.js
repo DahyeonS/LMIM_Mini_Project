@@ -30,7 +30,7 @@ function useData() {
         )
     }, [page]) // 페이지가 변경될 때마다 한 번만 실행
 
-    return [data];
+    return data;
 }
 
 function useCsrfToken() {
@@ -43,7 +43,7 @@ function useCsrfToken() {
         )
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [csrfToken];
+    return csrfToken;
 }
 
 function useValues() {
@@ -75,11 +75,11 @@ function useIsDisabled() {
 
 export default function Board() {
     // 출력값 처리 부분
-    const [data] = useData();
+    const data = useData();
     const isMobile = UseIsMoblie();
     
     // 입력값 처리 부분
-    const [csrfToken] = useCsrfToken();
+    const csrfToken = useCsrfToken();
     const [values, setValues] = useValues();
     const isDisabled = useIsDisabled();
     const [password, setPassword] = useState({}); // 비밀번호 입력값 반영
@@ -179,7 +179,7 @@ export default function Board() {
 
     // 화면 출력 부분
     return (
-        <section className='container-fluid container-xl px-5'>
+        <section className='container-fluid container-xl px-5 rounded'>
             <div className='pt-5 mb-5 border-bottom'>
                 <h1 className='pt-5 text-secondary fw-bold fst-italic'>방명록</h1>
             </div>
@@ -203,20 +203,20 @@ export default function Board() {
             {Array.isArray(data.items) ?
                 <div className='py-3'>
                     {data.items.map(item => 
-                        <Fragment key={item.idx}>
-                            <div className='row g-3 border-top py-5'>
+                        <Fragment key={`board-${item.idx}`}>
+                            <div className='row g-3 border-top py-5 mb-2'>
                                 <div className='col-12 col-md-6 col-lg-2' style={{marginTop:0}}>
                                     {item.username.length <= 15 ? 
-                                        <h6 style={{marginTop:10}}>{item.username}</h6>
+                                        <h6 className='fw-bold' style={{marginTop:7}}>{item.username}</h6>
                                     : 
-                                        <h6 dangerouslySetInnerHTML={{ __html: item.username.match(/.{1,15}/g).join('<br/>') }}/>
+                                        <h6 className='fw-bold' dangerouslySetInnerHTML={{ __html: item.username.match(/.{1,15}/g).join('<br/>') }}/>
                                     }
                                 </div>
                                 <div className='col-12 col-md-6 col-lg-5 mt-2 text-break'>
-                                    <p>{item.content}</p>
+                                    <h6>{item.content}</h6>
                                 </div>
                                 <div className='col-12 col-md-6 col-lg-2 mt-2'>
-                                    <p className='fst-italic text-secondary opacity-50 board-lower'>{item.postdate}</p>
+                                    <h6 className='fst-italic text-secondary opacity-50 board-lower'>{item.postdate}</h6>
                                 </div>
                                 {/* 삭제 버튼 */}
                                 {localStorage.getItem('token') ? /* 로그인 상태일 경우 */
@@ -260,99 +260,101 @@ export default function Board() {
                         </Fragment>
                     )}
                     {/* 페이징 */}
-                    <ul className='pagination justify-content-center py-5 mb-4'>
-                        {isMobile ? // 모바일
-                            <Fragment>
-                                {/* 처음 */}
-                                {data.hasPrev ? 
-                                    <Fragment>
-                                        <li className='page-item'>
-                                            <Link className='page-link text-secondary' state={{page:1}}>{'<<'}</Link>
-                                        </li>
-                                    </Fragment>
-                                :
-                                    <Fragment>
-                                        <li className='page-item disabled'>
-                                            <Link className='page-link' aria-disabled='true'>{'<<'}</Link>
-                                        </li>
-                                    </Fragment>
-                                }
-                                {/* 페이지 번호 */}
-                                {data.iterPages.map(pageNum => 
-                                    <Fragment key={`paging-${pageNum || Math.random()}`}>
-                                    {pageNum !== null && pageNum < data.page + 3 && pageNum > data.page - 3 &&
-                                        <Fragment key={`paging-fragment-${pageNum || Math.random()}`}>
-                                        {pageNum !== data.page ? 
-                                            <li className='page-item' >
-                                                <Link className='page-link text-secondary' state={{page:pageNum}}>{pageNum}</Link>
+                    {data.items.length > 0 &&
+                        <ul className='pagination justify-content-center py-5 mb-4'>
+                            {isMobile ? // 모바일
+                                <Fragment>
+                                    {/* 처음 */}
+                                    {data.hasPrev ? 
+                                        <Fragment>
+                                            <li className='page-item'>
+                                                <Link className='page-link text-secondary' state={{page:1}}>{'<<'}</Link>
                                             </li>
-                                        : 
-                                            <li className='page-item active' aria-current='page'>
-                                                <Link className='page-link' style={{backgroundColor:'rgba(119, 182, 202, 0.9)', border:'rgba(119, 182, 202, 0.9)'}} tabIndex={-1} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
-                                            </li>                            
-                                        }
+                                        </Fragment>
+                                    :
+                                        <Fragment>
+                                            <li className='page-item disabled'>
+                                                <Link className='page-link' aria-disabled='true'>{'<<'}</Link>
+                                            </li>
                                         </Fragment>
                                     }
-                                    </Fragment>
-                                )}
-                                {/* 마지막 */}
-                                {data.hasNext ? 
-                                    <li className='page-item'>
-                                        <Link className='page-link text-secondary' state={{page:data.iterPages[data.iterPages.length-1]}}>{'>>'}</Link>
-                                    </li>
-                                :
-                                    <li className='page-item disabled'>
-                                        <Link className='page-link' tabIndex={-1} aria-disabled='true'>{'>>'}</Link>
-                                    </li>
-                                }
-                            </Fragment>
-                        : // 데스크톱
-                            <Fragment>
-                                {/* 이전 */}
-                                {data.hasPrev ? 
-                                    <li className='page-item'>
-                                        <Link className='page-link text-secondary' state={{page:data.prevNum}}>이전</Link>
-                                    </li>
-                                :
-                                    <li className='page-item disabled'>
-                                        <Link className='page-link' aria-disabled='true'>이전</Link>
-                                    </li>
-                                }
-                                {/* 페이지 번호 */}
-                                {data.iterPages.map(pageNum => 
-                                    <Fragment key={`paging-${pageNum || Math.random()}`}>
-                                        {pageNum !== null ?
+                                    {/* 페이지 번호 */}
+                                    {data.iterPages.map(pageNum => 
+                                        <Fragment key={`paging-${pageNum || Math.random()}`}>
+                                        {pageNum !== null && pageNum < data.page + 3 && pageNum > data.page - 3 &&
                                             <Fragment key={`paging-fragment-${pageNum || Math.random()}`}>
-                                                {pageNum !== data.page ? 
-                                                    <li className='page-item' >
-                                                        <Link className='page-link text-secondary' state={{page:pageNum}}>{pageNum}</Link>
-                                                    </li>
-                                                : 
-                                                    <li className='page-item active' aria-current='page'>
-                                                        <Link className='page-link' style={{backgroundColor:'rgba(119, 182, 202, 0.9)', border:'rgba(119, 182, 202, 0.9)'}} tabIndex={-1} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
-                                                    </li>                            
-                                                }
+                                            {pageNum !== data.page ? 
+                                                <li className='page-item' >
+                                                    <Link className='page-link text-secondary' state={{page:pageNum}}>{pageNum}</Link>
+                                                </li>
+                                            : 
+                                                <li className='page-item active' aria-current='page'>
+                                                    <Link className='page-link' style={{backgroundColor:'rgba(119, 182, 202, 0.9)', border:'rgba(119, 182, 202, 0.9)'}} tabIndex={-1} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
+                                                </li>                            
+                                            }
                                             </Fragment>
-                                        : 
-                                            <li className='disabled'>
-                                                <Link className='page-link'>...</Link>
-                                            </li>
                                         }
-                                    </Fragment>
-                                )}
-                                {/* 다음 */}
-                                {data.hasNext ? 
-                                    <li>
-                                        <Link className='page-link text-secondary' state={{page:data.nextNum}}>다음</Link>
-                                    </li>
-                                : 
-                                    <li className='page-item disabled'>
-                                        <Link className='page-link' tabIndex={-1} aria-disabled='true'>다음</Link>
-                                    </li>
-                                }
-                            </Fragment>
-                        }
-                    </ul>
+                                        </Fragment>
+                                    )}
+                                    {/* 마지막 */}
+                                    {data.hasNext ? 
+                                        <li className='page-item'>
+                                            <Link className='page-link text-secondary' state={{page:data.iterPages[data.iterPages.length-1]}}>{'>>'}</Link>
+                                        </li>
+                                    :
+                                        <li className='page-item disabled'>
+                                            <Link className='page-link' tabIndex={-1} aria-disabled='true'>{'>>'}</Link>
+                                        </li>
+                                    }
+                                </Fragment>
+                            : // 데스크톱
+                                <Fragment>
+                                    {/* 이전 */}
+                                    {data.hasPrev ? 
+                                        <li className='page-item'>
+                                            <Link className='page-link text-secondary' state={{page:data.prevNum}}>이전</Link>
+                                        </li>
+                                    :
+                                        <li className='page-item disabled'>
+                                            <Link className='page-link' aria-disabled='true'>이전</Link>
+                                        </li>
+                                    }
+                                    {/* 페이지 번호 */}
+                                    {data.iterPages.map(pageNum => 
+                                        <Fragment key={`paging-${pageNum || Math.random()}`}>
+                                            {pageNum !== null ?
+                                                <Fragment key={`paging-fragment-${pageNum || Math.random()}`}>
+                                                    {pageNum !== data.page ? 
+                                                        <li className='page-item' >
+                                                            <Link className='page-link text-secondary' state={{page:pageNum}}>{pageNum}</Link>
+                                                        </li>
+                                                    : 
+                                                        <li className='page-item active' aria-current='page'>
+                                                            <Link className='page-link' style={{backgroundColor:'rgba(119, 182, 202, 0.9)', border:'rgba(119, 182, 202, 0.9)'}} tabIndex={-1} onClick={(e) => e.preventDefault()}>{pageNum}</Link>
+                                                        </li>                            
+                                                    }
+                                                </Fragment>
+                                            : 
+                                                <li className='disabled'>
+                                                    <Link className='page-link'>...</Link>
+                                                </li>
+                                            }
+                                        </Fragment>
+                                    )}
+                                    {/* 다음 */}
+                                    {data.hasNext ? 
+                                        <li className='page-item'>
+                                            <Link className='page-link text-secondary' state={{page:data.nextNum}}>다음</Link>
+                                        </li>
+                                    : 
+                                        <li className='page-item disabled'>
+                                            <Link className='page-link' tabIndex={-1} aria-disabled='true'>다음</Link>
+                                        </li>
+                                    }
+                                </Fragment>
+                            }
+                        </ul>
+                    }
                 </div>
             :
                 // 로딩 대기 문구

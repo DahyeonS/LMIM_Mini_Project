@@ -145,7 +145,7 @@ export default function Write() {
 
         service.uploadImage(formData, csrfRef.current).then(
             (res) => {
-                const url = `./post/load_image?type=temp&name=${res.data.name}`; // 실제 이미지가 저장된 URL
+                const url = `./load_image?type=temp&name=${res.data.name}`; // 실제 이미지가 저장된 URL
                 callback(url, blob.name); // 콜백 함수로 리턴값을 에디터에 적용하여 팝업 창 종료
             }
         )
@@ -217,7 +217,7 @@ export default function Write() {
 
     // 화면 출력 부분
     return (
-        <section className='container-fluid container-xl px-5'>
+        <section className='container-fluid container-xl px-5 rounded'>
             <div className='pt-5 border-bottom'>
                 <h1 className='pt-5 text-secondary fw-bold fst-italic'>글쓰기</h1>
             </div>

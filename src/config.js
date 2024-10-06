@@ -1,6 +1,7 @@
 export const API = {
     // CSRF
     CSRFTOKEN: 'csrf_token',
+    LOADIMAGE: 'load_image',
 
     // 로그인
     AUTHLOAD: 'auth/load',
@@ -13,7 +14,6 @@ export const API = {
     POSTLOAD: 'post/load',
     POSTINSERT: 'post/insert',
     POSTUPLOAD: 'post/upload',
-    POSTLOADIMAGE: 'post/load_image',
     POSTSELECT: 'post/select',
     POSTUPDATE: 'post/update',
     POSTDELETE: 'post/delete',

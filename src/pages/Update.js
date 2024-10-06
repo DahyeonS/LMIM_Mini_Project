@@ -35,7 +35,7 @@ function useCsrfToken() {
         )
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [csrfToken];
+    return csrfToken;
 }
 
 export default function Update() {
@@ -44,7 +44,7 @@ export default function Update() {
     useLoginCheck(navigate);
 
     // 입력값 처리 부분
-    const [csrfToken] = useCsrfToken();
+    const csrfToken = useCsrfToken();
     const [isChecked, setIsChecked] = useIsChecked();
     const [values, setValues] = useState({}) // 입력값 반영
     const [password, setPassword] = useState('') // 비밀번호 입력값 반영
@@ -136,7 +136,7 @@ export default function Update() {
 
     // 화면 출력 부분
     return (
-        <section className='container-fluid container-xl px-5'>
+        <section className='container-fluid container-xl px-5 rounded'>
             <div className='pt-5 mb-5 border-bottom'>
                 <h1 className='pt-5 text-secondary fw-bold fst-italic'>회원정보 수정</h1>
             </div>

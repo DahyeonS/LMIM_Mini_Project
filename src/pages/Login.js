@@ -16,7 +16,7 @@ function useCsrfToken() {
         )
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [csrfToken];
+    return csrfToken;
 }
 
 export default function Login() {
@@ -24,7 +24,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     // 입력값 처리 부분
-    const [csrfToken] = useCsrfToken();
+    const csrfToken = useCsrfToken();
     const [values, setValues] = useState({}); // 입력값 반영
 
     const idFocus = useRef(null); // 아이디 참조
@@ -73,7 +73,7 @@ export default function Login() {
 
     // 화면 출력 부분
     return (
-        <section className='container-fluid container-xl px-5'>
+        <section className='container-fluid container-xl px-5 rounded'>
             <div className='pt-5 mb-5 border-bottom'>
                 <h1 className='pt-5 text-secondary fw-bold fst-italic'>로그인</h1>
             </div>

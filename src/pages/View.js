@@ -47,7 +47,7 @@ function useData(index, navigate) {
         )
     }, [index, navigate]) // 페이지가 로드될 때 한 번만 실행
 
-    return [data];
+    return data;
 }
 
 function useCsrfToken() {
@@ -59,7 +59,7 @@ function useCsrfToken() {
         )
     }, []) // 페이지가 로드될 때 한 번만 실행
 
-    return [csrfToken];
+    return csrfToken;
 }
 
 export default function View() {
@@ -72,12 +72,12 @@ export default function View() {
     if (params.get('num')) index = params.get('num'); // 주소창에 페이지 번호가 있으면 대체
     
     // 출력값 처리 부분
-    const [data] = useData(index, navigate);
+    const data = useData(index, navigate);
     const isMobile = UseIsMoblie();
     const isDeskTop = UseIsDeskTop();
 
     // 입력값 처리 부분
-    const [csrfToken] = useCsrfToken();
+    const csrfToken = useCsrfToken();
 
     // 링크 복사
     const handleCopyLink = () => {
@@ -103,7 +103,7 @@ export default function View() {
 
     // 화면 출력 부분
     return (
-        <section className='container-fluid container-xl px-5'>
+        <section className='container-fluid container-xl px-5 rounded'>
             <div className='pt-5 border-bottom'>
                 <h1 className='pt-5 text-secondary fw-bold'>{data.title}</h1>
             </div>

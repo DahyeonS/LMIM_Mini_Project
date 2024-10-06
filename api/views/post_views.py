@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, send_from_directory, send_file
+from flask import Blueprint, jsonify, request
 from datetime import datetime
 import re; import os; import shutil
 from bs4 import BeautifulSoup
@@ -42,7 +42,7 @@ def insert() :
     tag = data.get('tag')
 
     url = re.findall(r'<img src="([^"]+)"', content)
-    files = [u.replace('./post/load_image?type=temp&amp;name=', '') for u in url]
+    files = [u.replace('./load_image?type=temp&amp;name=', '') for u in url]
 
     if files :
         for file in files :
@@ -51,7 +51,7 @@ def insert() :
         for f in os.scandir(UPLOAD_FOLDER + '/temp') :
             os.remove(f.path)
 
-        content = content.replace('<img src="./post/load_image?type=temp', '<img src="./post/load_image?type=uploads')
+        content = content.replace('<img src="./load_image?type=temp', '<img src="./load_image?type=uploads')
 
         if tag :
             post = Post(title=title, content=content, tag=' '.join(tag), photo=', '.join(files))
@@ -75,17 +75,6 @@ def upload() :
     file.save(os.path.join(f'{UPLOAD_FOLDER}/temp', file.filename))
     return jsonify({'name':file.filename})
 
-@bp.route('/load_image')
-def load_image() :
-    file_type = request.args.get('type')
-    file_name = request.args.get('name')
-
-    if file_type == 'static' :
-        path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-        return send_file(os.path.join(f'{path}/static', f'{file_name}.png'), as_attachment=True)
-
-    return send_from_directory(f'{UPLOAD_FOLDER}/{file_type}', file_name)
-
 @bp.route('/select')
 def select() :
     idx = request.args.get('idx', type=int)
@@ -108,12 +97,12 @@ def update() :
 
         url = re.findall(r'<img src="([^"]+)"', content)
         new_files = [
-            u.replace('./post/load_image?type=temp&amp;name=', '') for u in url
-            if './post/load_image?type=uploads&amp;name=' not in u
+            u.replace('./load_image?type=temp&amp;name=', '') for u in url
+            if './load_image?type=uploads&amp;name=' not in u
             ]
         files = [
-            u.replace('./post/load_image?type=uploads&amp;name=', '') for u in url
-            if './post/load_image?type=temp&amp;name=' not in u
+            u.replace('./load_image?type=uploads&amp;name=', '') for u in url
+            if './load_image?type=temp&amp;name=' not in u
             ]
 
         prev_photo = Post.query.get(idx).photo
@@ -135,9 +124,9 @@ def update() :
                 os.remove(f.path)
 
         if files or new_files :
-            content = content.replace('<img src="./post/load_image?type=temp', '<img src="./post/load_image?type=uploads')
+            content = content.replace('<img src="./load_image?type=temp', '<img src="./load_image?type=uploads')
             new_url = re.findall(r'<img src="([^"]+)"', content)
-            photos = [n.replace('./post/load_image?type=uploads&amp;name=', '') for n in new_url]
+            photos = [n.replace('./load_image?type=uploads&amp;name=', '') for n in new_url]
             if tag :
                 p_update = {'title':title, 'content':content, 'tag':' '.join(tag), 'photo':', '.join(photos)}
             else :
