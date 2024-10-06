@@ -96,7 +96,7 @@ export default function Home() {
                     <h5 className='mt-2 opacity-75'><Link className='text-secondary' to={'/works'}>작업물<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M19.1642 12L12.9571 5.79291L11.5429 7.20712L16.3358 12L11.5429 16.7929L12.9571 18.2071L19.1642 12ZM13.5143 12L7.30722 5.79291L5.89301 7.20712L10.6859 12L5.89301 16.7929L7.30722 18.2071L13.5143 12Z"/></svg></Link></h5>
                 </div>
                 <div className='mt-5 pt-5 row border-top mx-4'>
-                    <div className={`col-11 col-lg-5 ${isMobile ? 'mx-2' : 'mx-4'}`}>
+                    <div className={`col-11 col-lg-5 ${isDeskTop && 'ms-5'} ${isMobile && 'mx-2'} ${!isDeskTop && !isMobile && 'mx-4'}`}>
                         <h3 className='mb-3 pb-2 fw-bold border-bottom'>최근 게시물</h3>
                         {Array.isArray(postData.items) ?
                             <div className='mb-4'>
