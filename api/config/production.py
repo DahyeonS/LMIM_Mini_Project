@@ -7,6 +7,7 @@ pw = os.getenv('DB_PASSWORD') # 암호
 url = os.getenv('DB_HOST') # 데이터베이스 주소
 db = os.getenv('DB_NAME') # 데이터베이스 이름
 
+DEBUG = False
 SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{user}:{pw}@{url}:{'port':3306}/{db}?charset=utf8"
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SECRET_KEY = b64decode(os.getenv('SECRET_KEY')) # 시크릿 키
