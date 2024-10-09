@@ -11,4 +11,4 @@ SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{user}:{pw}@{url}:3306/{db}?charset=
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SECRET_KEY = b64decode(os.getenv('SECRET_KEY')) # 시크릿 키
 JWT_SECRET_KEY = b64decode(os.getenv('JWT_SECRET_KEY')) # JWT 시크릿 키
-CORS_RESOURCES = {r'/*': {'origins': ''}} # CORS 허용 주소
+CORS_RESOURCES = {r'/*': {'origins': 'https://dahyeonseo.pythonanywhere.com/'}} # CORS 허용 주소
