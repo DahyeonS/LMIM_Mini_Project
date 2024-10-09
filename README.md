@@ -1,5 +1,6 @@
 # LMIM_Mini_Project
 **플라스크 & 리액트 개인용 미니 프로젝트**
+
 접속 링크: https://dahyeonseo.pythonanywhere.com/
 
 
