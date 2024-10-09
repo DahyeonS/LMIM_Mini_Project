@@ -1,8 +1,8 @@
 # LMIM_Mini_Project
+
+접속 링크: 접속 링크: https://dahyeonseo.pythonanywhere.com/
+
 **플라스크 & 리액트 개인용 미니 프로젝트**
-
-접속 링크: https://dahyeonseo.pythonanywhere.com/
-
 
 *제작자: 서다현*
 
