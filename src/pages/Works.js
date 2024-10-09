@@ -70,22 +70,22 @@ export default function Works() {
                     <h4 className='text-secondary fst-italic opacity-75 mt-3'>2024.1.15 ~ 2024.2.29</h4>
                     <div className='row'>
                         <div className='col-lg-5 mt-5'>
-                            <img className='img-custom-grid' src='./load_image?type=static&name=works8.jpg' alt='works8'/>
+                            <img className='img-custom-grid' src='./load_image?type=static&name=works8.JPG' alt='works8'/>
                         </div>
                         <div className='col-lg-5 mt-5'>
-                            <img className='img-custom-grid' src='./load_image?type=static&name=works9.jpg' alt='works9'/>
+                            <img className='img-custom-grid' src='./load_image?type=static&name=works9.JPG' alt='works9'/>
                         </div>
                         <div className='col-lg-5 mt-5'>
-                            <img className='img-custom-grid' src='./load_image?type=static&name=works10.jpg' alt='works10'/>
+                            <img className='img-custom-grid' src='./load_image?type=static&name=works10.JPG' alt='works10'/>
                         </div>
                         <div className='col-lg-5 mt-5'>
-                            <img className='img-custom-grid' src='./load_image?type=static&name=works11.jpg' alt='works11'/>
+                            <img className='img-custom-grid' src='./load_image?type=static&name=works11.JPG' alt='works11'/>
                         </div>
                         <div className='col-lg-5 mt-5'>
-                            <img className='img-custom-grid' src='./load_image?type=static&name=works12.jpg' alt='works12'/>
+                            <img className='img-custom-grid' src='./load_image?type=static&name=works12.JPG' alt='works12'/>
                         </div>
                         <div className='col-lg-5 mt-5'>
-                            <img className='img-custom-grid' src='./load_image?type=static&name=works13.jpg' alt='works13'/>
+                            <img className='img-custom-grid' src='./load_image?type=static&name=works13.JPG' alt='works13'/>
                         </div>
                     </div>
                     <h5 className='my-4'>Django 기반 낙농체험 목장 홍보 웹사이트 개발 프로젝트</h5>
