@@ -1,9 +1,11 @@
 # LMIM_Mini_Project
 **플라스크 & 리액트 개인용 미니 프로젝트**
+접속 링크: https://dahyeonseo.pythonanywhere.com/
+
 
 *제작자: 서다현*
 
-24년 6월 기초 제작을 하고, 24년 8월부터 작업을 재개하여 9월중 배포 예정입니다.
+24년 6월 기초 제작을 하고, 24년 8월부터 작업을 재개하여 9월까지 제작한 사이트입니다.
 
 2024.6, 2024.8 ~ 2024.9
 
@@ -46,4 +48,5 @@
 - https://velog.io/@harimad/typewriter-effect
 - https://www.crypist.com/post/django/deployment/deploying-django-project-with-react-to-pythonanywhere/
 - https://velog.io/@thdusdl4767/Project-Pythonanywhere%EC%97%90-MySQL-%EC%84%B8%ED%8C%85%ED%95%98%EA%B3%A0-%EC%97%85%EB%A1%9C%EB%93%9C
+- https://help.pythonanywhere.com/pages/UsingSQLAlchemywithMySQL
 - https://www.remixicon.com/
