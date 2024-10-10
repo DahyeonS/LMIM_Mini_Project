@@ -53,9 +53,65 @@ code {
   height: auto;
 }
 
+.toastui-editor-contents {
+  font-size: 15pt !important;
+}
+
+.toastui-editor-contents h1 {
+  font-size: 28pt !important;
+}
+
+.toastui-editor-contents h2 {
+  font-size: 24pt !important;
+}
+
+.toastui-editor-contents h3 {
+  font-size: 22pt !important;
+}
+
+.toastui-editor-contents h4 {
+  font-size: 20pt !important;
+}
+
+.toastui-editor-contents h5 {
+  font-size: 18pt !important;
+}
+
+.toastui-editor-contents h6 {
+  font-size: 16pt !important;
+}
+
 @media (max-width: 1199px) {
   .img-custom, .img-custom-grid {
     width: 80%;
+  }
+
+  .toastui-editor-contents {
+    font-size: 13pt !important;
+  }
+  
+  .toastui-editor-contents h1 {
+    font-size: 22pt !important;
+  }
+  
+  .toastui-editor-contents h2 {
+    font-size: 20pt !important;
+  }
+  
+  .toastui-editor-contents h3 {
+    font-size: 18pt !important;
+  }
+  
+  .toastui-editor-contents h4 {
+    font-size: 16pt !important;
+  }
+  
+  .toastui-editor-contents h5 {
+    font-size: 15pt !important;
+  }
+  
+  .toastui-editor-contents h6 {
+    font-size: 14pt !important;
   }
 }
 
