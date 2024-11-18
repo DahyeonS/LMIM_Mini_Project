@@ -139,7 +139,7 @@ export default function View() {
                                 </Fragment>
                             : // 데스크톱
                                 <Fragment>
-                                <div className='col-2'>
+                                <div className='col-3 col-lg-2'>
                                     <Link className='btn btn-primary' to={'/post'}>목록보기</Link>
                                     <button onClick={handleCopyLink} className='btn btn-outline-secondary ms-2'>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" className='mb-1'>
@@ -147,7 +147,7 @@ export default function View() {
                                         </svg>
                                     </button>
                                 </div>
-                                <div className='col-6 col-lg-7'/>
+                                <div className='col-5 col-lg-7'/>
                                 <div className='col-4 col-lg-3'>
                                     <Link className='btn btn-secondary ms-2 float-end' onClick={handleDelete}>삭제하기</Link>
                                     <Link className='btn btn-primary float-end' to={'/write'} state={{idx:index}}>수정하기</Link>
