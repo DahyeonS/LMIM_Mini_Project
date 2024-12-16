@@ -34,3 +34,4 @@ uploads
 *.cmd
 *.db
 __pycache__/
+*.zip
