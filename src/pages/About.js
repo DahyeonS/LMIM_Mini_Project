@@ -14,7 +14,7 @@ export default function About() {
                     <li>
                         <h4 className='fw-bold'>경력 사항</h4>
                         <ul className='mb-3'>
-                            <li><h5>미래내일 일경험 인턴<span className='text-secondary fst-italic opacity-75 ms-2'>(비엠더코리아, 2024.10.07 ~ )</span></h5></li>
+                            <li><h5>미래내일 일경험 인턴<span className='text-secondary fst-italic opacity-75 ms-2'>(비엠더코리아, 2024.10.07 ~ 2024.12.27)</span></h5></li>
                             <li><h5>서울시 뉴딜일자리 전통시장 매니저<span className='text-secondary fst-italic opacity-75 ms-2'>(목사랑시장, 2022.02.14 ~ 2022.08.01)</span></h5></li>
                         </ul>
                     </li>
