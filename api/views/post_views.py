@@ -6,7 +6,7 @@ from models import Post
 from app import db
 
 bp = Blueprint('post', __name__, url_prefix='/post')
-UPLOAD_FOLDER = os.getcwd() + '/img' # 파일 절대 경로
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'img') # 파일 절대 경로
 
 def html_parse(html_text) :
     soup = BeautifulSoup(html_text, 'html.parser')
